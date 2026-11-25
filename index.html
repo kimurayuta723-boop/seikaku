@@ -37,6 +37,12 @@ p{margin:0 0 12px}
 .pick{appearance:none;font:inherit;padding:0;border:0;background:none;cursor:pointer;border-radius:8px;transition:transform .15s}
 .pick[aria-pressed=true]{transform:translateY(-8px)}
 .pick[aria-pressed=true] .cd{border:2px solid var(--ink);padding:6px 3px 8px}
+.cd .rk{position:absolute;top:8px;right:8px;font-size:11px;line-height:1;color:var(--sub)}
+.cd .rk.hon{color:var(--ink);font-weight:700}
+.hint{font-size:14px;line-height:1.75;margin:14px 0 0;padding:10px 12px;border-left:2px solid var(--ink);background:var(--card)}
+.hint.off{border-left-color:var(--line);color:var(--sub)}
+.rules{list-style:none;padding:0;margin:0;font-size:15px}.rules li{display:grid;grid-template-columns:5.5em minmax(0,1fr);gap:12px;padding:9px 0;border-bottom:1px solid var(--line)}.rules b{font-weight:700}
+.tv .rules{font-size:19px}
 .pick .ord{position:absolute;top:6px;right:8px;font:700 15px/1 "Zen Kaku Gothic New",sans-serif;z-index:1}
 .hand{display:grid;grid-template-columns:repeat(var(--n,4),minmax(0,1fr));gap:12px 8px;padding-top:10px;max-width:480px}
 .hand[style*="--n:5"] .cd svg{width:62%;margin-top:14%}.hand[style*="--n:5"] .cd .nm{font-size:11px;letter-spacing:0}.hand[style*="--n:5"] .cd .pz{font-size:10px;letter-spacing:0}
@@ -1422,7 +1428,7 @@ const EVENTS=[
  {n:'不景気',e:{0:50}},{n:'同窓会シーズン',e:{2:40}},{n:'婚活ブーム',e:{1:40,5:-20}},
  {n:'働き方改革',e:{4:-30,5:30}},{n:'大型連休',e:{5:40,4:-20}},{n:'グルメ番組ブーム',e:{6:40}},
  {n:'実家に帰省',e:{3:40}},{n:'バブル崩壊',e:'crash'}];
-const C={start:100,inc:20,dec:20,floor:10,a:20,bet:10,rounds:5,evAt:[2,4],min:3,max:7,choose:10};
+const C={start:100,inc:20,dec:20,floor:10,a:20,bet:10,hon:10,rounds:5,evAt:[2,4],min:3,max:7,choose:10};
 const kan=['〇','一','二','三','四','五','六','七'];
 /* 最初に手放した札による肩書き(診断の前半) */
 const MOD=['金離れのいい','色恋に冷めた','群れない','巣立った','肩の力が抜けた','縛られたがりの','食に頓着しない'];
@@ -1450,6 +1456,12 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const rnd=()=>Math.random();
 const gauss=()=>{let u=1-rnd(),v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
 const evText=ev=>ev.e==='crash'?'その時点でいちばん高い札が −50':Object.entries(ev.e).map(([c,d])=>`${CARDS[c].n} ${d>0?'+':'−'}${Math.abs(d)}`).join('、');
+const RULES=`<ul class="rules">
+  <li><b>最後の一枚</b><span>最後に残した札の相場が、そのまま得点になります。</span></li>
+  <li><b>相場</b><span>手放された札は1枚ごとに+${C.inc}、誰も手放さなかった札は−${C.dec}。</span></li>
+  <li><b>本音点</b><span>はじめに並べた順位で、残りの中でいちばん下の札を手放すと、1回ごとに+${C.hon}点。</span></li>
+  <li><b>予想</b><span>毎巡、指名された1人が手放す札を当てると+${C.a}点。</span></li>
+  <li><b>賭け</b><span>最後の二択で、人が残す札を当てると+${C.bet}点、外すと−${C.bet}点。</span></li></ul>`;
 const sgn=n=>n>0?'+'+n:n<0?'−'+(-n):'0';
 const cols=n=>n===7?4:n===6?3:n;
 const spark=(hist,i,W=72,H=24)=>{const all=hist.flat(),lo=Math.min(...all),hi=Math.max(...all),n=hist.length;
@@ -1517,7 +1529,7 @@ function hostMain(opt={}){
   const cpuDiscard=(p,ex)=>{let b=null,bu=1e9;for(const c of p.hand){const u=(1-p.g)*p.v[c]+p.g*ex[c]/200+gauss()*.03;if(u<bu){bu=u;b=c}}return b};
   const cpuGuess=(t,ex,keep)=>{const t0=P()[t],base=t0.cpu?t0.v:POP;let b=null,bu=keep?-1e9:1e9;for(const c of t0.hand){const u=.5*(base[c]+gauss()*.3)+.5*ex[c]/200;if(keep?u>bu:u<bu){bu=u;b=c}}return b};
   const newPlayer=(id,name,cpu)=>({id,name,cpu});
-  function resetPlayer(p){const v=POP.map(x=>x+gauss()*.3);Object.assign(p,{v,g:rnd(),rank:p.cpu?[...v.keys()].sort((a,b)=>v[b]-v[a]):[],hand:[0,1,2,3,4,5,6],disc:[],maj:0,a:0,bet:0,hits:0,targeted:0,greedy:0,notes:[],pick:null,guess:null,hit:false,final:null,gdrop:null})}
+  function resetPlayer(p){const v=POP.map(x=>x+gauss()*.3);Object.assign(p,{v,g:rnd(),rank:p.cpu?[...v.keys()].sort((a,b)=>v[b]-v[a]):[],hand:[0,1,2,3,4,5,6],disc:[],maj:0,hon:0,a:0,bet:0,hits:0,targeted:0,greedy:0,notes:[],pick:null,guess:null,hit:false,final:null,gdrop:null})}
   function startGame(){
     if(P().length<C.min)return;
     S.events=[...EVENTS].sort(()=>rnd()-.5).slice(0,2);S.round=0;S.prices=Array(7).fill(C.start);S.hist=[[...S.prices]];S.firedEv=null;S.results=null;
@@ -1537,11 +1549,12 @@ function hostMain(opt={}){
     const top=Math.max(...S.prices);
     P().forEach((p,i)=>{const tp=P()[targetOf(i)];tp.targeted++;p.hit=p.guess===tp.pick;if(p.hit){p.a+=C.a;tp.hits++}
       const honest=[...p.hand].sort((a,b)=>p.rank.indexOf(b)-p.rank.indexOf(a))[0];
+      p.honest=p.pick===honest;if(p.honest)p.hon++;
       if(p.pick!==honest){p.greedy++;p.notes.push({k:'greedy',r:S.round,c:p.pick,o:p.rank.indexOf(p.pick)+1})}
       if(S.prices[p.pick]===top)p.notes.push({k:'top',r:S.round,c:p.pick})});
     const cnt=Array(7).fill(0);P().forEach(p=>cnt[p.pick]++);const mx=Math.max(...cnt);
     if(mx>=2)P().forEach(p=>{if(cnt[p.pick]===mx)p.maj++});
-    S.reveal=P().map((p,i)=>({pick:p.pick,guess:p.guess,hit:p.hit,target:targetOf(i)}));
+    S.reveal=P().map((p,i)=>({pick:p.pick,guess:p.guess,hit:p.hit,target:targetOf(i),honest:p.honest}));
     P().forEach(p=>{p.hand=p.hand.filter(c=>c!==p.pick);p.disc.push(p.pick)});
     updatePrices(P().map(p=>p.pick));S.phase='reveal';pub();
   }
@@ -1562,6 +1575,7 @@ function hostMain(opt={}){
     if(S.phase!=='final-choose'||S.gOrder!==j)return;clearInterval(tick);clearTimeout(cpuT);
     const p=P()[j];p.final=keep;p.gdrop=p.hand.find(c=>c!==keep);
     const honest=[...p.hand].sort((a,b)=>p.rank.indexOf(a)-p.rank.indexOf(b))[0];
+    p.gHonest=keep===honest;if(p.gHonest)p.hon++;
     if(keep!==honest){p.greedy++;p.notes.push({k:'greedy',r:6,c:p.gdrop,o:p.rank.indexOf(p.gdrop)+1})}
     S.lastBets=Object.entries(S.bets).filter(([i,c])=>c!==null).map(([i,c])=>{const w=c===keep;P()[i].bet+=w?C.bet:-C.bet;return{i:+i,c,w}});
     S.phase='final-reveal';pub();
@@ -1570,7 +1584,7 @@ function hostMain(opt={}){
     const low=Math.min(...S.frozen);
     P().forEach(p=>{if(S.frozen[p.final]===low)p.notes.push({k:'low',c:p.final});p.disc.push(p.gdrop)});
     updatePrices(P().map(p=>p.gdrop));
-    const rows=P().map((p,i)=>({i,a:p.a,b:S.prices[p.final],bet:p.bet,t:p.a+S.prices[p.final]+p.bet})).sort((x,y)=>y.t-x.t||y.a-x.a);
+    const rows=P().map((p,i)=>({i,a:p.a,h:p.hon*C.hon,b:S.prices[p.final],bet:p.bet,t:p.a+p.hon*C.hon+S.prices[p.final]+p.bet})).sort((x,y)=>y.t-x.t||y.a-x.a);
     const rd=r=>r===6?'最後の二択':kan[r]+'巡目';
     const hi=Math.max(...S.frozen);
     const certs=P().map((p,i)=>{const c=CARDS[p.final],top=p.rank[0],lostAt=p.disc.indexOf(top)+1;
@@ -1625,7 +1639,7 @@ function hostMain(opt={}){
       players:P().map((p,i)=>({id:p.id,name:p.name,cpu:p.cpu,hand:p.hand||[],rankDone:(p.rank||[]).length===7,submitted:p.pick!==null&&p.pick!==undefined,target:S.round?targetOf(i):null,a:p.a||0,bet:p.bet||0}))};
     if(ph==='reveal')V.reveal=S.reveal;
     if(ph.startsWith('final')){V.j=S.gOrder;V.frozen=S.frozen;V.betDone=Object.keys(S.bets).map(Number);V.left=S.left;
-      if(ph==='final-reveal'){const p=P()[S.gOrder];V.keep=p.final;V.drop=p.gdrop;V.lastBets=S.lastBets}}
+      if(ph==='final-reveal'){const p=P()[S.gOrder];V.keep=p.final;V.drop=p.gdrop;V.lastBets=S.lastBets;V.gHonest=p.gHonest}}
     if(ph==='results'){V.results=S.results;V.frozen=S.frozen}
     return V;
   }
@@ -1643,13 +1657,13 @@ function hostMain(opt={}){
       <p class="sub" style="margin-top:14px">最初に入った人が進行役です。進行役のスマホからも、この画面と同じ操作ができます。</p></div>
       <div><h2 style="margin-top:0">スマホで参加</h2><div class="qr">${qrSVG(joinURL)}</div><p class="sub" style="margin-top:14px">部屋コード</p><p class="roomcode num">${code}</p><p class="sub" style="word-break:break-all">${esc(joinURL)}</p>${modeNote()}</div></div>`;
     }else if(ph==='ranking'){
-      h=`<div class="split"><div>${mk(0,'はじめる前に')}<h1>大事な順に、7枚を並べています</h1><p class="sub">この順位は誰にも見せず、診断にだけ使います。</p></div><div><h2 style="margin-top:0">並べ終えた人</h2>${status(p=>p.rankDone?['済み',1]:['考え中',0])}</div></div>`;
+      h=`<div class="split"><div>${mk(0,'はじめる前に')}<h1>大事な順に、7枚を並べています</h1><p class="sub">この順位は誰にも見せません。本音点と、最後の診断に使います。</p><h2>得点のしくみ</h2>${RULES}</div><div><h2 style="margin-top:0">並べ終えた人</h2>${status(p=>p.rankDone?['済み',1]:['考え中',0])}</div></div>`;
     }else if(ph==='turn'){
       h=`<div class="split"><div>${mk(V.round,kan[V.round]+'巡目')}<h1>${V.firedEv?`「${esc(V.firedEv.n)}」が起きた`:'手放す札を選んでいます'}</h1>${V.firedEv?`<p>${esc(V.firedEv.t)}</p>`:''}${pubBoard(V,V.firedEv?'出来事による値動き':'値動き')}</div>
       <div><h2 style="margin-top:0">選び終えた人</h2>${status(p=>p.submitted?['済み',1]:['考え中',0])}${evNote()}</div></div>`;
     }else if(ph==='reveal'){
       h=`<div class="split"><div>${mk(V.round,kan[V.round]+'巡目')}<h1>手放された札</h1>${pubBoard(V,`1枚手放されるごとに+${C.inc}、誰も手放さなければ−${C.dec}`)}</div>
-      <div><table class="list"><tr><th>名前</th><th>手放した</th><th>予想</th></tr>${V.reveal.map((x,i)=>`<tr><td>${esc(PL[i].name)}</td><td>${CARDS[x.pick].n}</td><td>${esc(PL[x.target].name)}さんは${CARDS[x.guess].n}<br><span class="${x.hit?'up':'sub'}">${x.hit?'的中 +'+C.a:'外れ'}</span></td></tr>`).join('')}</table>
+      <div><table class="list"><tr><th>名前</th><th>手放した</th><th>予想</th></tr>${V.reveal.map((x,i)=>`<tr><td>${esc(PL[i].name)}</td><td>${CARDS[x.pick].n}${x.honest?'<br><span class="sub">本音どおり +'+C.hon+'</span>':''}</td><td>${esc(PL[x.target].name)}さんは${CARDS[x.guess].n}<br><span class="${x.hit?'up':'sub'}">${x.hit?'的中 +'+C.a:'外れ'}</span></td></tr>`).join('')}</table>
       <button class="go" data-act="next">${V.round<C.rounds?kan[V.round+1]+'巡目へ':'最後の二択へ'}</button></div></div>`;
     }else if(ph==='final-bet'||ph==='final-choose'){
       const ch=PL[V.j];
@@ -1659,13 +1673,13 @@ function hostMain(opt={}){
       <div>${ph==='final-bet'?`<h2 style="margin-top:0">どちらを残すかに${C.bet}点を賭けています</h2><p class="sub">賭けた札は、選び終わるまで伏せます。</p>${status((p,i)=>i===V.j?['選ぶ人',0]:V.betDone.includes(i)?['済み',1]:['考え中',0])}<button class="go" data-act="closebets">賭けを締め切る</button>`:`<h2 style="margin-top:0">相場は止まっています</h2><p class="sub">全員が選び終えたら、最終相場を出します。</p>`}</div></div>`;
     }else if(ph==='final-reveal'){
       const ch=PL[V.j];
-      h=`<div class="split"><div>${mk(6,`最後の二択 ${V.j+1}/${PL.length}人目`)}<h1>${esc(ch.name)}さんは「${CARDS[V.keep].n}」を残した</h1><div class="hand big"><div>${card(V.keep)}</div></div><p class="sub" style="text-align:center;margin-top:12px">手放したのは「${CARDS[V.drop].n}」</p></div>
+      h=`<div class="split"><div>${mk(6,`最後の二択 ${V.j+1}/${PL.length}人目`)}<h1>${esc(ch.name)}さんは「${CARDS[V.keep].n}」を残した</h1><div class="hand big"><div>${card(V.keep)}</div></div><p class="sub" style="text-align:center;margin-top:12px">手放したのは「${CARDS[V.drop].n}」${V.gHonest?`。本音どおり +${C.hon}`:''}</p></div>
       <div>${V.lastBets.length?`<table class="list"><tr><th>賭けた人</th><th>賭けた札</th><th class="r">結果</th></tr>${V.lastBets.map(b=>`<tr><td>${esc(PL[b.i].name)}</td><td>${CARDS[b.c].n}</td><td class="r num ${b.w?'up':''}">${b.w?'+'+C.bet:'−'+C.bet}</td></tr>`).join('')}</table>`:'<p class="sub">誰も賭けませんでした。</p>'}
       <button class="go" data-act="next">${V.j<PL.length-1?'次の人へ':'最終相場を出す'}</button></div></div>`;
     }else if(ph==='results'){
       const R=V.results,win=R.rows.filter(x=>x.t===R.rows[0].t&&x.a===R.rows[0].a);
       h=`<div class="split"><div>${mk(7,'終局')}<h1>${win.map(x=>esc(PL[x.i].name)).join('さんと')}さんの勝ち</h1>${R.tie?'<p class="sub">合計が同点のため、予想の得点が多い人を上にしています。</p>':''}
-      <table class="list"><tr><th>名前</th><th class="r">予想</th><th class="r">最後の一枚</th><th class="r">賭け</th><th class="r">合計</th></tr>${R.rows.map(x=>`<tr><td>${esc(PL[x.i].name)}</td><td class="r num">${x.a}</td><td class="r num">${x.b}</td><td class="r num">${sgn(x.bet)}</td><td class="r num"><b>${x.t}</b></td></tr>`).join('')}</table>
+      <table class="list"><tr><th>名前</th><th class="r">予想</th><th class="r">本音</th><th class="r">最後の一枚</th><th class="r">賭け</th><th class="r">合計</th></tr>${R.rows.map(x=>`<tr><td>${esc(PL[x.i].name)}</td><td class="r num">${x.a}</td><td class="r num">${x.h}</td><td class="r num">${x.b}</td><td class="r num">${sgn(x.bet)}</td><td class="r num"><b>${x.t}</b></td></tr>`).join('')}</table>
       <div class="row"><button class="plain" data-act="again">同じ顔ぶれでもう一度</button></div></div>
       <div>${board(V.prices,V.frozen,V.hist,'最終相場')}</div></div>
       <h2>本性証券</h2><div class="certs">${R.certs.map((d,i)=>certHTML(d,PL[i].name)).join('')}</div>`;
@@ -1683,6 +1697,11 @@ function playerMain(code,opt={}){
   if(!pid){pid='p'+Date.now().toString(36)+Math.floor(rnd()*1e6).toString(36);try{if(!TEST)sessionStorage.setItem('saigo-pid',pid)}catch(e){}}
   let myName='';try{myName=localStorage.getItem('saigo-name')||''}catch(e){}
   let net=null,V=null,joined=false,sel={k:'',d:null,g:null,rank:[],sent:null};
+  let myRank=null;try{if(!TEST)myRank=JSON.parse(sessionStorage.getItem('saigo-rank')||'null')}catch(e){}
+  /* 残りの手札のうち、自分の順位でいちばん下の札(これを手放すと本音点) */
+  const honestOf=hand=>myRank&&hand.length?[...hand].sort((a,b)=>myRank.indexOf(b)-myRank.indexOf(a))[0]:null;
+  const rkBadge=(c,hon)=>myRank?`<span class="rk${hon?' hon':''}">${myRank.indexOf(c)+1}位${hon?'・本音':''}</span>`:'';
+  const myCard=(c,attr,pressed,price,hon)=>pickBtn(c,attr,pressed,'',price).replace('<span class="in"></span>','<span class="in"></span>'+rkBadge(c,hon));
   const send=a=>{if(net)net.send(Object.assign({pid},a))};
   function render(){
     let h='';const me=V?V.players.findIndex(p=>p.id===pid):-1,M=me>=0?V.players[me]:null,LEAD=!!V&&V.leader===pid;
@@ -1704,38 +1723,42 @@ function playerMain(code,opt={}){
         else h=wait(`${esc(M.name)}さん`,'進行役が始めるのを待っています。')+people();
       }else if(ph==='ranking'){
         if(M.rankDone||sel.sent)h=wait('並べ終えました','ほかの人を待っています。');
-        else{const t=sel.rank;h=`${mk(0,'はじめる前に')}<h1>大事な順に、7枚を押す</h1><p class="sub">診断にだけ使います。誰にも見せません。</p>
+        else{const t=sel.rank;h=`${mk(0,'はじめる前に')}<h1>大事な順に、7枚を押す</h1><p class="sub">いちばん大事なものから順に押してください。順位は誰にも見せません。</p>
+          <p class="hint">ゲーム中、この順位でいちばん下の札から手放すと、1回ごとに本音点+${C.hon}。最後の診断にも使います。</p>
           <div class="hand" style="--n:4">${CARDS.map((c,i)=>pickBtn(i,`data-act="rk" data-c="${i}"`,t.includes(i),t.includes(i)?`<span class="ord num">${t.indexOf(i)+1}</span>`:'')).join('')}</div>
           <div class="row" style="margin-top:18px"><button class="plain" data-act="rkreset"${t.length?'':' disabled'}>やり直す</button><span class="sub num">${t.length}/7枚</span></div>
           <button class="go" data-act="rkok"${t.length<7?' disabled':''}>この順で決める</button>`}
       }else if(ph==='turn'){
         if(M.submitted||sel.sent)h=wait('決めました',sel.sent?`「${CARDS[sel.sent.pick].n}」を手放し、${esc(V.players[M.target].name)}さんは「${CARDS[sel.sent.guess].n}」を手放すと予想しました。`:'ほかの人を待っています。');
-        else{const tp=V.players[M.target];h=`${mk(V.round,kan[V.round]+'巡目')}${V.firedEv?`<div class="notice" style="margin-top:0"><b>「${esc(V.firedEv.n)}」</b>が起きました。${esc(V.firedEv.t)}</div>`:''}<h1>手放す1枚</h1>
-          <div class="hand" style="--n:${cols(M.hand.length)}">${M.hand.map(c=>pickBtn(c,`data-act="pd" data-c="${c}"`,sel.d===c,'',V.prices[c])).join('')}</div>
-          <h2>${esc(tp.name)}さんが手放すのは</h2><div class="hand" style="--n:${cols(tp.hand.length)}">${tp.hand.map(c=>pickBtn(c,`data-act="pg" data-c="${c}"`,sel.g===c)).join('')}</div>
+        else{const tp=V.players[M.target],hon=honestOf(M.hand);h=`${mk(V.round,kan[V.round]+'巡目')}${V.firedEv?`<div class="notice" style="margin-top:0"><b>「${esc(V.firedEv.n)}」</b>が起きました。${esc(V.firedEv.t)}</div>`:''}<h1>1. 手放す札を選ぶ</h1><p class="sub">最後に残した1枚の相場が得点になります。札の右上はあなたの順位です。</p>
+          <div class="hand" style="--n:${cols(M.hand.length)}">${M.hand.map(c=>myCard(c,`data-act="pd" data-c="${c}"`,sel.d===c,V.prices[c],c===hon)).join('')}</div>
+          ${sel.d===null?`<p class="hint off">「本音」と書いた札を手放すと、本音点+${C.hon}。</p>`:`<p class="hint">「${CARDS[sel.d].n}」を手放す。${sel.d===hon?`本音どおりなので+${C.hon}点。`:'本音とは違う札なので、本音点はなし。'}この札の相場は上がります。</p>`}
+          <h2>2. ${esc(tp.name)}さんが手放す札を予想</h2><p class="sub">当たれば+${C.a}点。</p><div class="hand" style="--n:${cols(tp.hand.length)}">${tp.hand.map(c=>pickBtn(c,`data-act="pg" data-c="${c}"`,sel.g===c)).join('')}</div>
           ${V.nextEv?`<div class="notice">${kan[V.round+1]}巡目の前に<b>「${esc(V.nextEv.n)}」</b>が起きます。${esc(V.nextEv.t)}</div>`:''}
-          <button class="go" data-act="pok"${sel.d===null||sel.g===null?' disabled':''}>決める</button>${TEST?`<h2>値動き</h2>${pubBoard(V,'')}`:''}`}
+          <button class="go" data-act="pok"${sel.d===null||sel.g===null?' disabled':''}>${sel.d===null?'手放す札を選んでください':sel.g===null?'予想を選んでください':'この2つで決める'}</button>${TEST?`<h2>値動き</h2>${pubBoard(V,'')}`:''}`}
       }else if(ph==='reveal'){
-        const x=V.reveal[me];h=`${mk(V.round,kan[V.round]+'巡目')}<h1>「${CARDS[x.pick].n}」を手放した</h1><p>${esc(V.players[x.target].name)}さんの予想は、${x.hit?`<span class="up">的中 +${C.a}点</span>`:'外れ'}。</p>
+        const x=V.reveal[me];h=`${mk(V.round,kan[V.round]+'巡目')}<h1>「${CARDS[x.pick].n}」を手放した</h1><p>${x.honest?`本音どおり、+${C.hon}点。`:'本音とは違う札でした。'}${esc(V.players[x.target].name)}さんの予想は${x.hit?`<span class="up">的中 +${C.a}点</span>`:'外れ'}。</p>
           ${TEST?`<table class="list" style="margin:8px 0 20px"><tr><th>名前</th><th>手放した</th><th>予想</th></tr>${V.reveal.map((y,i)=>`<tr><td>${esc(V.players[i].name)}</td><td>${CARDS[y.pick].n}</td><td>${CARDS[y.guess].n} <span class="${y.hit?'up':'sub'}">${y.hit?'的中':'外れ'}</span></td></tr>`).join('')}</table>`:''}
           ${pubBoard(V,'値動き')}${ctl('next',V.round<C.rounds?kan[V.round+1]+'巡目へ':'最後の二択へ')}${nextNote}`;
       }else if(ph==='final-bet'){
         const ch=V.players[V.j];
-        if(me===V.j)h=wait('次はあなたの二択','全員が賭け終えたら、10秒で1枚を選びます。')+ctl('closebets','賭けを締め切る');
+        if(me===V.j)h=wait('次はあなたの二択',`全員が賭け終えたら、10秒で残す1枚を選びます。順位が上の札を残すと本音点+${C.hon}。`)+ctl('closebets','賭けを締め切る');
         else if(V.betDone.includes(me)||sel.sent!==null)h=wait('賭けました',`${esc(ch.name)}さんの選択を待っています。`)+ctl('closebets','賭けを締め切る');
-        else h=`${mk(6,'最後の二択')}<h1>${esc(ch.name)}さんが残すのは</h1><p class="sub">当たれば+${C.bet}点、外れれば−${C.bet}点。賭けた札は、選び終わるまで伏せます。</p>
+        else h=`${mk(6,'最後の二択')}<h1>${esc(ch.name)}さんが残すのは</h1><p class="sub">残すと思う札を押してください。当たれば+${C.bet}点、外れれば−${C.bet}点。賭けた札は、選び終わるまで伏せます。自信がなければ「賭けない」を。</p>
           <div class="hand big">${ch.hand.map(c=>pickBtn(c,`data-act="bet" data-c="${c}"`,false,'',V.frozen[c])).join('')}</div><button class="plain" data-act="nobet" style="display:block;margin:24px auto 0">賭けない</button>`;
       }else if(ph==='final-choose'){
         const ch=V.players[V.j];
-        if(me===V.j&&sel.sent===null)h=`${mk(6,'最後の二択')}<h1>残す1枚を選ぶ</h1><p class="timer num" data-live>${V.left}</p><div class="hand big">${M.hand.map(c=>pickBtn(c,`data-act="keep" data-c="${c}"`,false,'',V.frozen[c])).join('')}</div>`;
+        if(me===V.j&&sel.sent===null){const keepHon=myRank?[...M.hand].sort((a,b)=>myRank.indexOf(a)-myRank.indexOf(b))[0]:null;
+          h=`${mk(6,'最後の二択')}<h1>残す1枚を選ぶ</h1><p class="timer num" data-live>${V.left}</p><div class="hand big">${M.hand.map(c=>myCard(c,`data-act="keep" data-c="${c}"`,false,V.frozen[c],c===keepHon)).join('')}</div>
+          <p class="hint">残した札の最終相場が得点です。表示の相場は止まった時点の値で、このあと全員が手放した分だけ動きます。${myRank?`「本音」の札を残すと+${C.hon}点。`:''}</p>`}
         else h=wait(me===V.j?'選びました':`${esc(ch.name)}さんが選んでいます`,`残り<span data-live>${V.left}</span>秒`);
       }else if(ph==='final-reveal'){
         const ch=V.players[V.j],b=V.lastBets.find(x=>x.i===me);
         h=`${mk(6,'最後の二択')}<h1>${esc(ch.name)}さんは「${CARDS[V.keep].n}」を残した</h1><div class="hand big"><div>${card(V.keep)}</div></div>
-          <p style="text-align:center;margin-top:16px">${me===V.j?`手放したのは「${CARDS[V.drop].n}」。`:b?(b.w?`<span class="up">賭けに勝ち、+${C.bet}点</span>`:`賭けに負け、−${C.bet}点`):'賭けていません。'}</p>${ctl('next',V.j<V.players.length-1?'次の人へ':'最終相場を出す')}${nextNote}`;
+          <p style="text-align:center;margin-top:16px">${me===V.j?`手放したのは「${CARDS[V.drop].n}」。${V.gHonest?`本音どおり +${C.hon}点。`:''}`:b?(b.w?`<span class="up">賭けに勝ち、+${C.bet}点</span>`:`賭けに負け、−${C.bet}点`):'賭けていません。'}</p>${ctl('next',V.j<V.players.length-1?'次の人へ':'最終相場を出す')}${nextNote}`;
       }else if(ph==='results'){
         const R=V.results,pos=R.rows.findIndex(x=>x.i===me)+1,row=R.rows[pos-1];
-        h=`${mk(7,'終局')}<h1>${pos}位、<span class="num">${row.t}</span>点</h1><p class="sub">予想 ${row.a}点、最後の一枚 ${row.b}点、賭け ${sgn(row.bet)}点</p>${certHTML(R.certs[me],M.name)}${TEST?`<h2>ほかの人の証券</h2>${R.certs.map((d,i)=>i===me?'':certHTML(d,V.players[i].name)).join('')}`:'<p class="sub">ほかの人の証券は、テレビに出ています。</p>'}${ctl('again','同じ顔ぶれでもう一度')}`;
+        h=`${mk(7,'終局')}<h1>${pos}位、<span class="num">${row.t}</span>点</h1><p class="sub">予想 ${row.a}点、本音 ${row.h}点、最後の一枚 ${row.b}点、賭け ${sgn(row.bet)}点</p>${certHTML(R.certs[me],M.name)}${TEST?`<h2>ほかの人の証券</h2>${R.certs.map((d,i)=>i===me?'':certHTML(d,V.players[i].name)).join('')}`:'<p class="sub">ほかの人の証券は、テレビに出ています。</p>'}${ctl('again','同じ顔ぶれでもう一度')}`;
       }
     }
     paint(h,V?V.phase+'|'+V.round+'|'+(V.j??''):'join');
@@ -1745,7 +1768,7 @@ function playerMain(code,opt={}){
     if(a==='join'){const n=document.getElementById('nm').value.trim();if(!n){document.getElementById('nm').focus();return}myName=n;try{localStorage.setItem('saigo-name',n)}catch(e){}joined=true;send({type:'join',name:n});return}
     if(a==='rk'){if(!sel.rank.includes(c))sel.rank.push(c);render();return}
     if(a==='rkreset'){sel.rank=[];render();return}
-    if(a==='rkok'){sel.sent=true;send({type:'rank',order:sel.rank})}
+    if(a==='rkok'){sel.sent=true;myRank=sel.rank.slice();try{if(!TEST)sessionStorage.setItem('saigo-rank',JSON.stringify(myRank))}catch(e){}send({type:'rank',order:sel.rank})}
     if(a==='pd'){sel.d=c;render();return}
     if(a==='pg'){sel.g=c;render();return}
     if(a==='pok'){sel.sent={pick:sel.d,guess:sel.g};send({type:'turn',pick:sel.d,guess:sel.g})}
