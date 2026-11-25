@@ -19,7 +19,7 @@
 html,body{margin:0;background:var(--bg);color:var(--ink)}
 body{position:relative}
 body{font:16px/1.85 "Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;letter-spacing:.04em;overflow-x:clip;-webkit-font-smoothing:antialiased}
-main{max-width:600px;margin:0 auto;padding:32px 20px 72px}
+main{max-width:600px;margin:0 auto;padding:18px 20px 72px}
 h1.wb{word-break:keep-all;overflow-wrap:anywhere}
 h1{font:600 30px/1.35 "Zen Old Mincho",serif;letter-spacing:.08em;margin:0 0 8px;text-wrap:balance}
 h2{font:600 18px/1.5 "Zen Old Mincho",serif;letter-spacing:.1em;margin:36px 0 14px}
@@ -44,7 +44,7 @@ p{margin:0 0 12px}
 .hint{font-size:14px;line-height:1.75;margin:14px 0 0;padding:10px 12px;border-left:2px solid var(--ink);background:var(--card)}
 .hint.off{border-left-color:var(--line);color:var(--sub)}
 .stand tr.me td{font-weight:700}
-.mine{font-size:14px;color:var(--sub);margin:0 0 14px;padding-right:96px}.mine b{font-size:18px;color:var(--ink);margin:0 2px}
+.mine{font-size:14px;color:var(--sub);margin:0 0 14px}.mine b{font-size:18px;color:var(--ink);margin:0 2px}
 .dist{list-style:none;padding:0;margin:8px 0 0}
 .dist li{display:grid;grid-template-columns:34px 6.4em minmax(0,1fr) 2.5em;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
 .dist li svg{width:30px;height:30px;display:block}.dist .dn{font:600 16px/1.3 "Zen Old Mincho",serif}.dist .who2{font-size:14px;color:var(--sub)}.dist .ct{text-align:right;font-weight:700}
@@ -149,9 +149,11 @@ label{display:block;font-size:14px;color:var(--sub);margin:18px 0 6px}
 .qr svg{display:block;width:220px;height:220px}
 .roomcode{font:900 44px/1.1 "Zen Old Mincho",serif;letter-spacing:.3em;margin:6px 0}
 .mode{font-size:13px;color:var(--sub);border:1px solid var(--line);border-radius:6px;padding:8px 12px;margin-top:20px}
-.snd{position:absolute;top:14px;right:14px;z-index:5;min-height:36px;padding:0 14px;border:1px solid var(--line);border-radius:18px;background:var(--bg);color:var(--sub);font:inherit;font-size:13px;cursor:pointer}
+.topbar{display:flex;justify-content:space-between;gap:12px;max-width:600px;margin:0 auto;padding:12px 16px 0}
+.tb,.snd{min-height:36px;padding:0 14px;border:1px solid var(--line);border-radius:18px;background:var(--bg);color:var(--sub);font:inherit;font-size:13px;cursor:pointer}
+.tb[hidden]{display:none}.topbar .tb[hidden]+.snd{margin-left:auto}
 .snd.need{color:var(--ink);border-color:var(--ink)}
-.tv .snd{position:fixed;top:auto;bottom:20px;right:24px;font-size:15px;min-height:40px}
+.tv .topbar{position:fixed;left:0;right:0;bottom:16px;max-width:none;padding:0 24px;pointer-events:none;z-index:5}.tv .topbar button{pointer-events:auto;font-size:15px;min-height:40px}
 .guide{counter-reset:g;list-style:none;padding:0;margin:0 0 18px;border:1px solid var(--line);background:var(--card);border-radius:6px}
 .guide li{counter-increment:g;position:relative;padding:10px 12px 10px 2.6em;border-bottom:1px solid var(--line);font-size:15px;line-height:1.7}.guide li:last-child{border-bottom:0}
 .guide li::before{content:counter(g);position:absolute;left:12px;top:10px;font:600 16px/1.7 "Zen Old Mincho",serif}
@@ -160,6 +162,24 @@ label{display:block;font-size:14px;color:var(--sub);margin:18px 0 6px}
 .cdv{font-variant-numeric:tabular-nums}.cdv.low{color:var(--up)}
 .mine .mcd{margin-left:14px}.mine .mcd .cdv{font-weight:700;color:var(--ink)}.mine .mcd .cdv.low{color:var(--up)}
 .tv .timeleft{font-size:18px}.tv .timeleft .cdv{font-size:26px}
+.dlg{position:fixed;inset:0;background:color-mix(in srgb,var(--ink) 35%,transparent);display:grid;place-items:center;padding:20px;z-index:20}
+.dlg .box{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:22px 20px 18px;max-width:420px;width:100%}
+.dlg .box p{margin:0 0 6px}.dlg .row{flex-direction:column-reverse;align-items:stretch;margin-top:18px}.dlg .go,.dlg .plain{width:100%;margin:0;min-height:48px}
+/* 解説ページ */
+.gnav{display:flex;flex-wrap:wrap;gap:6px 8px;margin:8px 0 0;padding:0;list-style:none}
+.gnav a{display:inline-block;padding:6px 12px;border:1px solid var(--line);border-radius:16px;color:var(--ink);text-decoration:none;font-size:14px}
+.axtab td:first-child{white-space:nowrap;font-weight:600;padding-right:14px}
+.ty .sec{font-size:12px;color:var(--sub);letter-spacing:.06em;margin:16px 0 6px}
+.axtab{width:100%;border-collapse:collapse;font-size:15px}.axtab th,.axtab td{padding:10px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.axtab th{font-size:13px;color:var(--sub);font-weight:400}
+.ty{border-top:1px solid var(--ink);padding:22px 0 26px;scroll-margin-top:16px}
+.ty:target{background:var(--card);box-shadow:0 0 0 12px var(--card)}
+.ty h3{font:600 24px/1.4 "Zen Old Mincho",serif;letter-spacing:.06em;margin:0 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px;padding:0;list-style:none}.chips li{font-size:13px;padding:2px 10px;border:1px solid var(--line);border-radius:12px}
+.ty .txt{font-size:15px;line-height:1.85;margin:0 0 10px}.ty .word{font:600 16px/1.7 "Zen Old Mincho",serif;margin:12px 0 0}
+.ty .match{font-size:14px;margin:10px 0 0}.ty .match a{color:var(--ink)}
+.cardlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px 20px;margin:12px 0 0}
+.cl{display:grid;grid-template-columns:72px minmax(0,1fr);gap:14px;align-items:start}.cl h4{font:600 17px/1.4 "Zen Old Mincho",serif;margin:0 0 4px}.cl p{font-size:14px;line-height:1.75;margin:0}.cl .care2{color:var(--sub);margin-top:4px}
+.more{display:inline-block;margin-top:14px;font-size:14px;color:var(--ink)}
 .foot{margin-top:40px;font-size:13px;color:var(--sub)}
 /* テレビ */
 .tv main{max-width:1440px;padding:clamp(24px,3vw,48px) clamp(20px,4vw,64px) 64px}
@@ -188,7 +208,7 @@ label{display:block;font-size:14px;color:var(--sub);margin:18px 0 6px}
 </style>
 </head>
 <body>
-<button id="snd" class="snd" type="button" aria-live="polite"></button>
+<div class="topbar"><button id="home" class="tb" type="button">ホーム</button><button id="snd" class="snd" type="button" aria-live="polite"></button></div>
 <main id="app"></main>
 <script>
 /* ===== 設定 =====
@@ -1583,7 +1603,7 @@ const ALL=[
   art:c=>`<g ${L}><path d="M13 10l17 11v30L13 40z" ${P0}/><path d="M47 10L30 21v30l17-11z" fill="${c}"/></g>`}];
 let CARDS=ALL.slice(0,7);
 const setDeck=ids=>{if(Array.isArray(ids)&&ids.length===7)CARDS=ids.map(i=>ALL[i])};
-const C={start:100,inc:20,dec:20,floor:10,a:20,bet:10,hon:10,foolAll:20,foolHalf:10,pen:10,rounds:5,evAt:[2,4],min:3,max:7,turnSec:180,rankSec:180,finalSec:15,revDelay:2600};
+const C={start:100,inc:20,dec:20,floor:10,a:20,bet:10,hon:10,foolAll:20,foolHalf:10,pen:10,rounds:5,evAt:[2,4],min:3,max:7,turnSec:300,rankSec:300,finalSec:30,revDelay:2600};
 const kan=['〇','一','二','三','四','五','六','七'];
 /* 16タイプ。並びは [本音/損得][鉄仮面/顔に出る][我が道/協調][観察/直感] の組み合わせ順 */
 const POLES=[['本音','損得'],['鉄仮面','顔に出る'],['我が道','協調'],['観察','直感']];
@@ -1666,12 +1686,21 @@ const certHTML=(d,holder,PL)=>{const T=TYPES[d.ty],CD=CARDS[d.card],sw=d.pct.map
   <p class="sec">相性</p><div class="pair">${PL&&d.like!==null?`<div>似た者同士<b>${esc(PL[d.like].name)}さん</b></div>`:''}${PL&&d.unlike!==null?`<div>正反対<b>${esc(PL[d.unlike].name)}さん</b></div>`:''}<div>相性のいいタイプ<b>${TYPES[MATCH(d.ty)].n}</b></div></div>
   <p class="sec">取扱注意</p><p class="care">${CD.care}</p>
   <p class="sec">ひとこと</p><p class="word">${T.word}</p>
+  <a class="more" href="?guide=1#t${d.ty}" target="_blank" rel="noopener">「${T.n}」の解説を読む</a>
   <p class="ft">${d.cpu?'CPUの順位は自動で決めています':d.autoRank?'順位は時間切れのため自動で決めました':'今夜限り有効'}</p><span class="seal" aria-hidden="true">本性<br>確認</span></div></article>`};
 function qrSVG(text){try{const q=new QRLib.QRCode(-1,QRLib.L.M);q.addData(text);q.make();const n=q.getModuleCount();let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))d+=`M${c} ${r}h1v1h-1z`;return`<svg viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges" role="img" aria-label="参加用QRコード"><path d="${d}" fill="#111"/></svg>`}catch(e){return''}}
 const sndBtn=document.getElementById('snd');
 const sndLabel=()=>{const on=SFX.on,rd=SFX.ready;sndBtn.textContent=!on?'音なし':rd?'音あり':'音を出す';sndBtn.classList.toggle('need',on&&!rd);sndBtn.setAttribute('aria-label',!on?'効果音は切っています。押すと鳴らします':rd?'効果音を鳴らしています。押すと切ります':'押すと効果音を鳴らせます')};
 sndBtn.addEventListener('click',()=>{if(SFX.on&&!SFX.ready){sndLabel();return}SFX.toggle()});
 SFX.onChange(sndLabel);sndLabel();
+/* ホームへ戻る。遊んでいる途中なら、確認してから戻る */
+const homeBtn=document.getElementById('home');let homeMsg=()=>null;
+const goHome=()=>{const u=new URL(location.href);u.search='';u.hash='';location.href=u.toString()};
+homeBtn.addEventListener('click',()=>{const msg=homeMsg();if(!msg){goHome();return}
+  const d=document.createElement('div');d.className='dlg';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');
+  d.innerHTML=`<div class="box"><p><b>ホームに戻りますか?</b></p><p class="sub">${msg}</p><div class="row"><button class="plain" data-x="no">ゲームを続ける</button><button class="go" data-x="yes">ホームに戻る</button></div></div>`;
+  d.addEventListener('click',e=>{const b=e.target.closest('[data-x]');if(e.target===d||b&&b.dataset.x==='no')d.remove();else if(b&&b.dataset.x==='yes')goHome()});
+  document.body.appendChild(d);d.querySelector('[data-x=no]').focus()});
 let lastKey='',lastNorm='';
 /* 同じ画面のままなら描き直さない(押し損じ防止)。残り時間は下の時計が直接書き換える */
 function paint(h,key){const norm=h.replace(/data-cd="\d+">[^<]*</g,'');if(key===lastKey&&norm===lastNorm)return;
@@ -1897,6 +1926,7 @@ function hostMain(opt={}){
     if(ph==='results'){V.results=S.results;V.frozen=S.frozen;V.cer=S.cer}
     return V;
   }
+  if(!EMB)homeMsg=()=>['lobby','results'].includes(S.phase)?null:'テレビ側を離れると、遊んでいる全員の進行が止まります。同じURLで開き直せば、続きから再開できます。';
   function pub(){const V=view();window.__hostV=V;window.__SFX=SFX;if(net)net.publish(V);if(!EMB){try{localStorage.setItem(SAVE,JSON.stringify(Object.assign({},S,{savedAt:Date.now()})))}catch(e){}render(V)}}
   let cue=null;
   /* 場面が変わったとき・誰かが決めたときの音(テレビ側) */
@@ -1990,6 +2020,7 @@ function playerMain(code,opt={}){
   const rkBadge=(c,hon)=>myRank?`<span class="rk${hon?' hon':''}">${myRank.indexOf(c)+1}位${hon?'・本音':''}</span>`:'';
   const myCard=(c,attr,pressed,price,hon)=>pickBtn(c,attr,pressed,'',price).replace('<span class="in"></span>','<span class="in"></span>'+rkBadge(c,hon));
   const send=a=>{if(net)net.send(Object.assign({pid},a))};
+  homeMsg=()=>!V||['lobby','results'].includes(V.phase)||!V.players.some(p=>p.id===pid)?null:TEST?'ひとりで試している途中です。ホームに戻ると、このゲームは終わります。':'途中で抜けると、その間の手番は時間切れになり、減点されます。同じURLで開き直せば戻れます。';
   function render(){
     let h='';const me=V?V.players.findIndex(p=>p.id===pid):-1,M=me>=0?V.players[me]:null,LEAD=!!V&&V.leader===pid;
     const ctl=(op,label)=>LEAD?`<button class="go" data-act="ctl" data-op="${op}">${label}</button>`:'';
@@ -2109,21 +2140,53 @@ function playerMain(code,opt={}){
     playerCues(s);V=s;window.__pV=V;if(joined||V.players.some(p=>p.id===pid))joined=true;render()})}).catch(()=>{app.insertAdjacentHTML('afterbegin','<p class="mode">通信の準備に失敗しました。通信環境を確認して、ページを読み込み直してください。</p>')});
 }
 
+/* ================= 診断の解説 ================= */
+function guidePage(){
+  CARDS=ALL;
+  const poles=i=>[0,1,2,3].map(k=>POLES[k][(i>>(3-k))&1]);
+  const sw=i=>[0,1,2,3].map(k=>POLE_SW[k][(i>>(3-k))&1]);
+  const order=[...TYPES.keys()];
+  const H=`${mk(null,'診断の解説')}<h1 class="wb">16のタイプと、<wbr>最後の一枚</h1>
+  <p>本性証券のタイプは、ゲーム中の行動を4つの軸で判定し、その組み合わせで16通りに分かれます。どれも、その夜の遊び方から見えた一面です。</p>
+  <h2>4つの軸</h2><table class="axtab"><tr><th>軸</th><th>判定の材料</th></tr>
+  <tr><td>本音 ⇔ 損得</td><td>はじめに並べた順位どおりに手放した回数。6回のうち半分以上なら本音</td></tr>
+  <tr><td>鉄仮面 ⇔ 顔に出る</td><td>注目されたときや最後の二択で、人に手の内を読まれた割合。半分以下なら鉄仮面</td></tr>
+  <tr><td>我が道 ⇔ 協調</td><td>その巡でいちばん多く手放された札と、同じ札を手放した回数。5回のうち2回以下なら我が道</td></tr>
+  <tr><td>観察 ⇔ 直感</td><td>注目の人が手放す札を当てた割合。4割以上なら観察</td></tr></table>
+  <h2>16のタイプ</h2><ul class="gnav">${order.map(i=>`<li><a href="#t${i}">${TYPES[i].n}</a></li>`).join('')}</ul>
+  ${order.map(i=>{const T=TYPES[i],w=sw(i);return`<article class="ty" id="t${i}"><h3>${T.n}</h3><ul class="chips">${poles(i).map(p=>`<li>${p}</li>`).join('')}</ul>
+    <p class="txt">${T.sum}</p><p class="sec">飲み会でのあなた</p><p class="txt">${T.party}</p>
+    <div class="sw"><div><p class="sec">強み</p><ul>${w.map(x=>`<li>${x[0]}</li>`).join('')}</ul></div><div><p class="sec">気をつけたいところ</p><ul>${w.map(x=>`<li>${x[1]}</li>`).join('')}</ul></div></div>
+    <p class="match">相性のいいタイプ:<a href="#t${MATCH(i)}">${TYPES[MATCH(i)].n}</a></p><p class="word">${T.word}</p></article>`}).join('')}
+  <h2>最後の一枚(大事にしているもの)</h2><p class="sub">最後まで手放さなかった札が、証券の「大事にしているもの」になります。札は21枚あり、1回のゲームでは7枚を使います。</p>
+  <div class="cardlist">${ALL.map((c,i)=>`<div class="cl"><div>${card(i)}</div><div><h4>${c.n}</h4><p>${c.pro}</p><p class="care2">取扱注意:${c.care}</p></div></div>`).join('')}</div>
+  <p class="foot">判定の基準は、遊んだ結果を見て調整することがあります。</p>`;
+  app.innerHTML=`<div class="screen">${H}</div>`;
+  if(location.hash){const el=document.getElementById(location.hash.slice(1));if(el)setTimeout(()=>el.scrollIntoView(),50)}
+}
+
 /* ================= 入口 ================= */
 function landing(){
-  const go=u=>{location.href=u};
+  const go=u=>{location.href=u};homeBtn.hidden=true;
+  /* 途中のゲームがテレビ側に保存されていれば、続きから開けるようにする */
+  let resume=null;try{let best=0;for(let k=0;k<localStorage.length;k++){const key=localStorage.key(k);if(!key.startsWith('saigo-host-'))continue;const sv=JSON.parse(localStorage.getItem(key));if(sv&&!['lobby','results'].includes(sv.phase)&&Date.now()-sv.savedAt<6*3600e3&&sv.savedAt>best){best=sv.savedAt;resume=sv.code}}}catch(e){}
   app.innerHTML=`<div class="screen"><div class="fan" aria-hidden="true">${CARDS.map((c,i)=>card(i)).join('')}</div><h1>最後の一枚</h1><p class="sub">7枚の価値観を1枚ずつ手放し、最後に残った1枚で本性を診断します。3〜7人で遊べます。</p>
   <button class="go" data-act="host">テレビで部屋を作る</button>
   <h2>スマホで参加</h2><label for="cd">部屋コード(4文字)</label><input id="cd" class="field code" maxlength="4" autocomplete="off" autocapitalize="characters"><button class="plain" data-act="join" style="margin-top:12px">参加する</button>
-  <h2>ひとりで試す</h2><p class="sub">CPUを相手に、テレビも通信も使わずに遊べます。</p><button class="plain" data-act="test">CPUと遊ぶ</button>${modeNote()}</div>`;
+  ${resume?`<p style="margin-top:14px"><button class="plain" data-act="resume">テレビで続きから(部屋 ${esc(resume)})</button></p>`:''}
+  <h2>ひとりで試す</h2><p class="sub">CPUを相手に、テレビも通信も使わずに遊べます。</p><button class="plain" data-act="test">CPUと遊ぶ</button>
+  <h2>診断の解説</h2><p class="sub">16のタイプと、最後の一枚になる21枚の札の意味を読めます。</p><button class="plain" data-act="guide">解説を読む</button>${modeNote()}</div>`;
   app.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const u=new URL(location.href);u.search='';
     if(b.dataset.act==='host'){u.searchParams.set('host','new');go(u)}
     else if(b.dataset.act==='test'){u.searchParams.set('test','1');go(u)}
+    else if(b.dataset.act==='guide'){u.searchParams.set('guide','1');go(u)}
+    else if(b.dataset.act==='resume'){u.searchParams.set('host',resume);if(params.get('local')==='1')u.searchParams.set('local','1');go(u)}
     else{const v=document.getElementById('cd').value.trim().toUpperCase();if(v.length!==4){document.getElementById('cd').focus();return}u.searchParams.set('room',v);go(u)}});
 }
 const fanFix=()=>document.querySelectorAll('.fan .cd').forEach((el,i)=>{el.style.transform=`rotate(${(i-3)*11}deg)`});
 new MutationObserver(fanFix).observe(app,{childList:true,subtree:true});
-if(params.get('test')){const mem=memTransport();hostMain({mem});playerMain('TEST',{mem})}
+if(params.get('guide')){guidePage()}
+else if(params.get('test')){const mem=memTransport();hostMain({mem});playerMain('TEST',{mem})}
 else if(params.get('host'))hostMain();else if(params.get('room'))playerMain(params.get('room').toUpperCase().slice(0,4));else landing();
 }
 
