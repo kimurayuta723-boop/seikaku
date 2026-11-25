@@ -24,7 +24,8 @@ h2{font:600 18px/1.5 "Zen Old Mincho",serif;letter-spacing:.1em;margin:36px 0 14
 p{margin:0 0 12px}
 .sub{color:var(--sub);font-size:14px;line-height:1.75}
 .num{font-variant-numeric:tabular-nums;white-space:nowrap}
-.mark{font:900 13px/1 "Zen Old Mincho",serif;letter-spacing:.3em;color:var(--sub);margin-bottom:14px}
+.mark{display:flex;align-items:center;gap:14px;font-size:14px;color:var(--sub);margin:0 0 12px}
+.prog{display:flex;gap:4px}.prog i{display:block;width:16px;height:4px;border-radius:2px;background:var(--line)}.prog i.done{background:var(--sub)}.prog i.now{background:var(--ink)}
 .fan{position:relative;height:230px;margin:8px 0 28px}
 .fan .cd{position:absolute;left:50%;bottom:0;width:92px;margin-left:-46px;transform-origin:50% 140%}
 .cd{display:flex;flex-direction:column;align-items:center;aspect-ratio:5/7;background:var(--card);border:1px solid var(--line);border-radius:7px;padding:7px 4px 9px;position:relative;color:var(--ink);text-align:center;overflow:hidden}
@@ -85,11 +86,16 @@ label{display:block;font-size:14px;color:var(--sub);margin:18px 0 6px}
 .cert .no{font-size:13px;color:var(--sub)}
 .cert .body{display:grid;grid-template-columns:104px minmax(0,1fr);gap:18px;align-items:center}
 .cert .holder{font-size:14px;color:var(--sub);margin:0}
-.cert .type{font:600 25px/1.35 "Zen Old Mincho",serif;letter-spacing:.06em;margin:2px 0 6px}
+.cert .mod{font:600 15px/1.4 "Zen Old Mincho",serif;letter-spacing:.06em;margin:6px 0 0}
+.cert .type{font:600 25px/1.35 "Zen Old Mincho",serif;letter-spacing:.06em;margin:0 0 6px;text-wrap:balance;word-break:keep-all;overflow-wrap:anywhere}
+.cert .story{font:600 16px/1.8 "Zen Old Mincho",serif;letter-spacing:.04em;margin:18px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+.cert .path{display:flex;align-items:center;gap:4px;margin:14px 0 2px}
+.cert .path span{display:block;width:30px;height:30px;opacity:.5}.cert .path svg{width:100%;height:100%;display:block}
+.cert .path .last{opacity:1;width:38px;height:38px;margin-left:8px;padding-left:10px;border-left:1px solid var(--line);box-sizing:content-box}
+.cert .pcap{font-size:12px;color:var(--sub);margin:0}
+.cert .tags{font-size:14px;margin:12px 0 0}
 .cert .face{font-size:14px;margin:0}
 .cert .face b{font:600 22px/1 "Zen Old Mincho",serif;margin-left:6px}
-.cert dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 18px;margin:18px 0 0;font-size:15px;line-height:1.7}
-.cert dt{color:var(--sub);font-size:14px}.cert dd{margin:0}
 .cert .seal{position:absolute;right:16px;bottom:14px;width:46px;height:46px;border:1.5px solid var(--up);border-radius:50%;color:var(--up);font:900 12px/1.15 "Zen Old Mincho",serif;display:grid;place-items:center;text-align:center;transform:rotate(-12deg);opacity:.85}
 .cert .ft{margin-top:16px;font-size:12px;color:var(--sub);padding-right:64px;min-height:40px;display:flex;align-items:flex-end}
 .qr{background:#fff;padding:14px;border-radius:8px;width:max-content;max-width:100%;border:1px solid var(--line)}
@@ -113,7 +119,7 @@ label{display:block;font-size:14px;color:var(--sub);margin:18px 0 6px}
 .tv .list{font-size:19px}.tv .list th{font-size:15px}
 .tv .hand.big{grid-template-columns:repeat(2,minmax(0,210px))}
 .tv .hand.big .cd .nm{font-size:26px}.tv .hand.big .cd .pz{font-size:17px}
-.tv .timer{font-size:96px}
+.tv .timer{font-size:96px}.tv .mark{font-size:16px}.tv .prog i{width:24px;height:5px}
 .tv .go{max-width:420px}
 .certs{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:24px}
 .certs .cert{margin:0}
@@ -1418,6 +1424,10 @@ const EVENTS=[
  {n:'実家に帰省',e:{3:40}},{n:'バブル崩壊',e:'crash'}];
 const C={start:100,inc:20,dec:20,floor:10,a:20,bet:10,rounds:5,evAt:[2,4],min:3,max:7,choose:10};
 const kan=['〇','一','二','三','四','五','六','七'];
+/* 最初に手放した札による肩書き(診断の前半) */
+const MOD=['金離れのいい','色恋に冷めた','群れない','巣立った','肩の力が抜けた','縛られたがりの','食に頓着しない'];
+/* 進み具合:5巡+最後の二択 を6本の線で示す。step 0=開始前、7=終局 */
+const mk=(step,label)=>`<div class="mark">${step===null?'':`<span class="prog" aria-hidden="true">${[1,2,3,4,5,6].map(k=>`<i class="${k<step?'done':k===step?'now':''}"></i>`).join('')}</span>`}<span>${label}</span></div>`;
 
 /* ---------- 札の絵 ---------- */
 const L='stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"';
@@ -1439,7 +1449,8 @@ const app=document.getElementById('app');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const rnd=()=>Math.random();
 const gauss=()=>{let u=1-rnd(),v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
-const evText=ev=>ev.e==='crash'?'その時点で一番高い札が −50':Object.entries(ev.e).map(([c,d])=>`${CARDS[c].n} ${d>0?'+':'−'}${Math.abs(d)}`).join('、');
+const evText=ev=>ev.e==='crash'?'その時点でいちばん高い札が −50':Object.entries(ev.e).map(([c,d])=>`${CARDS[c].n} ${d>0?'+':'−'}${Math.abs(d)}`).join('、');
+const sgn=n=>n>0?'+'+n:n<0?'−'+(-n):'0';
 const cols=n=>n===7?4:n===6?3:n;
 const spark=(hist,i,W=72,H=24)=>{const all=hist.flat(),lo=Math.min(...all),hi=Math.max(...all),n=hist.length;
   if(n<2)return`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><line x1="2" y1="${H/2}" x2="${W-2}" y2="${H/2}" stroke="var(--line)"/></svg>`;
@@ -1450,9 +1461,12 @@ const pubBoard=(V,cap)=>board(V.prices,V.hist[V.hist.length-2]||V.prices,V.hist,
 const pickBtn=(c,attr,pressed,extra='',price)=>`<button class="pick" ${attr} aria-pressed="${pressed}" aria-label="${CARDS[c].n}">${extra}${card(c,price)}</button>`;
 const certHTML=(d,holder)=>`<article class="cert"><div class="fr">
   <div class="hd"><span class="tt">本性証券</span><span class="no num">第${kan[d.no]}号</span></div>
-  <div class="body"><div>${card(d.card)}</div><div><p class="holder">${esc(holder)}殿</p><p class="type">${CARDS[d.card].t}</p><p class="face">額面<b class="num">${d.face}</b></p></div></div>
-  <dl><dt>順位とのズレ</dt><dd>${d.greedy}回、${d.calc?'計算高い':'本音一筋'}</dd><dt>読まれ方</dt><dd><span class="num">${d.targeted}回中${d.hits}回</span>的中され、${d.read?'全部読まれている':'つかみどころがない'}</dd><dt>決め手</dt><dd>${esc(d.key)}</dd></dl>
-  <p class="ft">${d.cpu?'CPUの順位は自動で決めています。':'今夜限り有効'}</p><span class="seal" aria-hidden="true">本性<br>確認</span></div></article>`;
+  <div class="body"><div>${card(d.card)}</div><div><p class="holder">${esc(holder)}殿</p><p class="mod">${MOD[d.first]}</p><p class="type">${CARDS[d.card].t}</p><p class="face">額面<b class="num">${d.face}</b></p></div></div>
+  <p class="story">${esc(d.story)}</p>
+  <div class="path" role="img" aria-label="手放した順:${d.path.map(c=>CARDS[c].n).join('、')}。残したのは${CARDS[d.card].n}">${d.path.map(c=>`<span>${art(c)}</span>`).join('')}<span class="last">${art(d.card)}</span></div>
+  <p class="pcap">左から手放した順。右端が最後の一枚</p>
+  <p class="tags">${d.tags.join('、')}</p>
+  <p class="ft">${d.cpu?'CPUの順位は自動で決めています':'今夜限り有効'}</p><span class="seal" aria-hidden="true">本性<br>確認</span></div></article>`;
 function qrSVG(text){try{const q=new QRLib.QRCode(-1,QRLib.L.M);q.addData(text);q.make();const n=q.getModuleCount();let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))d+=`M${c} ${r}h1v1h-1z`;return`<svg viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges" role="img" aria-label="参加用QRコード"><path d="${d}" fill="#111"/></svg>`}catch(e){return''}}
 let lastKey='',lastNorm='';
 /* 同じ画面のままなら描き直さず、data-live の数字だけ書き換える(押し損じ防止) */
@@ -1462,9 +1476,12 @@ function paint(h,key){const live=[...h.matchAll(/data-live>([^<]*)</g)].map(m=>m
 
 /* ---------- 通信 ---------- */
 const params=new URLSearchParams(location.search);
-const LOCAL=!FIREBASE_CONFIG;
+const LOCAL=!FIREBASE_CONFIG||params.get('local')==='1';
 function loadScript(src){return new Promise((ok,ng)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=ng;document.head.appendChild(s)})}
-async function connect(room){
+function memTransport(){let onA=null,onS=null,last=null;const cp=x=>JSON.parse(JSON.stringify(x));
+  return{publish:st=>{last=cp(st);if(onS){const v=last;setTimeout(()=>onS(v))}},onAction:f=>{onA=f},send:a=>{const v=cp(a);setTimeout(()=>onA&&onA(v))},onState:f=>{onS=f;if(last)setTimeout(()=>f(last))}}}
+async function connect(room,mem){
+  if(mem)return mem;
   if(LOCAL){
     const ch=new BroadcastChannel('saigo-ichimai-'+room);let last=null,onA=null,onS=null;
     ch.onmessage=e=>{const m=e.data;if(m.t==='action'&&onA)onA(m.a);if(m.t==='hello'&&last)ch.postMessage({t:'state',s:last});if(m.t==='state'&&onS)onS(m.s)};
@@ -1481,14 +1498,15 @@ async function connect(room){
     send:a=>base.child('actions').push(a),
     onState:f=>base.child('state').on('value',snap=>{const v=snap.val();if(v&&v.json)f(JSON.parse(v.json))})};
 }
-const modeNote=()=>LOCAL?`<p class="mode">お試しモードです。このパソコンの別のタブからだけ参加できます。スマホから参加するには、手順書に沿って Firebase を設定してください。</p>`:'';
+const modeNote=()=>LOCAL?`<p class="mode">お試しモードで動いています。同じブラウザの別のタブからしか参加できません。スマホで遊ぶには、手順書に沿って Firebase を設定してください。</p>`:'';
 
 /* ================= テレビ(進行役) ================= */
-function hostMain(){
-  document.documentElement.classList.add('tv');
-  const A='ACDEFGHJKLMNPQRTUVWXY';const code=params.get('host')&&params.get('host').length===4?params.get('host').toUpperCase():Array.from({length:4},()=>A[Math.floor(rnd()*A.length)]).join('');
-  if(params.get('host')!==code){const u=new URL(location.href);u.searchParams.set('host',code);history.replaceState(null,'',u)}
-  const joinURL=(()=>{const u=new URL(location.href);u.search='';u.searchParams.set('room',code);return u.toString()})();
+function hostMain(opt={}){
+  const EMB=!!opt.mem;
+  if(!EMB)document.documentElement.classList.add('tv');
+  const A='ACDEFGHJKLMNPQRTUVWXY';const code=EMB?'TEST':params.get('host')&&params.get('host').length===4?params.get('host').toUpperCase():Array.from({length:4},()=>A[Math.floor(rnd()*A.length)]).join('');
+  if(!EMB&&params.get('host')!==code){const u=new URL(location.href);u.searchParams.set('host',code);history.replaceState(null,'',u)}
+  const joinURL=(()=>{const u=new URL(location.href);u.search='';u.searchParams.set('room',code);if(params.get('local')==='1')u.searchParams.set('local','1');return u.toString()})();
   let net=null,tick=null,cpuT=null;
   const S={code,phase:'lobby',players:[],round:0,prices:Array(7).fill(C.start),hist:[Array(7).fill(C.start)]};
   const P=()=>S.players;
@@ -1499,7 +1517,7 @@ function hostMain(){
   const cpuDiscard=(p,ex)=>{let b=null,bu=1e9;for(const c of p.hand){const u=(1-p.g)*p.v[c]+p.g*ex[c]/200+gauss()*.03;if(u<bu){bu=u;b=c}}return b};
   const cpuGuess=(t,ex,keep)=>{const t0=P()[t],base=t0.cpu?t0.v:POP;let b=null,bu=keep?-1e9:1e9;for(const c of t0.hand){const u=.5*(base[c]+gauss()*.3)+.5*ex[c]/200;if(keep?u>bu:u<bu){bu=u;b=c}}return b};
   const newPlayer=(id,name,cpu)=>({id,name,cpu});
-  function resetPlayer(p){const v=POP.map(x=>x+gauss()*.3);Object.assign(p,{v,g:rnd(),rank:p.cpu?[...v.keys()].sort((a,b)=>v[b]-v[a]):[],hand:[0,1,2,3,4,5,6],disc:[],a:0,bet:0,hits:0,targeted:0,greedy:0,notes:[],pick:null,guess:null,hit:false,final:null,gdrop:null})}
+  function resetPlayer(p){const v=POP.map(x=>x+gauss()*.3);Object.assign(p,{v,g:rnd(),rank:p.cpu?[...v.keys()].sort((a,b)=>v[b]-v[a]):[],hand:[0,1,2,3,4,5,6],disc:[],maj:0,a:0,bet:0,hits:0,targeted:0,greedy:0,notes:[],pick:null,guess:null,hit:false,final:null,gdrop:null})}
   function startGame(){
     if(P().length<C.min)return;
     S.events=[...EVENTS].sort(()=>rnd()-.5).slice(0,2);S.round=0;S.prices=Array(7).fill(C.start);S.hist=[[...S.prices]];S.firedEv=null;S.results=null;
@@ -1521,6 +1539,8 @@ function hostMain(){
       const honest=[...p.hand].sort((a,b)=>p.rank.indexOf(b)-p.rank.indexOf(a))[0];
       if(p.pick!==honest){p.greedy++;p.notes.push({k:'greedy',r:S.round,c:p.pick,o:p.rank.indexOf(p.pick)+1})}
       if(S.prices[p.pick]===top)p.notes.push({k:'top',r:S.round,c:p.pick})});
+    const cnt=Array(7).fill(0);P().forEach(p=>cnt[p.pick]++);const mx=Math.max(...cnt);
+    if(mx>=2)P().forEach(p=>{if(cnt[p.pick]===mx)p.maj++});
     S.reveal=P().map((p,i)=>({pick:p.pick,guess:p.guess,hit:p.hit,target:targetOf(i)}));
     P().forEach(p=>{p.hand=p.hand.filter(c=>c!==p.pick);p.disc.push(p.pick)});
     updatePrices(P().map(p=>p.pick));S.phase='reveal';pub();
@@ -1551,25 +1571,55 @@ function hostMain(){
     P().forEach(p=>{if(S.frozen[p.final]===low)p.notes.push({k:'low',c:p.final});p.disc.push(p.gdrop)});
     updatePrices(P().map(p=>p.gdrop));
     const rows=P().map((p,i)=>({i,a:p.a,b:S.prices[p.final],bet:p.bet,t:p.a+S.prices[p.final]+p.bet})).sort((x,y)=>y.t-x.t||y.a-x.a);
-    const rd=r=>r===6?'最後の二択':'第'+kan[r]+'ラウンド';
-    const certs=P().map((p,i)=>{const c=CARDS[p.final],calc=p.greedy>=3,g=p.notes.find(n=>n.k==='greedy'),lo=p.notes.find(n=>n.k==='low'),tp=p.notes.find(n=>n.k==='top');
-      const key=calc&&g?`${rd(g.r)}で、自分で${g.o}位にした「${CARDS[g.c].n}」を手放した`:lo?`最安値になっても「${c.n}」を手放さなかった`:tp?`${rd(tp.r)}で、最高値だった「${CARDS[tp.c].n}」を手放した`:`最後の二択で「${CARDS[p.gdrop].n}」より「${c.n}」を選んだ`;
-      return{no:i+1,card:p.final,face:S.prices[p.final],greedy:p.greedy,calc,hits:p.hits,targeted:p.targeted,read:p.targeted&&p.hits/p.targeted>=.5,key,cpu:p.cpu}});
+    const rd=r=>r===6?'最後の二択':kan[r]+'巡目';
+    const hi=Math.max(...S.frozen);
+    const certs=P().map((p,i)=>{const c=CARDS[p.final],top=p.rank[0],lostAt=p.disc.indexOf(top)+1;
+      /* 道のり:当てはまる事実のうち、いちばん珍しいものを一文にする(並びはシミュレーションでの出現率が低い順) */
+      const sec=p.rank[1],lost2=p.disc.indexOf(sec)+1,mine=p.a/C.a,hi2=Math.max(...S.frozen),lo2=Math.min(...S.frozen),T=CARDS[top].n;
+      const facts=[
+        [lost2===1,`二番目に大事だと並べた「${CARDS[sec].n}」を、いきなり一巡目で手放した。`],
+        [lostAt>0&&lostAt<=2,`一番と決めたはずの「${T}」を、${rd(lostAt)}であっさり手放した。`],
+        [p.maj===0,`一度も、みんなと同じ札を手放さなかった。`],
+        [p.targeted>0&&p.hits===0,`${p.targeted}回とも、手の内を読ませなかった。`],
+        [mine===0,`人の手放す札を、一度も当てられなかった。`],
+        [lostAt===6,`最後の二択で、一番と決めた「${T}」を手放した。`],
+        [p.final===top&&p.greedy===0,`一番と決めた「${c.n}」を、一度も本音を曲げずに守り抜いた。`],
+        [lostAt>=3&&lostAt<=5,`一番と決めた「${T}」は、${rd(lostAt)}まで粘ってから手放した。`],
+        [S.frozen[p.final]===hi2,`最後に残したのは、その時いちばんの高値の札だった。`],
+        [S.frozen[p.final]===lo2,`最安値になった「${c.n}」を、最後まで手放さなかった。`],
+        [p.hits>=3,`${p.targeted}回のうち${p.hits}回、手の内を読まれた。`],
+        [mine>=3,`人の手放す札を、${C.rounds}回のうち${mine}回当てた。`],
+        [p.maj>=3,`${C.rounds}回のうち${p.maj}回、みんなと同じ札を手放した。`],
+        [p.final===top,`損得で揺れながらも、一番と決めた「${c.n}」だけは守った。`]];
+      const story=(facts.find(f=>f[0])||[0,`「${CARDS[p.gdrop].n}」と「${c.n}」で最後まで迷い、「${c.n}」を残した。`])[1];
+      const read=p.targeted&&p.hits/p.targeted>=.5;
+      const tags=[p.greedy>=3?'計算高い':'本音に正直',p.maj>=3?'周りに合わせる':p.maj===0?'我が道を行く':'周りを見て動く',read?'読まれやすい':'つかみどころがない'];
+      return{no:i+1,card:p.final,first:p.disc[0],path:p.disc.slice(),face:S.prices[p.final],story,tags,cpu:p.cpu}});
     S.results={rows,certs,tie:rows.filter(r=>r.t===rows[0].t).length>1};
     S.phase='results';pub();
   }
   function onAction(a){
     if(!a||typeof a!=='object')return;const i=P().findIndex(p=>p.id===a.pid),p=P()[i];
     if(a.type==='join'){const name=String(a.name||'').trim().slice(0,10)||'名無し';
-      if(p){p.name=name}else if(S.phase==='lobby'&&P().length<C.max)S.players.push(newPlayer(a.pid,name,false));pub();return}
+      if(p){p.name=name}else if(S.phase==='lobby'&&P().length<C.max){S.players.push(newPlayer(a.pid,name,false));if(EMB)while(P().length<4)addCpu()}pub();return}
     if(!p||p.cpu)return;
+    if(a.type==='ctl'){if(leaderId()===a.pid&&acts[a.op]){acts[a.op]()}return}
     if(a.type==='rank'&&S.phase==='ranking'&&p.rank.length<7){const o=a.order;if(Array.isArray(o)&&o.length===7&&new Set(o).size===7&&o.every(x=>x>=0&&x<7)){p.rank=o.map(Number);checkRanking()}}
     else if(a.type==='turn'&&S.phase==='turn'&&p.pick===null){const t=P()[targetOf(i)];if(p.hand.includes(a.pick)&&t.hand.includes(a.guess)){p.pick=a.pick;p.guess=a.guess;checkTurn()}}
     else if(a.type==='bet'&&S.phase==='final-bet'&&i!==S.gOrder&&!(i in S.bets)){const ch=P()[S.gOrder];S.bets[i]=ch.hand.includes(a.card)?a.card:null;checkBets()}
     else if(a.type==='keep'&&S.phase==='final-choose'&&i===S.gOrder&&p.hand.includes(a.card))decide(i,a.card);
   }
+  function leaderId(){const h=P().find(p=>!p.cpu);return h?h.id:null}
+  function addCpu(){if(S.phase!=='lobby'||P().length>=C.max)return;let n=1;while(P().some(p=>p.name==='CPU '+n))n++;S.players.push(newPlayer('cpu'+Date.now()+'-'+n,'CPU '+n,true))}
+  const acts={
+    cpu(){if(S.phase==='lobby'){addCpu();pub()}},
+    uncpu(){if(S.phase!=='lobby')return;const k=P().map(p=>p.cpu).lastIndexOf(true);if(k>=0){S.players.splice(k,1);pub()}},
+    start(){if(S.phase==='lobby')startGame()},
+    next(){if(S.phase==='reveal'){S.round<C.rounds?startRound():startFinal()}else if(S.phase==='final-reveal'){S.gOrder++;openBet()}},
+    closebets(){if(S.phase!=='final-bet')return;P().forEach((p,i)=>{if(i!==S.gOrder&&!(i in S.bets))S.bets[i]=null});checkBets()},
+    again(){if(S.phase==='results')startGame()}};
   function view(){
-    const ph=S.phase,V={code,phase:ph,round:S.round,prices:S.prices,hist:S.hist,
+    const ph=S.phase,V={code,phase:ph,leader:leaderId(),round:S.round,prices:S.prices,hist:S.hist,
       firedEv:S.firedEv&&ph==='turn'?{n:S.firedEv.n,t:evText(S.firedEv)}:null,
       nextEv:(()=>{if(ph!=='turn')return null;const nx=C.evAt.indexOf(S.round+1);return nx>=0?{n:S.events[nx].n,t:evText(S.events[nx])}:null})(),
       players:P().map((p,i)=>({id:p.id,name:p.name,cpu:p.cpu,hand:p.hand||[],rankDone:(p.rank||[]).length===7,submitted:p.pick!==null&&p.pick!==undefined,target:S.round?targetOf(i):null,a:p.a||0,bet:p.bet||0}))};
@@ -1579,112 +1629,119 @@ function hostMain(){
     if(ph==='results'){V.results=S.results;V.frozen=S.frozen}
     return V;
   }
-  function pub(){const V=view();window.__hostV=V;if(net)net.publish(V);render(V)}
+  function pub(){const V=view();window.__hostV=V;if(net)net.publish(V);if(!EMB)render(V)}
   function render(V){
     const ph=V.phase,PL=V.players;let h='';
-    const status=(fn)=>`<ul class="people">${PL.map((p,i)=>`<li><span>${esc(p.name)}${p.cpu?' <span class="sub">CPU</span>':''}</span><span class="st ${fn(p,i)[1]?'ok':''}">${fn(p,i)[0]}</span></li>`).join('')}</ul>`;
+    const status=(fn)=>`<ul class="people">${PL.map((p,i)=>`<li><span>${esc(p.name)}</span><span class="st ${fn(p,i)[1]?'ok':''}">${fn(p,i)[0]}</span></li>`).join('')}</ul>`;
+    const role=p=>p.id===V.leader?['進行役',1]:p.cpu?['CPU',0]:['',0];
+    const evNote=()=>V.nextEv?`<div class="notice">${kan[V.round+1]}巡目の前に<b>「${esc(V.nextEv.n)}」</b>が起きます。${esc(V.nextEv.t)}</div>`:'';
     if(ph==='lobby'){
-      h=`<div class="split"><div><div class="fan" aria-hidden="true">${CARDS.map((c,i)=>card(i)).join('')}</div><h1>最後の一枚</h1><p class="sub">7枚の価値観から、1枚ずつ手放していく遊びです。テレビに相場と進行を映し、手札は各自のスマホで操作します。</p>
-      <h2>参加者 <span class="num">${PL.length}/${C.max}</span>人</h2>${PL.length?status(p=>['参加済み',1]):'<p class="sub">まだ誰もいません。</p>'}
+      h=`<div class="split"><div><div class="fan" aria-hidden="true">${CARDS.map((c,i)=>card(i)).join('')}</div><h1>最後の一枚</h1><p class="sub">7枚の価値観を1枚ずつ手放し、最後に残った1枚で本性を診断します。</p>
+      <h2>参加者 <span class="num">${PL.length}/${C.max}</span>人</h2>${PL.length?status(role):'<p class="sub">まだ誰もいません。</p>'}
       <div class="row"><button class="plain" data-act="cpu"${PL.length>=C.max?' disabled':''}>CPUを加える</button><button class="plain" data-act="uncpu"${PL.some(p=>p.cpu)?'':' disabled'}>CPUを減らす</button></div>
-      <button class="go" data-act="start"${PL.length<C.min?' disabled':''}>${PL.length<C.min?`あと${C.min-PL.length}人で始められます`:'この顔ぶれで始める'}</button></div>
-      <div><h2 style="margin-top:0">スマホで参加する</h2><div class="qr">${qrSVG(joinURL)}</div><p class="sub" style="margin-top:14px">部屋コード</p><p class="roomcode num">${code}</p><p class="sub" style="word-break:break-all">${esc(joinURL)}</p>${modeNote()}</div></div>`;
+      <button class="go" data-act="start"${PL.length<C.min?' disabled':''}>${PL.length<C.min?`あと${C.min-PL.length}人で始められます`:'この顔ぶれで始める'}</button>
+      <p class="sub" style="margin-top:14px">最初に入った人が進行役です。進行役のスマホからも、この画面と同じ操作ができます。</p></div>
+      <div><h2 style="margin-top:0">スマホで参加</h2><div class="qr">${qrSVG(joinURL)}</div><p class="sub" style="margin-top:14px">部屋コード</p><p class="roomcode num">${code}</p><p class="sub" style="word-break:break-all">${esc(joinURL)}</p>${modeNote()}</div></div>`;
     }else if(ph==='ranking'){
-      h=`<div class="split"><div><p class="mark">はじめる前に</p><h1>各自のスマホで、7枚を大事な順に並べています</h1><p class="sub">この順位はほかの人には見せず、最後の診断にだけ使います。</p></div><div><h2 style="margin-top:0">進み具合</h2>${status(p=>p.rankDone?['決めた',1]:['考え中',0])}</div></div>`;
+      h=`<div class="split"><div>${mk(0,'はじめる前に')}<h1>大事な順に、7枚を並べています</h1><p class="sub">この順位は誰にも見せず、診断にだけ使います。</p></div><div><h2 style="margin-top:0">並べ終えた人</h2>${status(p=>p.rankDone?['済み',1]:['考え中',0])}</div></div>`;
     }else if(ph==='turn'){
-      h=`<div class="split"><div><p class="mark">第${kan[V.round]}ラウンド</p><h1>${V.firedEv?`「${esc(V.firedEv.n)}」が起きた`:'手放す札を選んでいます'}</h1>${V.firedEv?`<p>${esc(V.firedEv.t)}</p>`:''}${pubBoard(V,V.firedEv?'イベントによる動き':'相場の推移と直近の動き')}</div>
-      <div><h2 style="margin-top:0">手番</h2>${status(p=>p.submitted?['決めた',1]:['考え中',0])}${V.nextEv?`<div class="notice">次のラウンドの前に<b>「${esc(V.nextEv.n)}」</b>が起きます。${esc(V.nextEv.t)}</div>`:''}</div></div>`;
+      h=`<div class="split"><div>${mk(V.round,kan[V.round]+'巡目')}<h1>${V.firedEv?`「${esc(V.firedEv.n)}」が起きた`:'手放す札を選んでいます'}</h1>${V.firedEv?`<p>${esc(V.firedEv.t)}</p>`:''}${pubBoard(V,V.firedEv?'出来事による値動き':'値動き')}</div>
+      <div><h2 style="margin-top:0">選び終えた人</h2>${status(p=>p.submitted?['済み',1]:['考え中',0])}${evNote()}</div></div>`;
     }else if(ph==='reveal'){
-      h=`<div class="split"><div><p class="mark">第${kan[V.round]}ラウンド</p><h1>手放された札</h1>${pubBoard(V,`手放した枚数×${C.inc}、誰も手放さなければ−${C.dec}`)}</div>
-      <div><table class="list"><tr><th>名前</th><th>手放した</th><th>予想</th></tr>${V.reveal.map((r,i)=>`<tr><td>${esc(PL[i].name)}</td><td>${CARDS[r.pick].n}</td><td>${esc(PL[r.target].name)}さんは${CARDS[r.guess].n}<br><span class="${r.hit?'up':'sub'}">${r.hit?'的中 +'+C.a:'外れ'}</span></td></tr>`).join('')}</table>
-      <button class="go" data-act="next">${V.round<C.rounds?'次のラウンドへ':'最後の二択へ'}</button></div></div>`;
+      h=`<div class="split"><div>${mk(V.round,kan[V.round]+'巡目')}<h1>手放された札</h1>${pubBoard(V,`1枚手放されるごとに+${C.inc}、誰も手放さなければ−${C.dec}`)}</div>
+      <div><table class="list"><tr><th>名前</th><th>手放した</th><th>予想</th></tr>${V.reveal.map((x,i)=>`<tr><td>${esc(PL[i].name)}</td><td>${CARDS[x.pick].n}</td><td>${esc(PL[x.target].name)}さんは${CARDS[x.guess].n}<br><span class="${x.hit?'up':'sub'}">${x.hit?'的中 +'+C.a:'外れ'}</span></td></tr>`).join('')}</table>
+      <button class="go" data-act="next">${V.round<C.rounds?kan[V.round+1]+'巡目へ':'最後の二択へ'}</button></div></div>`;
     }else if(ph==='final-bet'||ph==='final-choose'){
       const ch=PL[V.j];
-      h=`<div class="split"><div><p class="mark">最後の二択 ${V.j+1}/${PL.length}</p><h1>${esc(ch.name)}さんの二択</h1>
+      h=`<div class="split"><div>${mk(6,`最後の二択 ${V.j+1}/${PL.length}人目`)}<h1>${esc(ch.name)}さんの二択</h1>
       <div class="hand big">${ch.hand.map(c=>`<div>${card(c,V.frozen[c])}</div>`).join('')}</div>
-      ${ph==='final-choose'?`<p class="timer num" data-live>${V.left}</p><p class="sub" style="text-align:center">${esc(ch.name)}さんがスマホで選んでいます。時間切れのときは、どちらかがランダムに残ります。</p>`:''}</div>
-      <div>${ph==='final-bet'?`<h2 style="margin-top:0">各自のスマホで${C.bet}点を賭けています</h2><p class="sub">何に賭けたかは、選び終わるまで伏せておきます。</p>${status((p,i)=>i===V.j?['選ぶ人',0]:V.betDone.includes(i)?['賭けた',1]:['考え中',0])}<button class="go" data-act="closebets">賭けを締め切る</button>`:`<h2 style="margin-top:0">相場は止まっています</h2><p class="sub">全員が選び終えてから、最終相場を発表します。</p>`}</div></div>`;
+      ${ph==='final-choose'?`<p class="timer num" data-live>${V.left}</p><p class="sub" style="text-align:center">時間切れなら、どちらかが自動で残ります。</p>`:''}</div>
+      <div>${ph==='final-bet'?`<h2 style="margin-top:0">どちらを残すかに${C.bet}点を賭けています</h2><p class="sub">賭けた札は、選び終わるまで伏せます。</p>${status((p,i)=>i===V.j?['選ぶ人',0]:V.betDone.includes(i)?['済み',1]:['考え中',0])}<button class="go" data-act="closebets">賭けを締め切る</button>`:`<h2 style="margin-top:0">相場は止まっています</h2><p class="sub">全員が選び終えたら、最終相場を出します。</p>`}</div></div>`;
     }else if(ph==='final-reveal'){
       const ch=PL[V.j];
-      h=`<div class="split"><div><p class="mark">最後の二択 ${V.j+1}/${PL.length}</p><h1>${esc(ch.name)}さんは「${CARDS[V.keep].n}」を残した</h1><div class="hand big"><div>${card(V.keep)}</div></div><p class="sub" style="text-align:center;margin-top:12px">手放したのは「${CARDS[V.drop].n}」</p></div>
+      h=`<div class="split"><div>${mk(6,`最後の二択 ${V.j+1}/${PL.length}人目`)}<h1>${esc(ch.name)}さんは「${CARDS[V.keep].n}」を残した</h1><div class="hand big"><div>${card(V.keep)}</div></div><p class="sub" style="text-align:center;margin-top:12px">手放したのは「${CARDS[V.drop].n}」</p></div>
       <div>${V.lastBets.length?`<table class="list"><tr><th>賭けた人</th><th>賭けた札</th><th class="r">結果</th></tr>${V.lastBets.map(b=>`<tr><td>${esc(PL[b.i].name)}</td><td>${CARDS[b.c].n}</td><td class="r num ${b.w?'up':''}">${b.w?'+'+C.bet:'−'+C.bet}</td></tr>`).join('')}</table>`:'<p class="sub">誰も賭けませんでした。</p>'}
-      <button class="go" data-act="next">${V.j<PL.length-1?'次の人へ':'最終相場を発表する'}</button></div></div>`;
+      <button class="go" data-act="next">${V.j<PL.length-1?'次の人へ':'最終相場を出す'}</button></div></div>`;
     }else if(ph==='results'){
-      const R=V.results,win=R.rows.filter(r=>r.t===R.rows[0].t&&r.a===R.rows[0].a);
-      h=`<div class="split"><div><p class="mark">終局</p><h1>${win.map(r=>esc(PL[r.i].name)).join('さんと')}さんの勝ち</h1>${R.tie?'<p class="sub">合計が同点のため、予想の得点が多い人を上位にしています。</p>':''}
-      <table class="list"><tr><th>名前</th><th class="r">予想</th><th class="r">最後の一枚</th><th class="r">賭け</th><th class="r">合計</th></tr>${R.rows.map(r=>`<tr><td>${esc(PL[r.i].name)}</td><td class="r num">${r.a}</td><td class="r num">${r.b}</td><td class="r num">${r.bet>0?'+':''}${r.bet}</td><td class="r num"><b>${r.t}</b></td></tr>`).join('')}</table>
+      const R=V.results,win=R.rows.filter(x=>x.t===R.rows[0].t&&x.a===R.rows[0].a);
+      h=`<div class="split"><div>${mk(7,'終局')}<h1>${win.map(x=>esc(PL[x.i].name)).join('さんと')}さんの勝ち</h1>${R.tie?'<p class="sub">合計が同点のため、予想の得点が多い人を上にしています。</p>':''}
+      <table class="list"><tr><th>名前</th><th class="r">予想</th><th class="r">最後の一枚</th><th class="r">賭け</th><th class="r">合計</th></tr>${R.rows.map(x=>`<tr><td>${esc(PL[x.i].name)}</td><td class="r num">${x.a}</td><td class="r num">${x.b}</td><td class="r num">${sgn(x.bet)}</td><td class="r num"><b>${x.t}</b></td></tr>`).join('')}</table>
       <div class="row"><button class="plain" data-act="again">同じ顔ぶれでもう一度</button></div></div>
-      <div>${board(V.prices,V.frozen,V.hist,'最終相場(最後の二択で手放された分を反映)')}</div></div>
+      <div>${board(V.prices,V.frozen,V.hist,'最終相場')}</div></div>
       <h2>本性証券</h2><div class="certs">${R.certs.map((d,i)=>certHTML(d,PL[i].name)).join('')}</div>`;
     }
     paint(h,ph+'|'+V.round+'|'+(V.j??''));
   }
-  app.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled)return;const a=b.dataset.act;
-    if(a==='cpu'&&P().length<C.max){const n=P().filter(p=>p.cpu).length+1;S.players.push(newPlayer('cpu'+Date.now()+n,'CPU '+n,true));pub()}
-    else if(a==='uncpu'){const k=P().map(p=>p.cpu).lastIndexOf(true);if(k>=0){S.players.splice(k,1);pub()}}
-    else if(a==='start')startGame();
-    else if(a==='next'){if(S.phase==='reveal'){S.round<C.rounds?startRound():startFinal()}else if(S.phase==='final-reveal'){S.gOrder++;openBet()}}
-    else if(a==='closebets'){P().forEach((p,i)=>{if(i!==S.gOrder&&!(i in S.bets))S.bets[i]=null});checkBets()}
-    else if(a==='again')startGame();
-    window.scrollTo(0,0)});
-  render(view());
-  connect(code).then(n=>{net=n;n.onAction(onAction);pub()}).catch(()=>{app.insertAdjacentHTML('afterbegin','<p class="mode">通信の準備に失敗しました。設定と通信環境を確認して、ページを読み込み直してください。</p>')});
+  if(!EMB){app.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled)return;if(acts[b.dataset.act]){acts[b.dataset.act]();window.scrollTo(0,0)}});render(view())}
+  connect(code,opt.mem).then(n=>{net=n;n.onAction(onAction);pub()}).catch(()=>{app.insertAdjacentHTML('afterbegin','<p class="mode">通信の準備に失敗しました。設定と通信環境を確認して、ページを読み込み直してください。</p>')});
 }
 
 /* ================= スマホ(参加者) ================= */
-function playerMain(code){
-  let pid=null;try{pid=sessionStorage.getItem('saigo-pid')}catch(e){}
-  if(!pid){pid='p'+Date.now().toString(36)+Math.floor(rnd()*1e6).toString(36);try{sessionStorage.setItem('saigo-pid',pid)}catch(e){}}
+function playerMain(code,opt={}){
+  const TEST=!!opt.mem;
+  let pid=null;try{pid=TEST?null:sessionStorage.getItem('saigo-pid')}catch(e){}
+  if(!pid){pid='p'+Date.now().toString(36)+Math.floor(rnd()*1e6).toString(36);try{if(!TEST)sessionStorage.setItem('saigo-pid',pid)}catch(e){}}
   let myName='';try{myName=localStorage.getItem('saigo-name')||''}catch(e){}
   let net=null,V=null,joined=false,sel={k:'',d:null,g:null,rank:[],sent:null};
   const send=a=>{if(net)net.send(Object.assign({pid},a))};
   function render(){
-    let h='';const me=V?V.players.findIndex(p=>p.id===pid):-1,M=me>=0?V.players[me]:null;
+    let h='';const me=V?V.players.findIndex(p=>p.id===pid):-1,M=me>=0?V.players[me]:null,LEAD=!!V&&V.leader===pid;
+    const ctl=(op,label)=>LEAD?`<button class="go" data-act="ctl" data-op="${op}">${label}</button>`:'';
+    const people=()=>`<ul class="people">${V.players.map(p=>`<li><span>${esc(p.name)}${p.id===pid?' <span class="sub">あなた</span>':''}</span><span class="st">${p.id===V.leader?'進行役':p.cpu?'CPU':''}</span></li>`).join('')}</ul>`;
+    const nextNote=LEAD?'':`<p class="sub" style="margin-top:16px">進行役が次へ進めます。</p>`;
+    const head=TEST?'ひとりで試す':'部屋 '+esc(code);
     const wait=(t,s='')=>`<div class="wait"><div class="back">${backArt}</div><p class="who">${t}</p>${s?`<p class="sub">${s}</p>`:''}</div>`;
     if(!V||me<0){
-      h=`<p class="mark">部屋 ${esc(code)}</p><h1>最後の一枚に参加する</h1>${V&&V.phase!=='lobby'&&joined?'<p>この部屋はもう始まっています。次のゲームから参加してください。</p>':''}
+      h=`${mk(null,head)}<h1>${TEST?'CPUと遊ぶ':'参加する'}</h1>${TEST?'<p class="sub">テレビも通信も使わずに、最後まで遊べます。</p>':''}${V&&V.phase!=='lobby'&&joined?'<p>この部屋はもう始まっています。次の回から参加してください。</p>':''}
       <label for="nm">名前(10文字まで)</label><input id="nm" class="field" maxlength="10" value="${esc(myName)}" autocomplete="nickname">
-      <button class="go" data-act="join">参加する</button>${!V?'<p class="sub" style="margin-top:14px">テレビ側とつないでいます。</p>':''}${modeNote()}`;
+      <button class="go" data-act="join">${TEST?'始める':'参加する'}</button>${!V&&!TEST?'<p class="sub" style="margin-top:14px">テレビとつないでいます。</p>':''}${TEST?'':modeNote()}`;
     }else{
       const ph=V.phase,key=ph+'|'+V.round+'|'+(V.j??'');if(sel.k!==key)sel={k:key,d:null,g:null,rank:[],sent:null};
-      if(ph==='lobby')h=wait(`${esc(M.name)}さん`,'参加しました。テレビの画面で開始を待っています。');
-      else if(ph==='ranking'){
-        if(M.rankDone||sel.sent)h=wait('順位を送りました','ほかの人を待っています。');
-        else{const t=sel.rank;h=`<p class="mark">はじめる前に</p><h1>大事な順に、7枚を押す</h1><p class="sub">診断にだけ使います。ほかの人には見せません。</p>
+      if(ph==='lobby'){
+        if(LEAD){const n=V.players.length;h=`${mk(null,head)}<h1>参加者 <span class="num">${n}/${C.max}</span>人</h1><p class="sub">あなたが進行役です。足りない人数はCPUで補えます。</p>${people()}
+          <div class="row"><button class="plain" data-act="ctl" data-op="cpu"${n>=C.max?' disabled':''}>CPUを加える</button><button class="plain" data-act="ctl" data-op="uncpu"${V.players.some(p=>p.cpu)?'':' disabled'}>CPUを減らす</button></div>
+          <button class="go" data-act="ctl" data-op="start"${n<C.min?' disabled':''}>${n<C.min?`あと${C.min-n}人で始められます`:'この顔ぶれで始める'}</button>`}
+        else h=wait(`${esc(M.name)}さん`,'進行役が始めるのを待っています。')+people();
+      }else if(ph==='ranking'){
+        if(M.rankDone||sel.sent)h=wait('並べ終えました','ほかの人を待っています。');
+        else{const t=sel.rank;h=`${mk(0,'はじめる前に')}<h1>大事な順に、7枚を押す</h1><p class="sub">診断にだけ使います。誰にも見せません。</p>
           <div class="hand" style="--n:4">${CARDS.map((c,i)=>pickBtn(i,`data-act="rk" data-c="${i}"`,t.includes(i),t.includes(i)?`<span class="ord num">${t.indexOf(i)+1}</span>`:'')).join('')}</div>
-          <div class="row" style="margin-top:18px"><button class="plain" data-act="rkreset"${t.length?'':' disabled'}>やり直す</button><span class="sub">${t.length}/7枚</span></div>
+          <div class="row" style="margin-top:18px"><button class="plain" data-act="rkreset"${t.length?'':' disabled'}>やり直す</button><span class="sub num">${t.length}/7枚</span></div>
           <button class="go" data-act="rkok"${t.length<7?' disabled':''}>この順で決める</button>`}
       }else if(ph==='turn'){
-        if(M.submitted||sel.sent)h=wait('決めました',sel.sent?`「${CARDS[sel.sent.pick].n}」を手放し、${esc(V.players[M.target].name)}さんは「${CARDS[sel.sent.guess].n}」と予想しました。`:'ほかの人を待っています。');
-        else{const tp=V.players[M.target];h=`<p class="mark">第${kan[V.round]}ラウンド</p><h1>手放す1枚</h1>
+        if(M.submitted||sel.sent)h=wait('決めました',sel.sent?`「${CARDS[sel.sent.pick].n}」を手放し、${esc(V.players[M.target].name)}さんは「${CARDS[sel.sent.guess].n}」を手放すと予想しました。`:'ほかの人を待っています。');
+        else{const tp=V.players[M.target];h=`${mk(V.round,kan[V.round]+'巡目')}${V.firedEv?`<div class="notice" style="margin-top:0"><b>「${esc(V.firedEv.n)}」</b>が起きました。${esc(V.firedEv.t)}</div>`:''}<h1>手放す1枚</h1>
           <div class="hand" style="--n:${cols(M.hand.length)}">${M.hand.map(c=>pickBtn(c,`data-act="pd" data-c="${c}"`,sel.d===c,'',V.prices[c])).join('')}</div>
           <h2>${esc(tp.name)}さんが手放すのは</h2><div class="hand" style="--n:${cols(tp.hand.length)}">${tp.hand.map(c=>pickBtn(c,`data-act="pg" data-c="${c}"`,sel.g===c)).join('')}</div>
-          ${V.nextEv?`<div class="notice">次のラウンドの前に<b>「${esc(V.nextEv.n)}」</b>が起きます。${esc(V.nextEv.t)}</div>`:''}
-          <button class="go" data-act="pok"${sel.d===null||sel.g===null?' disabled':''}>これで決める</button>`}
+          ${V.nextEv?`<div class="notice">${kan[V.round+1]}巡目の前に<b>「${esc(V.nextEv.n)}」</b>が起きます。${esc(V.nextEv.t)}</div>`:''}
+          <button class="go" data-act="pok"${sel.d===null||sel.g===null?' disabled':''}>決める</button>${TEST?`<h2>値動き</h2>${pubBoard(V,'')}`:''}`}
       }else if(ph==='reveal'){
-        const r=V.reveal[me];h=`<p class="mark">第${kan[V.round]}ラウンド</p><h1>「${CARDS[r.pick].n}」を手放した</h1><p>${esc(V.players[r.target].name)}さんの予想は${r.hit?`<span class="up">的中、+${C.a}点</span>`:'外れ'}でした。</p>${pubBoard(V,'相場の動き')}<p class="sub" style="margin-top:16px">テレビの画面で次に進みます。</p>`;
+        const x=V.reveal[me];h=`${mk(V.round,kan[V.round]+'巡目')}<h1>「${CARDS[x.pick].n}」を手放した</h1><p>${esc(V.players[x.target].name)}さんの予想は、${x.hit?`<span class="up">的中 +${C.a}点</span>`:'外れ'}。</p>
+          ${TEST?`<table class="list" style="margin:8px 0 20px"><tr><th>名前</th><th>手放した</th><th>予想</th></tr>${V.reveal.map((y,i)=>`<tr><td>${esc(V.players[i].name)}</td><td>${CARDS[y.pick].n}</td><td>${CARDS[y.guess].n} <span class="${y.hit?'up':'sub'}">${y.hit?'的中':'外れ'}</span></td></tr>`).join('')}</table>`:''}
+          ${pubBoard(V,'値動き')}${ctl('next',V.round<C.rounds?kan[V.round+1]+'巡目へ':'最後の二択へ')}${nextNote}`;
       }else if(ph==='final-bet'){
         const ch=V.players[V.j];
-        if(me===V.j)h=wait('次はあなたの二択','みんなが賭け終わると、10秒で選んでもらいます。');
-        else if(V.betDone.includes(me)||sel.sent!==null)h=wait('賭けました',`${esc(ch.name)}さんが選ぶのを待っています。`);
-        else h=`<p class="mark">最後の二択</p><h1>${esc(ch.name)}さんが残すのは</h1><p class="sub">当たれば+${C.bet}点、外れれば−${C.bet}点。何に賭けたかは選び終わるまで伏せます。</p>
+        if(me===V.j)h=wait('次はあなたの二択','全員が賭け終えたら、10秒で1枚を選びます。')+ctl('closebets','賭けを締め切る');
+        else if(V.betDone.includes(me)||sel.sent!==null)h=wait('賭けました',`${esc(ch.name)}さんの選択を待っています。`)+ctl('closebets','賭けを締め切る');
+        else h=`${mk(6,'最後の二択')}<h1>${esc(ch.name)}さんが残すのは</h1><p class="sub">当たれば+${C.bet}点、外れれば−${C.bet}点。賭けた札は、選び終わるまで伏せます。</p>
           <div class="hand big">${ch.hand.map(c=>pickBtn(c,`data-act="bet" data-c="${c}"`,false,'',V.frozen[c])).join('')}</div><button class="plain" data-act="nobet" style="display:block;margin:24px auto 0">賭けない</button>`;
       }else if(ph==='final-choose'){
         const ch=V.players[V.j];
-        if(me===V.j&&sel.sent===null)h=`<p class="mark">最後の二択</p><h1>残す1枚を選ぶ</h1><p class="timer num" data-live>${V.left}</p><div class="hand big">${M.hand.map(c=>pickBtn(c,`data-act="keep" data-c="${c}"`,false,'',V.frozen[c])).join('')}</div>`;
+        if(me===V.j&&sel.sent===null)h=`${mk(6,'最後の二択')}<h1>残す1枚を選ぶ</h1><p class="timer num" data-live>${V.left}</p><div class="hand big">${M.hand.map(c=>pickBtn(c,`data-act="keep" data-c="${c}"`,false,'',V.frozen[c])).join('')}</div>`;
         else h=wait(me===V.j?'選びました':`${esc(ch.name)}さんが選んでいます`,`残り<span data-live>${V.left}</span>秒`);
       }else if(ph==='final-reveal'){
         const ch=V.players[V.j],b=V.lastBets.find(x=>x.i===me);
-        h=`<p class="mark">最後の二択</p><h1>${esc(ch.name)}さんは「${CARDS[V.keep].n}」を残した</h1><div class="hand big"><div>${card(V.keep)}</div></div>
-          <p style="text-align:center;margin-top:16px">${me===V.j?'あなたの選択です。':b?(b.w?`<span class="up">賭けに勝って+${C.bet}点</span>`:`賭けに負けて−${C.bet}点`):'賭けていません。'}</p>`;
+        h=`${mk(6,'最後の二択')}<h1>${esc(ch.name)}さんは「${CARDS[V.keep].n}」を残した</h1><div class="hand big"><div>${card(V.keep)}</div></div>
+          <p style="text-align:center;margin-top:16px">${me===V.j?`手放したのは「${CARDS[V.drop].n}」。`:b?(b.w?`<span class="up">賭けに勝ち、+${C.bet}点</span>`:`賭けに負け、−${C.bet}点`):'賭けていません。'}</p>${ctl('next',V.j<V.players.length-1?'次の人へ':'最終相場を出す')}${nextNote}`;
       }else if(ph==='results'){
-        const R=V.results,pos=R.rows.findIndex(r=>r.i===me)+1,row=R.rows[pos-1];
-        h=`<p class="mark">終局</p><h1>${pos}位、${row.t}点</h1><p class="sub">予想 ${row.a}点、最後の一枚 ${row.b}点、賭け ${row.bet>0?'+':''}${row.bet}点</p><h2>あなたの本性証券</h2>${certHTML(R.certs[me],M.name)}<p class="sub">全員の証券は、テレビの画面に出ています。</p>`;
+        const R=V.results,pos=R.rows.findIndex(x=>x.i===me)+1,row=R.rows[pos-1];
+        h=`${mk(7,'終局')}<h1>${pos}位、<span class="num">${row.t}</span>点</h1><p class="sub">予想 ${row.a}点、最後の一枚 ${row.b}点、賭け ${sgn(row.bet)}点</p>${certHTML(R.certs[me],M.name)}${TEST?`<h2>ほかの人の証券</h2>${R.certs.map((d,i)=>i===me?'':certHTML(d,V.players[i].name)).join('')}`:'<p class="sub">ほかの人の証券は、テレビに出ています。</p>'}${ctl('again','同じ顔ぶれでもう一度')}`;
       }
     }
     paint(h,V?V.phase+'|'+V.round+'|'+(V.j??''):'join');
   }
   app.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled)return;const a=b.dataset.act,c=b.dataset.c===undefined?null:+b.dataset.c;
+    if(a==='ctl'){send({type:'ctl',op:b.dataset.op});window.scrollTo(0,0);return}
     if(a==='join'){const n=document.getElementById('nm').value.trim();if(!n){document.getElementById('nm').focus();return}myName=n;try{localStorage.setItem('saigo-name',n)}catch(e){}joined=true;send({type:'join',name:n});return}
     if(a==='rk'){if(!sel.rank.includes(c))sel.rank.push(c);render();return}
     if(a==='rkreset'){sel.rank=[];render();return}
@@ -1697,22 +1754,25 @@ function playerMain(code){
     if(a==='keep'){sel.sent=c;send({type:'keep',card:c})}
     render();window.scrollTo(0,0)});
   render();
-  connect(code).then(n=>{net=n;n.onState(s=>{V=s;window.__pV=V;if(joined||V.players.some(p=>p.id===pid))joined=true;render()})}).catch(()=>{app.insertAdjacentHTML('afterbegin','<p class="mode">通信の準備に失敗しました。通信環境を確認して、ページを読み込み直してください。</p>')});
+  connect(code,opt.mem).then(n=>{net=n;n.onState(s=>{V=s;window.__pV=V;if(joined||V.players.some(p=>p.id===pid))joined=true;render()})}).catch(()=>{app.insertAdjacentHTML('afterbegin','<p class="mode">通信の準備に失敗しました。通信環境を確認して、ページを読み込み直してください。</p>')});
 }
 
 /* ================= 入口 ================= */
 function landing(){
   const go=u=>{location.href=u};
-  app.innerHTML=`<div class="screen"><div class="fan" aria-hidden="true">${CARDS.map((c,i)=>card(i)).join('')}</div><h1>最後の一枚</h1><p class="sub">7枚の価値観から1枚ずつ手放し、最後に残した札で本性を診断する、3〜7人用の遊びです。</p>
+  app.innerHTML=`<div class="screen"><div class="fan" aria-hidden="true">${CARDS.map((c,i)=>card(i)).join('')}</div><h1>最後の一枚</h1><p class="sub">7枚の価値観を1枚ずつ手放し、最後に残った1枚で本性を診断します。3〜7人で遊べます。</p>
   <button class="go" data-act="host">テレビで部屋を作る</button>
-  <h2>スマホで参加する</h2><label for="cd">部屋コード(4文字)</label><input id="cd" class="field code" maxlength="4" autocomplete="off" autocapitalize="characters"><button class="plain" data-act="join" style="margin-top:12px">参加する</button>${modeNote()}</div>`;
+  <h2>スマホで参加</h2><label for="cd">部屋コード(4文字)</label><input id="cd" class="field code" maxlength="4" autocomplete="off" autocapitalize="characters"><button class="plain" data-act="join" style="margin-top:12px">参加する</button>
+  <h2>ひとりで試す</h2><p class="sub">CPUを相手に、テレビも通信も使わずに遊べます。</p><button class="plain" data-act="test">CPUと遊ぶ</button>${modeNote()}</div>`;
   app.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const u=new URL(location.href);u.search='';
     if(b.dataset.act==='host'){u.searchParams.set('host','new');go(u)}
+    else if(b.dataset.act==='test'){u.searchParams.set('test','1');go(u)}
     else{const v=document.getElementById('cd').value.trim().toUpperCase();if(v.length!==4){document.getElementById('cd').focus();return}u.searchParams.set('room',v);go(u)}});
 }
 const fanFix=()=>document.querySelectorAll('.fan .cd').forEach((el,i)=>{el.style.transform=`rotate(${(i-3)*11}deg)`});
 new MutationObserver(fanFix).observe(app,{childList:true,subtree:true});
-if(params.get('host'))hostMain();else if(params.get('room'))playerMain(params.get('room').toUpperCase().slice(0,4));else landing();
+if(params.get('test')){const mem=memTransport();hostMain({mem});playerMain('TEST',{mem})}
+else if(params.get('host'))hostMain();else if(params.get('room'))playerMain(params.get('room').toUpperCase().slice(0,4));else landing();
 }
 </script>
 </body>
