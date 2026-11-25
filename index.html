@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>最後の一枚</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Old+Mincho:wght@600;900&display=swap" rel="stylesheet">
+<style>
+/* VOICE 気心の知れた宴席。騒がしくせず、札をめくるときの静かな緊張を出す
+   IDEA 取引所の相場板と、銘柄としての価値観札。最後に残した札が「本性証券」として発行される
+   PICTURE テレビ:大きな相場板と進行状況。スマホ:手札と自分の証券
+   COLOUR 紙の白と墨。札ごとに伝統色を1色ずつ割り当て、色は銘柄の識別にだけ使う
+   TYPE 札名・見出しは Zen Old Mincho、本文と数字は Zen Kaku Gothic New
+   LAYOUT テレビは相場板と状況の2列。スマホは1列。決定ボタンは墨の1か所だけ */
+:root{color-scheme:light dark;--bg:light-dark(#f7f6f2,#121315);--card:light-dark(#ffffff,#1c1d20);--ink:light-dark(#1f1d1a,#ebe8e1);--sub:light-dark(#6b6760,#9f9b93);--line:light-dark(#d9d5cc,#36373b);--up:light-dark(#b23a22,#f08a6e);--down:light-dark(#2e5b86,#87b3df)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font:16px/1.85 "Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;letter-spacing:.04em;overflow-x:clip;-webkit-font-smoothing:antialiased}
+main{max-width:600px;margin:0 auto;padding:32px 20px 72px}
+h1{font:600 30px/1.35 "Zen Old Mincho",serif;letter-spacing:.08em;margin:0 0 8px;text-wrap:balance}
+h2{font:600 18px/1.5 "Zen Old Mincho",serif;letter-spacing:.1em;margin:36px 0 14px}
+p{margin:0 0 12px}
+.sub{color:var(--sub);font-size:14px;line-height:1.75}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.mark{font:900 13px/1 "Zen Old Mincho",serif;letter-spacing:.3em;color:var(--sub);margin-bottom:14px}
+.fan{position:relative;height:230px;margin:8px 0 28px}
+.fan .cd{position:absolute;left:50%;bottom:0;width:92px;margin-left:-46px;transform-origin:50% 140%}
+.cd{display:flex;flex-direction:column;align-items:center;aspect-ratio:5/7;background:var(--card);border:1px solid var(--line);border-radius:7px;padding:7px 4px 9px;position:relative;color:var(--ink);text-align:center;overflow:hidden}
+.cd .in{position:absolute;inset:6px;border:1px solid var(--c);border-radius:4px;opacity:.55}
+.cd .kj{position:absolute;top:9px;left:10px;font:900 13px/1 "Zen Old Mincho",serif;color:var(--c)}
+.cd svg{display:block;width:70%;margin:20% auto auto;flex:none}
+.cd .nm{font:600 13px/1.3 "Zen Old Mincho",serif;letter-spacing:.06em;white-space:nowrap}
+.cd .pz{font-size:11px;line-height:1.3;color:var(--sub);margin-top:2px}
+.pick{appearance:none;font:inherit;padding:0;border:0;background:none;cursor:pointer;border-radius:8px;transition:transform .15s}
+.pick[aria-pressed=true]{transform:translateY(-8px)}
+.pick[aria-pressed=true] .cd{border:2px solid var(--ink);padding:6px 3px 8px}
+.pick .ord{position:absolute;top:6px;right:8px;font:700 15px/1 "Zen Kaku Gothic New",sans-serif;z-index:1}
+.hand{display:grid;grid-template-columns:repeat(var(--n,4),minmax(0,1fr));gap:12px 8px;padding-top:10px;max-width:480px}
+.hand[style*="--n:5"] .cd svg{width:62%;margin-top:14%}.hand[style*="--n:5"] .cd .nm{font-size:11px;letter-spacing:0}.hand[style*="--n:5"] .cd .pz{font-size:10px;letter-spacing:0}
+.hand.big{grid-template-columns:repeat(2,minmax(0,150px));justify-content:center;gap:20px;max-width:none}
+.hand.big .cd{padding-bottom:14px}.hand.big .cd .nm{font-size:19px}.hand.big .cd .pz{font-size:13px}.hand.big .cd .kj{font-size:16px;top:12px;left:13px}
+.board{width:100%;border-collapse:collapse;margin-top:4px}
+.board caption{text-align:left;color:var(--sub);font-size:13px;padding-bottom:4px}
+.board td{padding:7px 3px;border-bottom:1px solid var(--line);vertical-align:middle}
+.board .ic{width:32px}.board .ic svg{width:28px;height:28px;display:block}
+.board .bn{font:600 16px/1.3 "Zen Old Mincho",serif;letter-spacing:.06em}
+.board .sp{width:72px}.board .sp svg{display:block;width:72px;height:24px}
+.board .pr{width:3.4em;text-align:right;font-size:19px;font-weight:700}
+.board .df{width:4.2em;text-align:right;font-size:13px}
+.up{color:var(--up)}.down{color:var(--down)}
+.notice{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 2px;margin:22px 0;font-size:15px}
+.notice b{font-family:"Zen Old Mincho",serif;font-weight:600}
+button,input,select{font:inherit;letter-spacing:.04em}
+.go{display:block;width:100%;margin-top:28px;min-height:54px;border:0;border-radius:8px;background:var(--ink);color:var(--bg);font-weight:700;font-size:17px;letter-spacing:.12em;cursor:pointer}
+.go:disabled{background:var(--line);color:var(--sub);cursor:default}
+.plain{min-height:44px;padding:0 18px;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--ink);cursor:pointer}
+.plain:disabled{opacity:.4;cursor:default}
+button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.field{width:100%;min-height:50px;font-size:18px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+.field.code{text-transform:uppercase;letter-spacing:.4em;font-weight:700}
+label{display:block;font-size:14px;color:var(--sub);margin:18px 0 6px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.list{width:100%;border-collapse:collapse;font-size:15px}
+.list th,.list td{padding:9px 4px;border-bottom:1px solid var(--line);text-align:left;font-weight:400;vertical-align:top}
+.list th{color:var(--sub);font-size:13px}
+.list .r{text-align:right}
+.seg{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 18px}
+.seg button{min-height:44px;padding:0 16px;border:1px solid var(--line);border-radius:22px;background:transparent;color:var(--ink);cursor:pointer}
+.seg button[aria-pressed=true]{border-color:var(--ink);background:var(--ink);color:var(--bg)}
+.wait{text-align:center;padding-top:8vh}
+.back{width:130px;margin:0 auto 24px;aspect-ratio:5/7;border-radius:9px;background:var(--card);border:1px solid var(--line);padding:8px}
+.back svg{width:100%;height:100%;display:block}
+.who{font:600 28px/1.4 "Zen Old Mincho",serif;letter-spacing:.08em;margin:0 0 6px}
+.timer{font:600 64px/1.2 "Zen Old Mincho",serif;text-align:center;margin:8px 0 4px}
+.people{list-style:none;padding:0;margin:0}
+.people li{display:flex;justify-content:space-between;gap:12px;padding:9px 2px;border-bottom:1px solid var(--line)}
+.people .st{color:var(--sub);font-size:14px;white-space:nowrap}
+.people .ok{color:var(--ink)}
+.cert{background:var(--card);border:1px solid var(--ink);padding:6px;margin:0 0 24px}
+.cert .fr{border:1px solid var(--line);padding:22px 20px 18px;position:relative;height:100%}
+.cert .hd{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:16px}
+.cert .tt{font:900 20px/1 "Zen Old Mincho",serif;letter-spacing:.4em}
+.cert .no{font-size:13px;color:var(--sub)}
+.cert .body{display:grid;grid-template-columns:104px minmax(0,1fr);gap:18px;align-items:center}
+.cert .holder{font-size:14px;color:var(--sub);margin:0}
+.cert .type{font:600 25px/1.35 "Zen Old Mincho",serif;letter-spacing:.06em;margin:2px 0 6px}
+.cert .face{font-size:14px;margin:0}
+.cert .face b{font:600 22px/1 "Zen Old Mincho",serif;margin-left:6px}
+.cert dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 18px;margin:18px 0 0;font-size:15px;line-height:1.7}
+.cert dt{color:var(--sub);font-size:14px}.cert dd{margin:0}
+.cert .seal{position:absolute;right:16px;bottom:14px;width:46px;height:46px;border:1.5px solid var(--up);border-radius:50%;color:var(--up);font:900 12px/1.15 "Zen Old Mincho",serif;display:grid;place-items:center;text-align:center;transform:rotate(-12deg);opacity:.85}
+.cert .ft{margin-top:16px;font-size:12px;color:var(--sub);padding-right:64px;min-height:40px;display:flex;align-items:flex-end}
+.qr{background:#fff;padding:14px;border-radius:8px;width:max-content;max-width:100%;border:1px solid var(--line)}
+.qr svg{display:block;width:220px;height:220px}
+.roomcode{font:900 44px/1.1 "Zen Old Mincho",serif;letter-spacing:.3em;margin:6px 0}
+.mode{font-size:13px;color:var(--sub);border:1px solid var(--line);border-radius:6px;padding:8px 12px;margin-top:20px}
+.foot{margin-top:40px;font-size:13px;color:var(--sub)}
+/* テレビ */
+.tv main{max-width:1440px;padding:clamp(24px,3vw,48px) clamp(20px,4vw,64px) 64px}
+.tv body,.tv{font-size:18px}
+.tv h1{font-size:clamp(32px,3.2vw,46px)}
+.tv h2{font-size:22px}
+.split{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(32px,5vw,80px);align-items:start}
+.tv .board .ic{width:46px}.tv .board .ic svg{width:40px;height:40px}
+.tv .board .bn{font-size:24px}.tv .board td{padding:11px 4px}
+.tv .board .sp{width:150px}.tv .board .sp svg{width:150px;height:36px}
+.tv .board .pr{font-size:32px;width:3.6em}.tv .board .df{font-size:18px;width:4.6em}
+.tv .board caption{font-size:16px}
+.tv .people li{font-size:20px;padding:12px 2px}.tv .people .st{font-size:17px}
+.tv .notice{font-size:19px}
+.tv .list{font-size:19px}.tv .list th{font-size:15px}
+.tv .hand.big{grid-template-columns:repeat(2,minmax(0,210px))}
+.tv .hand.big .cd .nm{font-size:26px}.tv .hand.big .cd .pz{font-size:17px}
+.tv .timer{font-size:96px}
+.tv .go{max-width:420px}
+.certs{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:24px}
+.certs .cert{margin:0}
+@media(max-width:900px){.split{grid-template-columns:minmax(0,1fr)}.tv .board .sp{width:72px}.tv .board .sp svg{width:72px}}
+@media(max-width:420px){main{padding:24px 16px 56px}.cert .body{grid-template-columns:80px minmax(0,1fr);gap:14px}.cert .type{font-size:22px}.fan .cd{width:80px;margin-left:-40px}.qr svg{width:180px;height:180px}}
+@media(prefers-reduced-motion:no-preference){.screen{animation:in .3s ease-out}@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}}
+@media(prefers-reduced-motion:reduce){.pick{transition:none}}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+/* ===== 設定 =====
+   Firebase を使う場合は、下の null を Firebase コンソールで表示される firebaseConfig の中身に置き換えてください。
+   null のままだと「お試しモード」になり、同じパソコンの別タブからだけ参加できます。 */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBVPTz97sZu9Doay2eJ7hZEkJW_44JRR-A",
+  authDomain: "seikaku-6343b.firebaseapp.com",
+  databaseURL: "https://seikaku-6343b-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "seikaku-6343b",
+  storageBucket: "seikaku-6343b.firebasestorage.app",
+  messagingSenderId: "404009459613",
+  appId: "1:404009459613:web:c2bcfa3630cf861edf1974"
+};
+</script>
+<script>
+/* QRCode for JavaScript (c) 2009 Kazuhiko Arase, MIT license. qrcode-terminal 版を同梱 */
+const QRLib=(()=>{const M={};const R=n=>{n=n.replace(/^\.\//,"").replace(/\.js$/,"");if(!M[n].done){M[n].done=1;M[n].f(R,M[n].m,M[n].m.exports)}return M[n].m.exports};
+M["QR8bitByte"]={m:{exports:{}},f:function(require,module,exports){
+var QRMode = require('./QRMode');
+
+function QR8bitByte(data) {
+	this.mode = QRMode.MODE_8BIT_BYTE;
+	this.data = data;
+}
+
+QR8bitByte.prototype = {
+
+	getLength : function() {
+		return this.data.length;
+	},
+	
+	write : function(buffer) {
+		for (var i = 0; i < this.data.length; i++) {
+			// not JIS ...
+			buffer.put(this.data.charCodeAt(i), 8);
+		}
+	}
+};
+
+module.exports = QR8bitByte;
+
+}};
+M["QRBitBuffer"]={m:{exports:{}},f:function(require,module,exports){
+function QRBitBuffer() {
+	this.buffer = [];
+	this.length = 0;
+}
+
+QRBitBuffer.prototype = {
+
+	get : function(index) {
+		var bufIndex = Math.floor(index / 8);
+		return ( (this.buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+	},
+	
+	put : function(num, length) {
+		for (var i = 0; i < length; i++) {
+			this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+		}
+	},
+	
+	getLengthInBits : function() {
+		return this.length;
+	},
+	
+	putBit : function(bit) {
+	
+		var bufIndex = Math.floor(this.length / 8);
+		if (this.buffer.length <= bufIndex) {
+			this.buffer.push(0);
+		}
+	
+		if (bit) {
+			this.buffer[bufIndex] |= (0x80 >>> (this.length % 8) );
+		}
+	
+		this.length++;
+	}
+};
+
+module.exports = QRBitBuffer;
+
+}};
+M["QRErrorCorrectLevel"]={m:{exports:{}},f:function(require,module,exports){
+module.exports = {
+	L : 1,
+	M : 0,
+	Q : 3,
+	H : 2
+};
+
+
+}};
+M["QRMaskPattern"]={m:{exports:{}},f:function(require,module,exports){
+module.exports = {
+	PATTERN000 : 0,
+	PATTERN001 : 1,
+	PATTERN010 : 2,
+	PATTERN011 : 3,
+	PATTERN100 : 4,
+	PATTERN101 : 5,
+	PATTERN110 : 6,
+	PATTERN111 : 7
+};
+
+}};
+M["QRMath"]={m:{exports:{}},f:function(require,module,exports){
+var QRMath = {
+
+	glog : function(n) {
+	
+		if (n < 1) {
+			throw new Error("glog(" + n + ")");
+		}
+		
+		return QRMath.LOG_TABLE[n];
+	},
+	
+	gexp : function(n) {
+	
+		while (n < 0) {
+			n += 255;
+		}
+	
+		while (n >= 256) {
+			n -= 255;
+		}
+	
+		return QRMath.EXP_TABLE[n];
+	},
+	
+	EXP_TABLE : new Array(256),
+	
+	LOG_TABLE : new Array(256)
+
+};
+	
+for (var i = 0; i < 8; i++) {
+	QRMath.EXP_TABLE[i] = 1 << i;
+}
+for (var i = 8; i < 256; i++) {
+	QRMath.EXP_TABLE[i] = QRMath.EXP_TABLE[i - 4]
+		^ QRMath.EXP_TABLE[i - 5]
+		^ QRMath.EXP_TABLE[i - 6]
+		^ QRMath.EXP_TABLE[i - 8];
+}
+for (var i = 0; i < 255; i++) {
+	QRMath.LOG_TABLE[QRMath.EXP_TABLE[i] ] = i;
+}
+
+module.exports = QRMath;
+
+}};
+M["QRMode"]={m:{exports:{}},f:function(require,module,exports){
+module.exports = {
+    MODE_NUMBER :       1 << 0,
+    MODE_ALPHA_NUM :    1 << 1,
+    MODE_8BIT_BYTE :    1 << 2,
+    MODE_KANJI :        1 << 3
+};
+
+}};
+M["QRPolynomial"]={m:{exports:{}},f:function(require,module,exports){
+var QRMath = require('./QRMath');
+
+function QRPolynomial(num, shift) {
+	if (num.length === undefined) {
+		throw new Error(num.length + "/" + shift);
+	}
+
+	var offset = 0;
+
+	while (offset < num.length && num[offset] === 0) {
+		offset++;
+	}
+
+	this.num = new Array(num.length - offset + shift);
+	for (var i = 0; i < num.length - offset; i++) {
+		this.num[i] = num[i + offset];
+	}
+}
+
+QRPolynomial.prototype = {
+
+	get : function(index) {
+		return this.num[index];
+	},
+	
+	getLength : function() {
+		return this.num.length;
+	},
+	
+	multiply : function(e) {
+	
+		var num = new Array(this.getLength() + e.getLength() - 1);
+	
+		for (var i = 0; i < this.getLength(); i++) {
+			for (var j = 0; j < e.getLength(); j++) {
+				num[i + j] ^= QRMath.gexp(QRMath.glog(this.get(i) ) + QRMath.glog(e.get(j) ) );
+			}
+		}
+	
+		return new QRPolynomial(num, 0);
+	},
+	
+	mod : function(e) {
+	
+		if (this.getLength() - e.getLength() < 0) {
+			return this;
+		}
+	
+		var ratio = QRMath.glog(this.get(0) ) - QRMath.glog(e.get(0) );
+	
+		var num = new Array(this.getLength() );
+		
+		for (var i = 0; i < this.getLength(); i++) {
+			num[i] = this.get(i);
+		}
+		
+		for (var x = 0; x < e.getLength(); x++) {
+			num[x] ^= QRMath.gexp(QRMath.glog(e.get(x) ) + ratio);
+		}
+	
+		// recursive call
+		return new QRPolynomial(num, 0).mod(e);
+	}
+};
+
+module.exports = QRPolynomial;
+
+}};
+M["QRRSBlock"]={m:{exports:{}},f:function(require,module,exports){
+var QRErrorCorrectLevel = require('./QRErrorCorrectLevel');
+
+function QRRSBlock(totalCount, dataCount) {
+	this.totalCount = totalCount;
+	this.dataCount  = dataCount;
+}
+
+QRRSBlock.RS_BLOCK_TABLE = [
+
+	// L
+	// M
+	// Q
+	// H
+
+	// 1
+	[1, 26, 19],
+	[1, 26, 16],
+	[1, 26, 13],
+	[1, 26, 9],
+	
+	// 2
+	[1, 44, 34],
+	[1, 44, 28],
+	[1, 44, 22],
+	[1, 44, 16],
+
+	// 3
+	[1, 70, 55],
+	[1, 70, 44],
+	[2, 35, 17],
+	[2, 35, 13],
+
+	// 4		
+	[1, 100, 80],
+	[2, 50, 32],
+	[2, 50, 24],
+	[4, 25, 9],
+	
+	// 5
+	[1, 134, 108],
+	[2, 67, 43],
+	[2, 33, 15, 2, 34, 16],
+	[2, 33, 11, 2, 34, 12],
+	
+	// 6
+	[2, 86, 68],
+	[4, 43, 27],
+	[4, 43, 19],
+	[4, 43, 15],
+	
+	// 7		
+	[2, 98, 78],
+	[4, 49, 31],
+	[2, 32, 14, 4, 33, 15],
+	[4, 39, 13, 1, 40, 14],
+	
+	// 8
+	[2, 121, 97],
+	[2, 60, 38, 2, 61, 39],
+	[4, 40, 18, 2, 41, 19],
+	[4, 40, 14, 2, 41, 15],
+	
+	// 9
+	[2, 146, 116],
+	[3, 58, 36, 2, 59, 37],
+	[4, 36, 16, 4, 37, 17],
+	[4, 36, 12, 4, 37, 13],
+	
+	// 10		
+	[2, 86, 68, 2, 87, 69],
+	[4, 69, 43, 1, 70, 44],
+	[6, 43, 19, 2, 44, 20],
+	[6, 43, 15, 2, 44, 16],
+
+	// 11
+	[4, 101, 81],
+	[1, 80, 50, 4, 81, 51],
+	[4, 50, 22, 4, 51, 23],
+	[3, 36, 12, 8, 37, 13],
+
+	// 12
+	[2, 116, 92, 2, 117, 93],
+	[6, 58, 36, 2, 59, 37],
+	[4, 46, 20, 6, 47, 21],
+	[7, 42, 14, 4, 43, 15],
+
+	// 13
+	[4, 133, 107],
+	[8, 59, 37, 1, 60, 38],
+	[8, 44, 20, 4, 45, 21],
+	[12, 33, 11, 4, 34, 12],
+
+	// 14
+	[3, 145, 115, 1, 146, 116],
+	[4, 64, 40, 5, 65, 41],
+	[11, 36, 16, 5, 37, 17],
+	[11, 36, 12, 5, 37, 13],
+
+	// 15
+	[5, 109, 87, 1, 110, 88],
+	[5, 65, 41, 5, 66, 42],
+	[5, 54, 24, 7, 55, 25],
+	[11, 36, 12],
+
+	// 16
+	[5, 122, 98, 1, 123, 99],
+	[7, 73, 45, 3, 74, 46],
+	[15, 43, 19, 2, 44, 20],
+	[3, 45, 15, 13, 46, 16],
+
+	// 17
+	[1, 135, 107, 5, 136, 108],
+	[10, 74, 46, 1, 75, 47],
+	[1, 50, 22, 15, 51, 23],
+	[2, 42, 14, 17, 43, 15],
+
+	// 18
+	[5, 150, 120, 1, 151, 121],
+	[9, 69, 43, 4, 70, 44],
+	[17, 50, 22, 1, 51, 23],
+	[2, 42, 14, 19, 43, 15],
+
+	// 19
+	[3, 141, 113, 4, 142, 114],
+	[3, 70, 44, 11, 71, 45],
+	[17, 47, 21, 4, 48, 22],
+	[9, 39, 13, 16, 40, 14],
+
+	// 20
+	[3, 135, 107, 5, 136, 108],
+	[3, 67, 41, 13, 68, 42],
+	[15, 54, 24, 5, 55, 25],
+	[15, 43, 15, 10, 44, 16],
+
+	// 21
+	[4, 144, 116, 4, 145, 117],
+	[17, 68, 42],
+	[17, 50, 22, 6, 51, 23],
+	[19, 46, 16, 6, 47, 17],
+
+	// 22
+	[2, 139, 111, 7, 140, 112],
+	[17, 74, 46],
+	[7, 54, 24, 16, 55, 25],
+	[34, 37, 13],
+
+	// 23
+	[4, 151, 121, 5, 152, 122],
+	[4, 75, 47, 14, 76, 48],
+	[11, 54, 24, 14, 55, 25],
+	[16, 45, 15, 14, 46, 16],
+
+	// 24
+	[6, 147, 117, 4, 148, 118],
+	[6, 73, 45, 14, 74, 46],
+	[11, 54, 24, 16, 55, 25],
+	[30, 46, 16, 2, 47, 17],
+
+	// 25
+	[8, 132, 106, 4, 133, 107],
+	[8, 75, 47, 13, 76, 48],
+	[7, 54, 24, 22, 55, 25],
+	[22, 45, 15, 13, 46, 16],
+
+	// 26
+	[10, 142, 114, 2, 143, 115],
+	[19, 74, 46, 4, 75, 47],
+	[28, 50, 22, 6, 51, 23],
+	[33, 46, 16, 4, 47, 17],
+
+	// 27
+	[8, 152, 122, 4, 153, 123],
+	[22, 73, 45, 3, 74, 46],
+	[8, 53, 23, 26, 54, 24],
+	[12, 45, 15, 28, 46, 16],
+
+	// 28
+	[3, 147, 117, 10, 148, 118],
+	[3, 73, 45, 23, 74, 46],
+	[4, 54, 24, 31, 55, 25],
+	[11, 45, 15, 31, 46, 16],
+
+	// 29
+	[7, 146, 116, 7, 147, 117],
+	[21, 73, 45, 7, 74, 46],
+	[1, 53, 23, 37, 54, 24],
+	[19, 45, 15, 26, 46, 16],
+
+	// 30
+	[5, 145, 115, 10, 146, 116],
+	[19, 75, 47, 10, 76, 48],
+	[15, 54, 24, 25, 55, 25],
+	[23, 45, 15, 25, 46, 16],
+
+	// 31
+	[13, 145, 115, 3, 146, 116],
+	[2, 74, 46, 29, 75, 47],
+	[42, 54, 24, 1, 55, 25],
+	[23, 45, 15, 28, 46, 16],
+
+	// 32
+	[17, 145, 115],
+	[10, 74, 46, 23, 75, 47],
+	[10, 54, 24, 35, 55, 25],
+	[19, 45, 15, 35, 46, 16],
+
+	// 33
+	[17, 145, 115, 1, 146, 116],
+	[14, 74, 46, 21, 75, 47],
+	[29, 54, 24, 19, 55, 25],
+	[11, 45, 15, 46, 46, 16],
+
+	// 34
+	[13, 145, 115, 6, 146, 116],
+	[14, 74, 46, 23, 75, 47],
+	[44, 54, 24, 7, 55, 25],
+	[59, 46, 16, 1, 47, 17],
+
+	// 35
+	[12, 151, 121, 7, 152, 122],
+	[12, 75, 47, 26, 76, 48],
+	[39, 54, 24, 14, 55, 25],
+	[22, 45, 15, 41, 46, 16],
+
+	// 36
+	[6, 151, 121, 14, 152, 122],
+	[6, 75, 47, 34, 76, 48],
+	[46, 54, 24, 10, 55, 25],
+	[2, 45, 15, 64, 46, 16],
+
+	// 37
+	[17, 152, 122, 4, 153, 123],
+	[29, 74, 46, 14, 75, 47],
+	[49, 54, 24, 10, 55, 25],
+	[24, 45, 15, 46, 46, 16],
+
+	// 38
+	[4, 152, 122, 18, 153, 123],
+	[13, 74, 46, 32, 75, 47],
+	[48, 54, 24, 14, 55, 25],
+	[42, 45, 15, 32, 46, 16],
+
+	// 39
+	[20, 147, 117, 4, 148, 118],
+	[40, 75, 47, 7, 76, 48],
+	[43, 54, 24, 22, 55, 25],
+	[10, 45, 15, 67, 46, 16],
+
+	// 40
+	[19, 148, 118, 6, 149, 119],
+	[18, 75, 47, 31, 76, 48],
+	[34, 54, 24, 34, 55, 25],
+	[20, 45, 15, 61, 46, 16]
+];
+
+QRRSBlock.getRSBlocks = function(typeNumber, errorCorrectLevel) {
+	
+	var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectLevel);
+	
+	if (rsBlock === undefined) {
+		throw new Error("bad rs block @ typeNumber:" + typeNumber + "/errorCorrectLevel:" + errorCorrectLevel);
+	}
+
+	var length = rsBlock.length / 3;
+	
+	var list = [];
+	
+	for (var i = 0; i < length; i++) {
+
+		var count = rsBlock[i * 3 + 0];
+		var totalCount = rsBlock[i * 3 + 1];
+		var dataCount  = rsBlock[i * 3 + 2];
+
+		for (var j = 0; j < count; j++) {
+			list.push(new QRRSBlock(totalCount, dataCount) );	
+		}
+	}
+	
+	return list;
+};
+
+QRRSBlock.getRsBlockTable = function(typeNumber, errorCorrectLevel) {
+
+	switch(errorCorrectLevel) {
+	case QRErrorCorrectLevel.L :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+	case QRErrorCorrectLevel.M :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+	case QRErrorCorrectLevel.Q :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+	case QRErrorCorrectLevel.H :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+	default :
+		return undefined;
+	}
+};
+
+module.exports = QRRSBlock;
+
+}};
+M["QRUtil"]={m:{exports:{}},f:function(require,module,exports){
+var QRMode = require('./QRMode');
+var QRPolynomial = require('./QRPolynomial');
+var QRMath = require('./QRMath');
+var QRMaskPattern = require('./QRMaskPattern');
+
+var QRUtil = {
+
+    PATTERN_POSITION_TABLE : [
+        [],
+        [6, 18],
+        [6, 22],
+        [6, 26],
+        [6, 30],
+        [6, 34],
+        [6, 22, 38],
+        [6, 24, 42],
+        [6, 26, 46],
+        [6, 28, 50],
+        [6, 30, 54],        
+        [6, 32, 58],
+        [6, 34, 62],
+        [6, 26, 46, 66],
+        [6, 26, 48, 70],
+        [6, 26, 50, 74],
+        [6, 30, 54, 78],
+        [6, 30, 56, 82],
+        [6, 30, 58, 86],
+        [6, 34, 62, 90],
+        [6, 28, 50, 72, 94],
+        [6, 26, 50, 74, 98],
+        [6, 30, 54, 78, 102],
+        [6, 28, 54, 80, 106],
+        [6, 32, 58, 84, 110],
+        [6, 30, 58, 86, 114],
+        [6, 34, 62, 90, 118],
+        [6, 26, 50, 74, 98, 122],
+        [6, 30, 54, 78, 102, 126],
+        [6, 26, 52, 78, 104, 130],
+        [6, 30, 56, 82, 108, 134],
+        [6, 34, 60, 86, 112, 138],
+        [6, 30, 58, 86, 114, 142],
+        [6, 34, 62, 90, 118, 146],
+        [6, 30, 54, 78, 102, 126, 150],
+        [6, 24, 50, 76, 102, 128, 154],
+        [6, 28, 54, 80, 106, 132, 158],
+        [6, 32, 58, 84, 110, 136, 162],
+        [6, 26, 54, 82, 110, 138, 166],
+        [6, 30, 58, 86, 114, 142, 170]
+    ],
+
+    G15 : (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0),
+    G18 : (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0),
+    G15_MASK : (1 << 14) | (1 << 12) | (1 << 10)    | (1 << 4) | (1 << 1),
+
+    getBCHTypeInfo : function(data) {
+        var d = data << 10;
+        while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) >= 0) {
+            d ^= (QRUtil.G15 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) ) );    
+        }
+        return ( (data << 10) | d) ^ QRUtil.G15_MASK;
+    },
+
+    getBCHTypeNumber : function(data) {
+        var d = data << 12;
+        while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) >= 0) {
+            d ^= (QRUtil.G18 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) ) );    
+        }
+        return (data << 12) | d;
+    },
+
+    getBCHDigit : function(data) {
+
+        var digit = 0;
+
+        while (data !== 0) {
+            digit++;
+            data >>>= 1;
+        }
+
+        return digit;
+    },
+
+    getPatternPosition : function(typeNumber) {
+        return QRUtil.PATTERN_POSITION_TABLE[typeNumber - 1];
+    },
+
+    getMask : function(maskPattern, i, j) {
+        
+        switch (maskPattern) {
+            
+        case QRMaskPattern.PATTERN000 : return (i + j) % 2 === 0;
+        case QRMaskPattern.PATTERN001 : return i % 2 === 0;
+        case QRMaskPattern.PATTERN010 : return j % 3 === 0;
+        case QRMaskPattern.PATTERN011 : return (i + j) % 3 === 0;
+        case QRMaskPattern.PATTERN100 : return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 === 0;
+        case QRMaskPattern.PATTERN101 : return (i * j) % 2 + (i * j) % 3 === 0;
+        case QRMaskPattern.PATTERN110 : return ( (i * j) % 2 + (i * j) % 3) % 2 === 0;
+        case QRMaskPattern.PATTERN111 : return ( (i * j) % 3 + (i + j) % 2) % 2 === 0;
+
+        default :
+            throw new Error("bad maskPattern:" + maskPattern);
+        }
+    },
+
+    getErrorCorrectPolynomial : function(errorCorrectLength) {
+
+        var a = new QRPolynomial([1], 0);
+
+        for (var i = 0; i < errorCorrectLength; i++) {
+            a = a.multiply(new QRPolynomial([1, QRMath.gexp(i)], 0) );
+        }
+
+        return a;
+    },
+
+    getLengthInBits : function(mode, type) {
+
+        if (1 <= type && type < 10) {
+
+            // 1 - 9
+
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 10;
+            case QRMode.MODE_ALPHA_NUM  : return 9;
+            case QRMode.MODE_8BIT_BYTE  : return 8;
+            case QRMode.MODE_KANJI      : return 8;
+            default :
+                throw new Error("mode:" + mode);
+            }
+
+        } else if (type < 27) {
+
+            // 10 - 26
+
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 12;
+            case QRMode.MODE_ALPHA_NUM  : return 11;
+            case QRMode.MODE_8BIT_BYTE  : return 16;
+            case QRMode.MODE_KANJI      : return 10;
+            default :
+                throw new Error("mode:" + mode);
+            }
+
+        } else if (type < 41) {
+
+            // 27 - 40
+
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 14;
+            case QRMode.MODE_ALPHA_NUM  : return 13;
+            case QRMode.MODE_8BIT_BYTE  : return 16;
+            case QRMode.MODE_KANJI      : return 12;
+            default :
+                throw new Error("mode:" + mode);
+            }
+
+        } else {
+            throw new Error("type:" + type);
+        }
+    },
+
+    getLostPoint : function(qrCode) {
+        
+        var moduleCount = qrCode.getModuleCount();
+        var lostPoint = 0;
+        var row = 0; 
+        var col = 0;
+
+        
+        // LEVEL1
+        
+        for (row = 0; row < moduleCount; row++) {
+
+            for (col = 0; col < moduleCount; col++) {
+
+                var sameCount = 0;
+                var dark = qrCode.isDark(row, col);
+
+                for (var r = -1; r <= 1; r++) {
+
+                    if (row + r < 0 || moduleCount <= row + r) {
+                        continue;
+                    }
+
+                    for (var c = -1; c <= 1; c++) {
+
+                        if (col + c < 0 || moduleCount <= col + c) {
+                            continue;
+                        }
+
+                        if (r === 0 && c === 0) {
+                            continue;
+                        }
+
+                        if (dark === qrCode.isDark(row + r, col + c) ) {
+                            sameCount++;
+                        }
+                    }
+                }
+
+                if (sameCount > 5) {
+                    lostPoint += (3 + sameCount - 5);
+                }
+            }
+        }
+
+        // LEVEL2
+
+        for (row = 0; row < moduleCount - 1; row++) {
+            for (col = 0; col < moduleCount - 1; col++) {
+                var count = 0;
+                if (qrCode.isDark(row,     col    ) ) count++;
+                if (qrCode.isDark(row + 1, col    ) ) count++;
+                if (qrCode.isDark(row,     col + 1) ) count++;
+                if (qrCode.isDark(row + 1, col + 1) ) count++;
+                if (count === 0 || count === 4) {
+                    lostPoint += 3;
+                }
+            }
+        }
+
+        // LEVEL3
+
+        for (row = 0; row < moduleCount; row++) {
+            for (col = 0; col < moduleCount - 6; col++) {
+                if (qrCode.isDark(row, col) && 
+                        !qrCode.isDark(row, col + 1) && 
+                         qrCode.isDark(row, col + 2) && 
+                         qrCode.isDark(row, col + 3) && 
+                         qrCode.isDark(row, col + 4) && 
+                        !qrCode.isDark(row, col + 5) && 
+                         qrCode.isDark(row, col + 6) ) {
+                    lostPoint += 40;
+                }
+            }
+        }
+
+        for (col = 0; col < moduleCount; col++) {
+            for (row = 0; row < moduleCount - 6; row++) {
+                if (qrCode.isDark(row, col) &&
+                        !qrCode.isDark(row + 1, col) &&
+                         qrCode.isDark(row + 2, col) &&
+                         qrCode.isDark(row + 3, col) &&
+                         qrCode.isDark(row + 4, col) &&
+                        !qrCode.isDark(row + 5, col) &&
+                         qrCode.isDark(row + 6, col) ) {
+                    lostPoint += 40;
+                }
+            }
+        }
+
+        // LEVEL4
+        
+        var darkCount = 0;
+
+        for (col = 0; col < moduleCount; col++) {
+            for (row = 0; row < moduleCount; row++) {
+                if (qrCode.isDark(row, col) ) {
+                    darkCount++;
+                }
+            }
+        }
+        
+        var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+        lostPoint += ratio * 10;
+
+        return lostPoint;       
+    }
+
+};
+
+module.exports = QRUtil;
+
+}};
+M["index"]={m:{exports:{}},f:function(require,module,exports){
+//---------------------------------------------------------------------
+// QRCode for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//   http://www.opensource.org/licenses/mit-license.php
+//
+// The word "QR Code" is registered trademark of 
+// DENSO WAVE INCORPORATED
+//   http://www.denso-wave.com/qrcode/faqpatent-e.html
+//
+//---------------------------------------------------------------------
+// Modified to work in node for this project (and some refactoring)
+//---------------------------------------------------------------------
+
+var QR8bitByte = require('./QR8bitByte');
+var QRUtil = require('./QRUtil');
+var QRPolynomial = require('./QRPolynomial');
+var QRRSBlock = require('./QRRSBlock');
+var QRBitBuffer = require('./QRBitBuffer');
+
+function QRCode(typeNumber, errorCorrectLevel) {
+	this.typeNumber = typeNumber;
+	this.errorCorrectLevel = errorCorrectLevel;
+	this.modules = null;
+	this.moduleCount = 0;
+	this.dataCache = null;
+	this.dataList = [];
+}
+
+QRCode.prototype = {
+	
+	addData : function(data) {
+		var newData = new QR8bitByte(data);
+		this.dataList.push(newData);
+		this.dataCache = null;
+	},
+	
+	isDark : function(row, col) {
+		if (row < 0 || this.moduleCount <= row || col < 0 || this.moduleCount <= col) {
+			throw new Error(row + "," + col);
+		}
+		return this.modules[row][col];
+	},
+
+	getModuleCount : function() {
+		return this.moduleCount;
+	},
+	
+	make : function() {
+		// Calculate automatically typeNumber if provided is < 1
+		if (this.typeNumber < 1 ){
+			var typeNumber = 1;
+			for (typeNumber = 1; typeNumber < 40; typeNumber++) {
+				var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, this.errorCorrectLevel);
+
+				var buffer = new QRBitBuffer();
+				var totalDataCount = 0;
+				for (var i = 0; i < rsBlocks.length; i++) {
+					totalDataCount += rsBlocks[i].dataCount;
+				}
+
+				for (var x = 0; x < this.dataList.length; x++) {
+					var data = this.dataList[x];
+					buffer.put(data.mode, 4);
+					buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber) );
+					data.write(buffer);
+				}
+				if (buffer.getLengthInBits() <= totalDataCount * 8)
+					break;
+			}
+			this.typeNumber = typeNumber;
+		}
+		this.makeImpl(false, this.getBestMaskPattern() );
+	},
+	
+	makeImpl : function(test, maskPattern) {
+		
+		this.moduleCount = this.typeNumber * 4 + 17;
+		this.modules = new Array(this.moduleCount);
+		
+		for (var row = 0; row < this.moduleCount; row++) {
+			
+			this.modules[row] = new Array(this.moduleCount);
+			
+			for (var col = 0; col < this.moduleCount; col++) {
+				this.modules[row][col] = null;//(col + row) % 3;
+			}
+		}
+	
+		this.setupPositionProbePattern(0, 0);
+		this.setupPositionProbePattern(this.moduleCount - 7, 0);
+		this.setupPositionProbePattern(0, this.moduleCount - 7);
+		this.setupPositionAdjustPattern();
+		this.setupTimingPattern();
+		this.setupTypeInfo(test, maskPattern);
+		
+		if (this.typeNumber >= 7) {
+			this.setupTypeNumber(test);
+		}
+	
+		if (this.dataCache === null) {
+			this.dataCache = QRCode.createData(this.typeNumber, this.errorCorrectLevel, this.dataList);
+		}
+	
+		this.mapData(this.dataCache, maskPattern);
+	},
+
+	setupPositionProbePattern : function(row, col)  {
+		
+		for (var r = -1; r <= 7; r++) {
+			
+			if (row + r <= -1 || this.moduleCount <= row + r) continue;
+			
+			for (var c = -1; c <= 7; c++) {
+				
+				if (col + c <= -1 || this.moduleCount <= col + c) continue;
+				
+				if ( (0 <= r && r <= 6 && (c === 0 || c === 6) ) || 
+                     (0 <= c && c <= 6 && (r === 0 || r === 6) ) || 
+                     (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+					this.modules[row + r][col + c] = true;
+				} else {
+					this.modules[row + r][col + c] = false;
+				}
+			}		
+		}		
+	},
+	
+	getBestMaskPattern : function() {
+	
+		var minLostPoint = 0;
+		var pattern = 0;
+	
+		for (var i = 0; i < 8; i++) {
+			
+			this.makeImpl(true, i);
+	
+			var lostPoint = QRUtil.getLostPoint(this);
+	
+			if (i === 0 || minLostPoint >  lostPoint) {
+				minLostPoint = lostPoint;
+				pattern = i;
+			}
+		}
+	
+		return pattern;
+	},
+	
+	createMovieClip : function(target_mc, instance_name, depth) {
+	
+		var qr_mc = target_mc.createEmptyMovieClip(instance_name, depth);
+		var cs = 1;
+	
+		this.make();
+
+		for (var row = 0; row < this.modules.length; row++) {
+			
+			var y = row * cs;
+			
+			for (var col = 0; col < this.modules[row].length; col++) {
+	
+				var x = col * cs;
+				var dark = this.modules[row][col];
+			
+				if (dark) {
+					qr_mc.beginFill(0, 100);
+					qr_mc.moveTo(x, y);
+					qr_mc.lineTo(x + cs, y);
+					qr_mc.lineTo(x + cs, y + cs);
+					qr_mc.lineTo(x, y + cs);
+					qr_mc.endFill();
+				}
+			}
+		}
+		
+		return qr_mc;
+	},
+
+	setupTimingPattern : function() {
+		
+		for (var r = 8; r < this.moduleCount - 8; r++) {
+			if (this.modules[r][6] !== null) {
+				continue;
+			}
+			this.modules[r][6] = (r % 2 === 0);
+		}
+	
+		for (var c = 8; c < this.moduleCount - 8; c++) {
+			if (this.modules[6][c] !== null) {
+				continue;
+			}
+			this.modules[6][c] = (c % 2 === 0);
+		}
+	},
+	
+	setupPositionAdjustPattern : function() {
+	
+		var pos = QRUtil.getPatternPosition(this.typeNumber);
+		
+		for (var i = 0; i < pos.length; i++) {
+		
+			for (var j = 0; j < pos.length; j++) {
+			
+				var row = pos[i];
+				var col = pos[j];
+				
+				if (this.modules[row][col] !== null) {
+					continue;
+				}
+				
+				for (var r = -2; r <= 2; r++) {
+				
+					for (var c = -2; c <= 2; c++) {
+					
+						if (Math.abs(r) === 2 || 
+                            Math.abs(c) === 2 ||
+                            (r === 0 && c === 0) ) {
+							this.modules[row + r][col + c] = true;
+						} else {
+							this.modules[row + r][col + c] = false;
+						}
+					}
+				}
+			}
+		}
+	},
+	
+	setupTypeNumber : function(test) {
+	
+		var bits = QRUtil.getBCHTypeNumber(this.typeNumber);
+        var mod;
+	
+		for (var i = 0; i < 18; i++) {
+			mod = (!test && ( (bits >> i) & 1) === 1);
+			this.modules[Math.floor(i / 3)][i % 3 + this.moduleCount - 8 - 3] = mod;
+		}
+	
+		for (var x = 0; x < 18; x++) {
+			mod = (!test && ( (bits >> x) & 1) === 1);
+			this.modules[x % 3 + this.moduleCount - 8 - 3][Math.floor(x / 3)] = mod;
+		}
+	},
+	
+	setupTypeInfo : function(test, maskPattern) {
+	
+		var data = (this.errorCorrectLevel << 3) | maskPattern;
+		var bits = QRUtil.getBCHTypeInfo(data);
+        var mod;
+	
+		// vertical		
+		for (var v = 0; v < 15; v++) {
+	
+			mod = (!test && ( (bits >> v) & 1) === 1);
+	
+			if (v < 6) {
+				this.modules[v][8] = mod;
+			} else if (v < 8) {
+				this.modules[v + 1][8] = mod;
+			} else {
+				this.modules[this.moduleCount - 15 + v][8] = mod;
+			}
+		}
+	
+		// horizontal
+		for (var h = 0; h < 15; h++) {
+	
+			mod = (!test && ( (bits >> h) & 1) === 1);
+			
+			if (h < 8) {
+				this.modules[8][this.moduleCount - h - 1] = mod;
+			} else if (h < 9) {
+				this.modules[8][15 - h - 1 + 1] = mod;
+			} else {
+				this.modules[8][15 - h - 1] = mod;
+			}
+		}
+	
+		// fixed module
+		this.modules[this.moduleCount - 8][8] = (!test);
+	
+	},
+	
+	mapData : function(data, maskPattern) {
+		
+		var inc = -1;
+		var row = this.moduleCount - 1;
+		var bitIndex = 7;
+		var byteIndex = 0;
+		
+		for (var col = this.moduleCount - 1; col > 0; col -= 2) {
+	
+			if (col === 6) col--;
+	
+			while (true) {
+	
+				for (var c = 0; c < 2; c++) {
+					
+					if (this.modules[row][col - c] === null) {
+						
+						var dark = false;
+	
+						if (byteIndex < data.length) {
+							dark = ( ( (data[byteIndex] >>> bitIndex) & 1) === 1);
+						}
+	
+						var mask = QRUtil.getMask(maskPattern, row, col - c);
+	
+						if (mask) {
+							dark = !dark;
+						}
+						
+						this.modules[row][col - c] = dark;
+						bitIndex--;
+	
+						if (bitIndex === -1) {
+							byteIndex++;
+							bitIndex = 7;
+						}
+					}
+				}
+								
+				row += inc;
+	
+				if (row < 0 || this.moduleCount <= row) {
+					row -= inc;
+					inc = -inc;
+					break;
+				}
+			}
+		}
+		
+	}
+
+};
+
+QRCode.PAD0 = 0xEC;
+QRCode.PAD1 = 0x11;
+
+QRCode.createData = function(typeNumber, errorCorrectLevel, dataList) {
+	
+	var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel);
+	
+	var buffer = new QRBitBuffer();
+	
+	for (var i = 0; i < dataList.length; i++) {
+		var data = dataList[i];
+		buffer.put(data.mode, 4);
+		buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber) );
+		data.write(buffer);
+	}
+
+	// calc num max data.
+	var totalDataCount = 0;
+	for (var x = 0; x < rsBlocks.length; x++) {
+		totalDataCount += rsBlocks[x].dataCount;
+	}
+
+	if (buffer.getLengthInBits() > totalDataCount * 8) {
+		throw new Error("code length overflow. (" + 
+            buffer.getLengthInBits() + 
+            ">" +  
+            totalDataCount * 8 + 
+            ")");
+	}
+
+	// end code
+	if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+		buffer.put(0, 4);
+	}
+
+	// padding
+	while (buffer.getLengthInBits() % 8 !== 0) {
+		buffer.putBit(false);
+	}
+
+	// padding
+	while (true) {
+		
+		if (buffer.getLengthInBits() >= totalDataCount * 8) {
+			break;
+		}
+		buffer.put(QRCode.PAD0, 8);
+		
+		if (buffer.getLengthInBits() >= totalDataCount * 8) {
+			break;
+		}
+		buffer.put(QRCode.PAD1, 8);
+	}
+
+	return QRCode.createBytes(buffer, rsBlocks);
+};
+
+QRCode.createBytes = function(buffer, rsBlocks) {
+
+	var offset = 0;
+	
+	var maxDcCount = 0;
+	var maxEcCount = 0;
+	
+	var dcdata = new Array(rsBlocks.length);
+	var ecdata = new Array(rsBlocks.length);
+	
+	for (var r = 0; r < rsBlocks.length; r++) {
+
+		var dcCount = rsBlocks[r].dataCount;
+		var ecCount = rsBlocks[r].totalCount - dcCount;
+
+		maxDcCount = Math.max(maxDcCount, dcCount);
+		maxEcCount = Math.max(maxEcCount, ecCount);
+		
+		dcdata[r] = new Array(dcCount);
+		
+		for (var i = 0; i < dcdata[r].length; i++) {
+			dcdata[r][i] = 0xff & buffer.buffer[i + offset];
+		}
+		offset += dcCount;
+		
+		var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+		var rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+		var modPoly = rawPoly.mod(rsPoly);
+		ecdata[r] = new Array(rsPoly.getLength() - 1);
+		for (var x = 0; x < ecdata[r].length; x++) {
+            var modIndex = x + modPoly.getLength() - ecdata[r].length;
+			ecdata[r][x] = (modIndex >= 0)? modPoly.get(modIndex) : 0;
+		}
+
+	}
+	
+	var totalCodeCount = 0;
+	for (var y = 0; y < rsBlocks.length; y++) {
+		totalCodeCount += rsBlocks[y].totalCount;
+	}
+
+	var data = new Array(totalCodeCount);
+	var index = 0;
+
+	for (var z = 0; z < maxDcCount; z++) {
+		for (var s = 0; s < rsBlocks.length; s++) {
+			if (z < dcdata[s].length) {
+				data[index++] = dcdata[s][z];
+			}
+		}
+	}
+
+	for (var xx = 0; xx < maxEcCount; xx++) {
+		for (var t = 0; t < rsBlocks.length; t++) {
+			if (xx < ecdata[t].length) {
+				data[index++] = ecdata[t][xx];
+			}
+		}
+	}
+
+	return data;
+
+};
+
+module.exports = QRCode;
+
+}};
+return{QRCode:R("index"),L:R("QRErrorCorrectLevel")}})();
+
+</script>
+<script>
+{
+/* ---------- 札とルール ---------- */
+const CARDS=[
+ {n:'お金',k:'金',c:'#b5852a',t:'現実主義の守り人'},
+ {n:'恋愛',k:'恋',c:'#c2505d',t:'永遠のロマンチスト'},
+ {n:'友情',k:'友',c:'#3c79a0',t:'宴会の守護神'},
+ {n:'家族',k:'家',c:'#9b4b31',t:'ふるさとの柱'},
+ {n:'やりがい',k:'志',c:'#4c6091',t:'静かな野心家'},
+ {n:'自由',k:'自',c:'#3a958f',t:'風まかせの旅人'},
+ {n:'美食',k:'食',c:'#cc6f2c',t:'本能に正直な人'}];
+const POP=[.6,.5,.6,.7,.4,.6,.5];
+const EVENTS=[
+ {n:'不景気',e:{0:50}},{n:'同窓会シーズン',e:{2:40}},{n:'婚活ブーム',e:{1:40,5:-20}},
+ {n:'働き方改革',e:{4:-30,5:30}},{n:'大型連休',e:{5:40,4:-20}},{n:'グルメ番組ブーム',e:{6:40}},
+ {n:'実家に帰省',e:{3:40}},{n:'バブル崩壊',e:'crash'}];
+const C={start:100,inc:20,dec:20,floor:10,a:20,bet:10,rounds:5,evAt:[2,4],min:3,max:7,choose:10};
+const kan=['〇','一','二','三','四','五','六','七'];
+
+/* ---------- 札の絵 ---------- */
+const L='stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"';
+const P0='fill="var(--card)"';
+const ART=[
+ c=>`<g ${L}><ellipse cx="37" cy="29" rx="11" ry="17" transform="rotate(16 37 29)" ${P0}/><path d="M29 22l15 4M28 29l16 4" transform="rotate(16 37 29)" fill="none" opacity=".5"/><ellipse cx="24" cy="33" rx="12.5" ry="19" transform="rotate(-12 24 33)" fill="${c}"/><path d="M15 26h18M14 32.5h20M15 39h18" transform="rotate(-12 24 33)" fill="none"/><rect x="20" y="29" width="8" height="7" rx="1" transform="rotate(-12 24 33)" ${P0}/></g>`,
+ c=>`<g ${L}><path d="M9 20h42v28H9z" ${P0}/><path d="M9 20l21 17 21-17" fill="none"/><path d="M9 48l15-14M51 48L36 34" fill="none" opacity=".5"/><path d="M30 44c-7-5-8-11-3.5-12.2 2-.5 3.2.8 3.5 2.2.3-1.4 1.5-2.7 3.5-2.2C38 33 37 39 30 44z" fill="${c}"/></g>`,
+ c=>{const m=`<g transform="translate(-3 2) rotate(14 21 36)"><path d="M11 24h18v22a2 2 0 0 1-2 2H13a2 2 0 0 1-2-2z" fill="${c}"/><path d="M29 29h3a4 4 0 0 1 4 4v5a4 4 0 0 1-4 4h-3" fill="none"/><path d="M10 25c0-4 3-5 5-3 1-3 5-3 6 0 2-2 6-1 6 2v2H10z" ${P0}/><path d="M16 31v12M22 31v12" fill="none" opacity=".45"/></g>`;return`<g ${L}>${m}<g transform="translate(60 0) scale(-1 1)">${m}</g><path d="M30 8v5M24 10l2.5 3.5M36 10l-2.5 3.5" fill="none"/></g>`},
+ c=>`<g ${L}><path d="M41 22v-8h5v12" ${P0}/><path d="M43 10c3-2-1-4 1-6" fill="none" opacity=".6"/><path d="M14 29h32v21H14z" fill="${c}"/><path d="M9 31l21-18 21 18" ${P0}/><path d="M26 38h8v12h-8z" ${P0}/><path d="M17 34h6v6h-6z" ${P0}/><path d="M37 34h6v6h-6z" ${P0}/><path d="M5 50h50" fill="none"/></g>`,
+ c=>`<g ${L}><path d="M5 50l19-29 8 11 7-9 16 27z" fill="${c}"/><path d="M19.5 28l4.5-7 4.5 7-2.3-1.2-2.2 2-2.2-2z" ${P0}/><path d="M24 21V7" fill="none"/><path d="M24 7l11 3.5L24 14z" ${P0}/></g>`,
+ c=>`<g ${L}><path d="M6 29l47-16-21 21z" fill="${c}"/><path d="M32 34l21-21-15 33z" ${P0}/><path d="M32 34l1.5 8" fill="none"/><path d="M4 47c7 1 11-2 14-7" fill="none" stroke-dasharray="2 4"/></g>`,
+ c=>`<g ${L}><path d="M35 30L51 9M39 31l16-19" fill="none" stroke-width="2"/><path d="M9 32h42c0 10-9 17-21 17S9 42 9 32z" fill="${c}"/><path d="M13 32c4-7 30-7 34 0z" ${P0}/><path d="M24 49v3h12v-3" fill="none"/><path d="M21 24c-2.5-2.5 2.5-4 0-7M28 22c-2.5-2.5 2.5-4 0-7" fill="none" opacity=".6"/></g>`];
+const art=i=>`<svg viewBox="0 0 60 60" aria-hidden="true" style="color:var(--ink)">${ART[i](CARDS[i].c)}</svg>`;
+const card=(i,price)=>`<span class="cd" style="--c:${CARDS[i].c}"><span class="in"></span><span class="kj">${CARDS[i].k}</span>${art(i)}<span class="nm">${CARDS[i].n}</span>${price!==undefined?`<span class="pz num">相場 ${price}</span>`:''}</span>`;
+const backArt=`<svg viewBox="0 0 100 140" aria-hidden="true"><defs><pattern id="sp" width="20" height="20" patternUnits="userSpaceOnUse"><g fill="none" stroke="var(--line)" stroke-width="1"><circle cx="0" cy="0" r="10"/><circle cx="20" cy="0" r="10"/><circle cx="0" cy="20" r="10"/><circle cx="20" cy="20" r="10"/><circle cx="10" cy="10" r="10"/></g></pattern></defs><rect x="2" y="2" width="96" height="136" rx="4" fill="url(#sp)" stroke="var(--line)"/><rect x="30" y="34" width="40" height="72" fill="var(--card)" stroke="currentColor"/>${['最','後','の','一枚'].map((t,k)=>`<text x="50" y="${52+k*16}" text-anchor="middle" font-family="Zen Old Mincho,serif" font-weight="900" font-size="13" fill="currentColor">${t}</text>`).join('')}</svg>`;
+
+/* ---------- 共通の部品 ---------- */
+const app=document.getElementById('app');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rnd=()=>Math.random();
+const gauss=()=>{let u=1-rnd(),v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
+const evText=ev=>ev.e==='crash'?'その時点で一番高い札が −50':Object.entries(ev.e).map(([c,d])=>`${CARDS[c].n} ${d>0?'+':'−'}${Math.abs(d)}`).join('、');
+const cols=n=>n===7?4:n===6?3:n;
+const spark=(hist,i,W=72,H=24)=>{const all=hist.flat(),lo=Math.min(...all),hi=Math.max(...all),n=hist.length;
+  if(n<2)return`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><line x1="2" y1="${H/2}" x2="${W-2}" y2="${H/2}" stroke="var(--line)"/></svg>`;
+  const pts=hist.map((h,k)=>`${(2+k*(W-6)/(n-1)).toFixed(1)},${(H-3-(hi===lo?.5:(h[i]-lo)/(hi-lo))*(H-6)).toFixed(1)}`);
+  return`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts.join(' ')}" fill="none" stroke="${CARDS[i].c}" stroke-width="1.8" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>`};
+const board=(pr,prev,hist,cap)=>`<table class="board"><caption>${cap}</caption>${CARDS.map((c,i)=>{const d=pr[i]-prev[i];return`<tr><td class="ic">${art(i)}</td><td class="bn">${c.n}</td><td class="sp">${hist?spark(hist,i):''}</td><td class="pr num">${pr[i]}</td><td class="df num ${d>0?'up':d<0?'down':''}">${d>0?'▲'+d:d<0?'▼'+(-d):'―'}</td></tr>`}).join('')}</table>`;
+const pubBoard=(V,cap)=>board(V.prices,V.hist[V.hist.length-2]||V.prices,V.hist,cap);
+const pickBtn=(c,attr,pressed,extra='',price)=>`<button class="pick" ${attr} aria-pressed="${pressed}" aria-label="${CARDS[c].n}">${extra}${card(c,price)}</button>`;
+const certHTML=(d,holder)=>`<article class="cert"><div class="fr">
+  <div class="hd"><span class="tt">本性証券</span><span class="no num">第${kan[d.no]}号</span></div>
+  <div class="body"><div>${card(d.card)}</div><div><p class="holder">${esc(holder)}殿</p><p class="type">${CARDS[d.card].t}</p><p class="face">額面<b class="num">${d.face}</b></p></div></div>
+  <dl><dt>順位とのズレ</dt><dd>${d.greedy}回、${d.calc?'計算高い':'本音一筋'}</dd><dt>読まれ方</dt><dd><span class="num">${d.targeted}回中${d.hits}回</span>的中され、${d.read?'全部読まれている':'つかみどころがない'}</dd><dt>決め手</dt><dd>${esc(d.key)}</dd></dl>
+  <p class="ft">${d.cpu?'CPUの順位は自動で決めています。':'今夜限り有効'}</p><span class="seal" aria-hidden="true">本性<br>確認</span></div></article>`;
+function qrSVG(text){try{const q=new QRLib.QRCode(-1,QRLib.L.M);q.addData(text);q.make();const n=q.getModuleCount();let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))d+=`M${c} ${r}h1v1h-1z`;return`<svg viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges" role="img" aria-label="参加用QRコード"><path d="${d}" fill="#111"/></svg>`}catch(e){return''}}
+let lastKey='',lastNorm='';
+/* 同じ画面のままなら描き直さず、data-live の数字だけ書き換える(押し損じ防止) */
+function paint(h,key){const live=[...h.matchAll(/data-live>([^<]*)</g)].map(m=>m[1]),norm=h.replace(/data-live>[^<]*</g,'data-live><');
+  if(key===lastKey&&norm===lastNorm){app.querySelectorAll('[data-live]').forEach((el,k)=>{if(live[k]!==undefined)el.textContent=live[k]});return}
+  app.innerHTML=`<div class="${key!==lastKey?'screen':''}">${h}</div>`;lastKey=key;lastNorm=norm}
+
+/* ---------- 通信 ---------- */
+const params=new URLSearchParams(location.search);
+const LOCAL=!FIREBASE_CONFIG;
+function loadScript(src){return new Promise((ok,ng)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=ng;document.head.appendChild(s)})}
+async function connect(room){
+  if(LOCAL){
+    const ch=new BroadcastChannel('saigo-ichimai-'+room);let last=null,onA=null,onS=null;
+    ch.onmessage=e=>{const m=e.data;if(m.t==='action'&&onA)onA(m.a);if(m.t==='hello'&&last)ch.postMessage({t:'state',s:last});if(m.t==='state'&&onS)onS(m.s)};
+    return{publish:s=>{last=s;ch.postMessage({t:'state',s})},onAction:f=>{onA=f},send:a=>ch.postMessage({t:'action',a}),onState:f=>{onS=f;ch.postMessage({t:'hello'})}};
+  }
+  const V='10.12.2';
+  await loadScript(`https://cdn.jsdelivr.net/npm/firebase@${V}/firebase-app-compat.js`);
+  await loadScript(`https://cdn.jsdelivr.net/npm/firebase@${V}/firebase-database-compat.js`);
+  if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
+  const db=firebase.database(),base=db.ref('rooms/'+room);
+  return{
+    publish:s=>base.child('state').set({json:JSON.stringify(s),at:Date.now()}),
+    onAction:f=>base.child('actions').on('child_added',snap=>{const a=snap.val();snap.ref.remove();f(a)}),
+    send:a=>base.child('actions').push(a),
+    onState:f=>base.child('state').on('value',snap=>{const v=snap.val();if(v&&v.json)f(JSON.parse(v.json))})};
+}
+const modeNote=()=>LOCAL?`<p class="mode">お試しモードです。このパソコンの別のタブからだけ参加できます。スマホから参加するには、手順書に沿って Firebase を設定してください。</p>`:'';
+
+/* ================= テレビ(進行役) ================= */
+function hostMain(){
+  document.documentElement.classList.add('tv');
+  const A='ACDEFGHJKLMNPQRTUVWXY';const code=params.get('host')&&params.get('host').length===4?params.get('host').toUpperCase():Array.from({length:4},()=>A[Math.floor(rnd()*A.length)]).join('');
+  if(params.get('host')!==code){const u=new URL(location.href);u.searchParams.set('host',code);history.replaceState(null,'',u)}
+  const joinURL=(()=>{const u=new URL(location.href);u.search='';u.searchParams.set('room',code);return u.toString()})();
+  let net=null,tick=null,cpuT=null;
+  const S={code,phase:'lobby',players:[],round:0,prices:Array(7).fill(C.start),hist:[Array(7).fill(C.start)]};
+  const P=()=>S.players;
+  const humans=()=>P().filter(p=>!p.cpu);
+  const targetOf=(i)=>{const n=P().length,k=((S.round-1)%(n-1))+1;return(i+k)%n};
+  function addEv(pr,ev){if(ev.e==='crash'){let m=0;pr.forEach((x,i)=>{if(x>pr[m])m=i});pr[m]-=50}else for(const[c,d]of Object.entries(ev.e))pr[c]+=d;for(let i=0;i<7;i++)pr[i]=Math.max(C.floor,pr[i])}
+  const expPrices=()=>{const e=[...S.prices],nx=C.evAt.indexOf(S.round+1);if(nx>=0)addEv(e,S.events[nx]);return e};
+  const cpuDiscard=(p,ex)=>{let b=null,bu=1e9;for(const c of p.hand){const u=(1-p.g)*p.v[c]+p.g*ex[c]/200+gauss()*.03;if(u<bu){bu=u;b=c}}return b};
+  const cpuGuess=(t,ex,keep)=>{const t0=P()[t],base=t0.cpu?t0.v:POP;let b=null,bu=keep?-1e9:1e9;for(const c of t0.hand){const u=.5*(base[c]+gauss()*.3)+.5*ex[c]/200;if(keep?u>bu:u<bu){bu=u;b=c}}return b};
+  const newPlayer=(id,name,cpu)=>({id,name,cpu});
+  function resetPlayer(p){const v=POP.map(x=>x+gauss()*.3);Object.assign(p,{v,g:rnd(),rank:p.cpu?[...v.keys()].sort((a,b)=>v[b]-v[a]):[],hand:[0,1,2,3,4,5,6],disc:[],a:0,bet:0,hits:0,targeted:0,greedy:0,notes:[],pick:null,guess:null,hit:false,final:null,gdrop:null})}
+  function startGame(){
+    if(P().length<C.min)return;
+    S.events=[...EVENTS].sort(()=>rnd()-.5).slice(0,2);S.round=0;S.prices=Array(7).fill(C.start);S.hist=[[...S.prices]];S.firedEv=null;S.results=null;
+    P().forEach(resetPlayer);S.phase='ranking';checkRanking();
+  }
+  function checkRanking(){if(P().every(p=>p.rank.length===7))startRound();else pub()}
+  function startRound(){
+    S.round++;const ei=C.evAt.indexOf(S.round);S.firedEv=null;
+    if(ei>=0){addEv(S.prices,S.events[ei]);S.firedEv=S.events[ei];S.hist.push([...S.prices])}
+    const ex=expPrices();
+    P().forEach((p,i)=>{p.pick=null;p.guess=null;if(p.cpu){p.pick=cpuDiscard(p,ex);p.guess=cpuGuess(targetOf(i),ex,false)}});
+    S.phase='turn';checkTurn();
+  }
+  function checkTurn(){if(P().every(p=>p.pick!==null))resolveRound();else pub()}
+  function updatePrices(ds){const cnt=Array(7).fill(0);ds.forEach(c=>cnt[c]++);for(let c=0;c<7;c++)S.prices[c]=Math.max(C.floor,S.prices[c]+(cnt[c]?C.inc*cnt[c]:-C.dec));S.hist.push([...S.prices])}
+  function resolveRound(){
+    const top=Math.max(...S.prices);
+    P().forEach((p,i)=>{const tp=P()[targetOf(i)];tp.targeted++;p.hit=p.guess===tp.pick;if(p.hit){p.a+=C.a;tp.hits++}
+      const honest=[...p.hand].sort((a,b)=>p.rank.indexOf(b)-p.rank.indexOf(a))[0];
+      if(p.pick!==honest){p.greedy++;p.notes.push({k:'greedy',r:S.round,c:p.pick,o:p.rank.indexOf(p.pick)+1})}
+      if(S.prices[p.pick]===top)p.notes.push({k:'top',r:S.round,c:p.pick})});
+    S.reveal=P().map((p,i)=>({pick:p.pick,guess:p.guess,hit:p.hit,target:targetOf(i)}));
+    P().forEach(p=>{p.hand=p.hand.filter(c=>c!==p.pick);p.disc.push(p.pick)});
+    updatePrices(P().map(p=>p.pick));S.phase='reveal';pub();
+  }
+  function startFinal(){S.frozen=[...S.prices];S.gOrder=0;openBet()}
+  function openBet(){
+    if(S.gOrder>=P().length){finish();return}
+    const j=S.gOrder;S.bets={};P().forEach((p,i)=>{if(i!==j&&p.cpu)S.bets[i]=cpuGuess(j,S.frozen,true)});
+    S.phase='final-bet';checkBets();
+  }
+  function checkBets(){const j=S.gOrder;if(P().every((p,i)=>i===j||i in S.bets))startChoose();else pub()}
+  function startChoose(){
+    const j=S.gOrder,p=P()[j];S.phase='final-choose';S.left=C.choose;clearInterval(tick);clearTimeout(cpuT);
+    if(p.cpu){cpuT=setTimeout(()=>{let k=null,bu=-1e9;for(const x of p.hand){const u=(1-p.g)*p.v[x]+p.g*S.frozen[x]/200+gauss()*.03;if(u>bu){bu=u;k=x}}decide(j,k)},2500)}
+    tick=setInterval(()=>{S.left--;if(S.left<=0)decide(j,p.hand[Math.floor(rnd()*2)]);else pub()},1000);
+    pub();
+  }
+  function decide(j,keep){
+    if(S.phase!=='final-choose'||S.gOrder!==j)return;clearInterval(tick);clearTimeout(cpuT);
+    const p=P()[j];p.final=keep;p.gdrop=p.hand.find(c=>c!==keep);
+    const honest=[...p.hand].sort((a,b)=>p.rank.indexOf(a)-p.rank.indexOf(b))[0];
+    if(keep!==honest){p.greedy++;p.notes.push({k:'greedy',r:6,c:p.gdrop,o:p.rank.indexOf(p.gdrop)+1})}
+    S.lastBets=Object.entries(S.bets).filter(([i,c])=>c!==null).map(([i,c])=>{const w=c===keep;P()[i].bet+=w?C.bet:-C.bet;return{i:+i,c,w}});
+    S.phase='final-reveal';pub();
+  }
+  function finish(){
+    const low=Math.min(...S.frozen);
+    P().forEach(p=>{if(S.frozen[p.final]===low)p.notes.push({k:'low',c:p.final});p.disc.push(p.gdrop)});
+    updatePrices(P().map(p=>p.gdrop));
+    const rows=P().map((p,i)=>({i,a:p.a,b:S.prices[p.final],bet:p.bet,t:p.a+S.prices[p.final]+p.bet})).sort((x,y)=>y.t-x.t||y.a-x.a);
+    const rd=r=>r===6?'最後の二択':'第'+kan[r]+'ラウンド';
+    const certs=P().map((p,i)=>{const c=CARDS[p.final],calc=p.greedy>=3,g=p.notes.find(n=>n.k==='greedy'),lo=p.notes.find(n=>n.k==='low'),tp=p.notes.find(n=>n.k==='top');
+      const key=calc&&g?`${rd(g.r)}で、自分で${g.o}位にした「${CARDS[g.c].n}」を手放した`:lo?`最安値になっても「${c.n}」を手放さなかった`:tp?`${rd(tp.r)}で、最高値だった「${CARDS[tp.c].n}」を手放した`:`最後の二択で「${CARDS[p.gdrop].n}」より「${c.n}」を選んだ`;
+      return{no:i+1,card:p.final,face:S.prices[p.final],greedy:p.greedy,calc,hits:p.hits,targeted:p.targeted,read:p.targeted&&p.hits/p.targeted>=.5,key,cpu:p.cpu}});
+    S.results={rows,certs,tie:rows.filter(r=>r.t===rows[0].t).length>1};
+    S.phase='results';pub();
+  }
+  function onAction(a){
+    if(!a||typeof a!=='object')return;const i=P().findIndex(p=>p.id===a.pid),p=P()[i];
+    if(a.type==='join'){const name=String(a.name||'').trim().slice(0,10)||'名無し';
+      if(p){p.name=name}else if(S.phase==='lobby'&&P().length<C.max)S.players.push(newPlayer(a.pid,name,false));pub();return}
+    if(!p||p.cpu)return;
+    if(a.type==='rank'&&S.phase==='ranking'&&p.rank.length<7){const o=a.order;if(Array.isArray(o)&&o.length===7&&new Set(o).size===7&&o.every(x=>x>=0&&x<7)){p.rank=o.map(Number);checkRanking()}}
+    else if(a.type==='turn'&&S.phase==='turn'&&p.pick===null){const t=P()[targetOf(i)];if(p.hand.includes(a.pick)&&t.hand.includes(a.guess)){p.pick=a.pick;p.guess=a.guess;checkTurn()}}
+    else if(a.type==='bet'&&S.phase==='final-bet'&&i!==S.gOrder&&!(i in S.bets)){const ch=P()[S.gOrder];S.bets[i]=ch.hand.includes(a.card)?a.card:null;checkBets()}
+    else if(a.type==='keep'&&S.phase==='final-choose'&&i===S.gOrder&&p.hand.includes(a.card))decide(i,a.card);
+  }
+  function view(){
+    const ph=S.phase,V={code,phase:ph,round:S.round,prices:S.prices,hist:S.hist,
+      firedEv:S.firedEv&&ph==='turn'?{n:S.firedEv.n,t:evText(S.firedEv)}:null,
+      nextEv:(()=>{if(ph!=='turn')return null;const nx=C.evAt.indexOf(S.round+1);return nx>=0?{n:S.events[nx].n,t:evText(S.events[nx])}:null})(),
+      players:P().map((p,i)=>({id:p.id,name:p.name,cpu:p.cpu,hand:p.hand||[],rankDone:(p.rank||[]).length===7,submitted:p.pick!==null&&p.pick!==undefined,target:S.round?targetOf(i):null,a:p.a||0,bet:p.bet||0}))};
+    if(ph==='reveal')V.reveal=S.reveal;
+    if(ph.startsWith('final')){V.j=S.gOrder;V.frozen=S.frozen;V.betDone=Object.keys(S.bets).map(Number);V.left=S.left;
+      if(ph==='final-reveal'){const p=P()[S.gOrder];V.keep=p.final;V.drop=p.gdrop;V.lastBets=S.lastBets}}
+    if(ph==='results'){V.results=S.results;V.frozen=S.frozen}
+    return V;
+  }
+  function pub(){const V=view();window.__hostV=V;if(net)net.publish(V);render(V)}
+  function render(V){
+    const ph=V.phase,PL=V.players;let h='';
+    const status=(fn)=>`<ul class="people">${PL.map((p,i)=>`<li><span>${esc(p.name)}${p.cpu?' <span class="sub">CPU</span>':''}</span><span class="st ${fn(p,i)[1]?'ok':''}">${fn(p,i)[0]}</span></li>`).join('')}</ul>`;
+    if(ph==='lobby'){
+      h=`<div class="split"><div><div class="fan" aria-hidden="true">${CARDS.map((c,i)=>card(i)).join('')}</div><h1>最後の一枚</h1><p class="sub">7枚の価値観から、1枚ずつ手放していく遊びです。テレビに相場と進行を映し、手札は各自のスマホで操作します。</p>
+      <h2>参加者 <span class="num">${PL.length}/${C.max}</span>人</h2>${PL.length?status(p=>['参加済み',1]):'<p class="sub">まだ誰もいません。</p>'}
+      <div class="row"><button class="plain" data-act="cpu"${PL.length>=C.max?' disabled':''}>CPUを加える</button><button class="plain" data-act="uncpu"${PL.some(p=>p.cpu)?'':' disabled'}>CPUを減らす</button></div>
+      <button class="go" data-act="start"${PL.length<C.min?' disabled':''}>${PL.length<C.min?`あと${C.min-PL.length}人で始められます`:'この顔ぶれで始める'}</button></div>
+      <div><h2 style="margin-top:0">スマホで参加する</h2><div class="qr">${qrSVG(joinURL)}</div><p class="sub" style="margin-top:14px">部屋コード</p><p class="roomcode num">${code}</p><p class="sub" style="word-break:break-all">${esc(joinURL)}</p>${modeNote()}</div></div>`;
+    }else if(ph==='ranking'){
+      h=`<div class="split"><div><p class="mark">はじめる前に</p><h1>各自のスマホで、7枚を大事な順に並べています</h1><p class="sub">この順位はほかの人には見せず、最後の診断にだけ使います。</p></div><div><h2 style="margin-top:0">進み具合</h2>${status(p=>p.rankDone?['決めた',1]:['考え中',0])}</div></div>`;
+    }else if(ph==='turn'){
+      h=`<div class="split"><div><p class="mark">第${kan[V.round]}ラウンド</p><h1>${V.firedEv?`「${esc(V.firedEv.n)}」が起きた`:'手放す札を選んでいます'}</h1>${V.firedEv?`<p>${esc(V.firedEv.t)}</p>`:''}${pubBoard(V,V.firedEv?'イベントによる動き':'相場の推移と直近の動き')}</div>
+      <div><h2 style="margin-top:0">手番</h2>${status(p=>p.submitted?['決めた',1]:['考え中',0])}${V.nextEv?`<div class="notice">次のラウンドの前に<b>「${esc(V.nextEv.n)}」</b>が起きます。${esc(V.nextEv.t)}</div>`:''}</div></div>`;
+    }else if(ph==='reveal'){
+      h=`<div class="split"><div><p class="mark">第${kan[V.round]}ラウンド</p><h1>手放された札</h1>${pubBoard(V,`手放した枚数×${C.inc}、誰も手放さなければ−${C.dec}`)}</div>
+      <div><table class="list"><tr><th>名前</th><th>手放した</th><th>予想</th></tr>${V.reveal.map((r,i)=>`<tr><td>${esc(PL[i].name)}</td><td>${CARDS[r.pick].n}</td><td>${esc(PL[r.target].name)}さんは${CARDS[r.guess].n}<br><span class="${r.hit?'up':'sub'}">${r.hit?'的中 +'+C.a:'外れ'}</span></td></tr>`).join('')}</table>
+      <button class="go" data-act="next">${V.round<C.rounds?'次のラウンドへ':'最後の二択へ'}</button></div></div>`;
+    }else if(ph==='final-bet'||ph==='final-choose'){
+      const ch=PL[V.j];
+      h=`<div class="split"><div><p class="mark">最後の二択 ${V.j+1}/${PL.length}</p><h1>${esc(ch.name)}さんの二択</h1>
+      <div class="hand big">${ch.hand.map(c=>`<div>${card(c,V.frozen[c])}</div>`).join('')}</div>
+      ${ph==='final-choose'?`<p class="timer num" data-live>${V.left}</p><p class="sub" style="text-align:center">${esc(ch.name)}さんがスマホで選んでいます。時間切れのときは、どちらかがランダムに残ります。</p>`:''}</div>
+      <div>${ph==='final-bet'?`<h2 style="margin-top:0">各自のスマホで${C.bet}点を賭けています</h2><p class="sub">何に賭けたかは、選び終わるまで伏せておきます。</p>${status((p,i)=>i===V.j?['選ぶ人',0]:V.betDone.includes(i)?['賭けた',1]:['考え中',0])}<button class="go" data-act="closebets">賭けを締め切る</button>`:`<h2 style="margin-top:0">相場は止まっています</h2><p class="sub">全員が選び終えてから、最終相場を発表します。</p>`}</div></div>`;
+    }else if(ph==='final-reveal'){
+      const ch=PL[V.j];
+      h=`<div class="split"><div><p class="mark">最後の二択 ${V.j+1}/${PL.length}</p><h1>${esc(ch.name)}さんは「${CARDS[V.keep].n}」を残した</h1><div class="hand big"><div>${card(V.keep)}</div></div><p class="sub" style="text-align:center;margin-top:12px">手放したのは「${CARDS[V.drop].n}」</p></div>
+      <div>${V.lastBets.length?`<table class="list"><tr><th>賭けた人</th><th>賭けた札</th><th class="r">結果</th></tr>${V.lastBets.map(b=>`<tr><td>${esc(PL[b.i].name)}</td><td>${CARDS[b.c].n}</td><td class="r num ${b.w?'up':''}">${b.w?'+'+C.bet:'−'+C.bet}</td></tr>`).join('')}</table>`:'<p class="sub">誰も賭けませんでした。</p>'}
+      <button class="go" data-act="next">${V.j<PL.length-1?'次の人へ':'最終相場を発表する'}</button></div></div>`;
+    }else if(ph==='results'){
+      const R=V.results,win=R.rows.filter(r=>r.t===R.rows[0].t&&r.a===R.rows[0].a);
+      h=`<div class="split"><div><p class="mark">終局</p><h1>${win.map(r=>esc(PL[r.i].name)).join('さんと')}さんの勝ち</h1>${R.tie?'<p class="sub">合計が同点のため、予想の得点が多い人を上位にしています。</p>':''}
+      <table class="list"><tr><th>名前</th><th class="r">予想</th><th class="r">最後の一枚</th><th class="r">賭け</th><th class="r">合計</th></tr>${R.rows.map(r=>`<tr><td>${esc(PL[r.i].name)}</td><td class="r num">${r.a}</td><td class="r num">${r.b}</td><td class="r num">${r.bet>0?'+':''}${r.bet}</td><td class="r num"><b>${r.t}</b></td></tr>`).join('')}</table>
+      <div class="row"><button class="plain" data-act="again">同じ顔ぶれでもう一度</button></div></div>
+      <div>${board(V.prices,V.frozen,V.hist,'最終相場(最後の二択で手放された分を反映)')}</div></div>
+      <h2>本性証券</h2><div class="certs">${R.certs.map((d,i)=>certHTML(d,PL[i].name)).join('')}</div>`;
+    }
+    paint(h,ph+'|'+V.round+'|'+(V.j??''));
+  }
+  app.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled)return;const a=b.dataset.act;
+    if(a==='cpu'&&P().length<C.max){const n=P().filter(p=>p.cpu).length+1;S.players.push(newPlayer('cpu'+Date.now()+n,'CPU '+n,true));pub()}
+    else if(a==='uncpu'){const k=P().map(p=>p.cpu).lastIndexOf(true);if(k>=0){S.players.splice(k,1);pub()}}
+    else if(a==='start')startGame();
+    else if(a==='next'){if(S.phase==='reveal'){S.round<C.rounds?startRound():startFinal()}else if(S.phase==='final-reveal'){S.gOrder++;openBet()}}
+    else if(a==='closebets'){P().forEach((p,i)=>{if(i!==S.gOrder&&!(i in S.bets))S.bets[i]=null});checkBets()}
+    else if(a==='again')startGame();
+    window.scrollTo(0,0)});
+  render(view());
+  connect(code).then(n=>{net=n;n.onAction(onAction);pub()}).catch(()=>{app.insertAdjacentHTML('afterbegin','<p class="mode">通信の準備に失敗しました。設定と通信環境を確認して、ページを読み込み直してください。</p>')});
+}
+
+/* ================= スマホ(参加者) ================= */
+function playerMain(code){
+  let pid=null;try{pid=sessionStorage.getItem('saigo-pid')}catch(e){}
+  if(!pid){pid='p'+Date.now().toString(36)+Math.floor(rnd()*1e6).toString(36);try{sessionStorage.setItem('saigo-pid',pid)}catch(e){}}
+  let myName='';try{myName=localStorage.getItem('saigo-name')||''}catch(e){}
+  let net=null,V=null,joined=false,sel={k:'',d:null,g:null,rank:[],sent:null};
+  const send=a=>{if(net)net.send(Object.assign({pid},a))};
+  function render(){
+    let h='';const me=V?V.players.findIndex(p=>p.id===pid):-1,M=me>=0?V.players[me]:null;
+    const wait=(t,s='')=>`<div class="wait"><div class="back">${backArt}</div><p class="who">${t}</p>${s?`<p class="sub">${s}</p>`:''}</div>`;
+    if(!V||me<0){
+      h=`<p class="mark">部屋 ${esc(code)}</p><h1>最後の一枚に参加する</h1>${V&&V.phase!=='lobby'&&joined?'<p>この部屋はもう始まっています。次のゲームから参加してください。</p>':''}
+      <label for="nm">名前(10文字まで)</label><input id="nm" class="field" maxlength="10" value="${esc(myName)}" autocomplete="nickname">
+      <button class="go" data-act="join">参加する</button>${!V?'<p class="sub" style="margin-top:14px">テレビ側とつないでいます。</p>':''}${modeNote()}`;
+    }else{
+      const ph=V.phase,key=ph+'|'+V.round+'|'+(V.j??'');if(sel.k!==key)sel={k:key,d:null,g:null,rank:[],sent:null};
+      if(ph==='lobby')h=wait(`${esc(M.name)}さん`,'参加しました。テレビの画面で開始を待っています。');
+      else if(ph==='ranking'){
+        if(M.rankDone||sel.sent)h=wait('順位を送りました','ほかの人を待っています。');
+        else{const t=sel.rank;h=`<p class="mark">はじめる前に</p><h1>大事な順に、7枚を押す</h1><p class="sub">診断にだけ使います。ほかの人には見せません。</p>
+          <div class="hand" style="--n:4">${CARDS.map((c,i)=>pickBtn(i,`data-act="rk" data-c="${i}"`,t.includes(i),t.includes(i)?`<span class="ord num">${t.indexOf(i)+1}</span>`:'')).join('')}</div>
+          <div class="row" style="margin-top:18px"><button class="plain" data-act="rkreset"${t.length?'':' disabled'}>やり直す</button><span class="sub">${t.length}/7枚</span></div>
+          <button class="go" data-act="rkok"${t.length<7?' disabled':''}>この順で決める</button>`}
+      }else if(ph==='turn'){
+        if(M.submitted||sel.sent)h=wait('決めました',sel.sent?`「${CARDS[sel.sent.pick].n}」を手放し、${esc(V.players[M.target].name)}さんは「${CARDS[sel.sent.guess].n}」と予想しました。`:'ほかの人を待っています。');
+        else{const tp=V.players[M.target];h=`<p class="mark">第${kan[V.round]}ラウンド</p><h1>手放す1枚</h1>
+          <div class="hand" style="--n:${cols(M.hand.length)}">${M.hand.map(c=>pickBtn(c,`data-act="pd" data-c="${c}"`,sel.d===c,'',V.prices[c])).join('')}</div>
+          <h2>${esc(tp.name)}さんが手放すのは</h2><div class="hand" style="--n:${cols(tp.hand.length)}">${tp.hand.map(c=>pickBtn(c,`data-act="pg" data-c="${c}"`,sel.g===c)).join('')}</div>
+          ${V.nextEv?`<div class="notice">次のラウンドの前に<b>「${esc(V.nextEv.n)}」</b>が起きます。${esc(V.nextEv.t)}</div>`:''}
+          <button class="go" data-act="pok"${sel.d===null||sel.g===null?' disabled':''}>これで決める</button>`}
+      }else if(ph==='reveal'){
+        const r=V.reveal[me];h=`<p class="mark">第${kan[V.round]}ラウンド</p><h1>「${CARDS[r.pick].n}」を手放した</h1><p>${esc(V.players[r.target].name)}さんの予想は${r.hit?`<span class="up">的中、+${C.a}点</span>`:'外れ'}でした。</p>${pubBoard(V,'相場の動き')}<p class="sub" style="margin-top:16px">テレビの画面で次に進みます。</p>`;
+      }else if(ph==='final-bet'){
+        const ch=V.players[V.j];
+        if(me===V.j)h=wait('次はあなたの二択','みんなが賭け終わると、10秒で選んでもらいます。');
+        else if(V.betDone.includes(me)||sel.sent!==null)h=wait('賭けました',`${esc(ch.name)}さんが選ぶのを待っています。`);
+        else h=`<p class="mark">最後の二択</p><h1>${esc(ch.name)}さんが残すのは</h1><p class="sub">当たれば+${C.bet}点、外れれば−${C.bet}点。何に賭けたかは選び終わるまで伏せます。</p>
+          <div class="hand big">${ch.hand.map(c=>pickBtn(c,`data-act="bet" data-c="${c}"`,false,'',V.frozen[c])).join('')}</div><button class="plain" data-act="nobet" style="display:block;margin:24px auto 0">賭けない</button>`;
+      }else if(ph==='final-choose'){
+        const ch=V.players[V.j];
+        if(me===V.j&&sel.sent===null)h=`<p class="mark">最後の二択</p><h1>残す1枚を選ぶ</h1><p class="timer num" data-live>${V.left}</p><div class="hand big">${M.hand.map(c=>pickBtn(c,`data-act="keep" data-c="${c}"`,false,'',V.frozen[c])).join('')}</div>`;
+        else h=wait(me===V.j?'選びました':`${esc(ch.name)}さんが選んでいます`,`残り<span data-live>${V.left}</span>秒`);
+      }else if(ph==='final-reveal'){
+        const ch=V.players[V.j],b=V.lastBets.find(x=>x.i===me);
+        h=`<p class="mark">最後の二択</p><h1>${esc(ch.name)}さんは「${CARDS[V.keep].n}」を残した</h1><div class="hand big"><div>${card(V.keep)}</div></div>
+          <p style="text-align:center;margin-top:16px">${me===V.j?'あなたの選択です。':b?(b.w?`<span class="up">賭けに勝って+${C.bet}点</span>`:`賭けに負けて−${C.bet}点`):'賭けていません。'}</p>`;
+      }else if(ph==='results'){
+        const R=V.results,pos=R.rows.findIndex(r=>r.i===me)+1,row=R.rows[pos-1];
+        h=`<p class="mark">終局</p><h1>${pos}位、${row.t}点</h1><p class="sub">予想 ${row.a}点、最後の一枚 ${row.b}点、賭け ${row.bet>0?'+':''}${row.bet}点</p><h2>あなたの本性証券</h2>${certHTML(R.certs[me],M.name)}<p class="sub">全員の証券は、テレビの画面に出ています。</p>`;
+      }
+    }
+    paint(h,V?V.phase+'|'+V.round+'|'+(V.j??''):'join');
+  }
+  app.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled)return;const a=b.dataset.act,c=b.dataset.c===undefined?null:+b.dataset.c;
+    if(a==='join'){const n=document.getElementById('nm').value.trim();if(!n){document.getElementById('nm').focus();return}myName=n;try{localStorage.setItem('saigo-name',n)}catch(e){}joined=true;send({type:'join',name:n});return}
+    if(a==='rk'){if(!sel.rank.includes(c))sel.rank.push(c);render();return}
+    if(a==='rkreset'){sel.rank=[];render();return}
+    if(a==='rkok'){sel.sent=true;send({type:'rank',order:sel.rank})}
+    if(a==='pd'){sel.d=c;render();return}
+    if(a==='pg'){sel.g=c;render();return}
+    if(a==='pok'){sel.sent={pick:sel.d,guess:sel.g};send({type:'turn',pick:sel.d,guess:sel.g})}
+    if(a==='bet'){sel.sent=c;send({type:'bet',card:c})}
+    if(a==='nobet'){sel.sent=-1;send({type:'bet',card:null})}
+    if(a==='keep'){sel.sent=c;send({type:'keep',card:c})}
+    render();window.scrollTo(0,0)});
+  render();
+  connect(code).then(n=>{net=n;n.onState(s=>{V=s;window.__pV=V;if(joined||V.players.some(p=>p.id===pid))joined=true;render()})}).catch(()=>{app.insertAdjacentHTML('afterbegin','<p class="mode">通信の準備に失敗しました。通信環境を確認して、ページを読み込み直してください。</p>')});
+}
+
+/* ================= 入口 ================= */
+function landing(){
+  const go=u=>{location.href=u};
+  app.innerHTML=`<div class="screen"><div class="fan" aria-hidden="true">${CARDS.map((c,i)=>card(i)).join('')}</div><h1>最後の一枚</h1><p class="sub">7枚の価値観から1枚ずつ手放し、最後に残した札で本性を診断する、3〜7人用の遊びです。</p>
+  <button class="go" data-act="host">テレビで部屋を作る</button>
+  <h2>スマホで参加する</h2><label for="cd">部屋コード(4文字)</label><input id="cd" class="field code" maxlength="4" autocomplete="off" autocapitalize="characters"><button class="plain" data-act="join" style="margin-top:12px">参加する</button>${modeNote()}</div>`;
+  app.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const u=new URL(location.href);u.search='';
+    if(b.dataset.act==='host'){u.searchParams.set('host','new');go(u)}
+    else{const v=document.getElementById('cd').value.trim().toUpperCase();if(v.length!==4){document.getElementById('cd').focus();return}u.searchParams.set('room',v);go(u)}});
+}
+const fanFix=()=>document.querySelectorAll('.fan .cd').forEach((el,i)=>{el.style.transform=`rotate(${(i-3)*11}deg)`});
+new MutationObserver(fanFix).observe(app,{childList:true,subtree:true});
+if(params.get('host'))hostMain();else if(params.get('room'))playerMain(params.get('room').toUpperCase().slice(0,4));else landing();
+}
+</script>
+</body>
+</html>
