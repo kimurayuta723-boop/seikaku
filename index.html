@@ -109,6 +109,20 @@ label{display:block;font-size:14px;color:var(--sub);margin:18px 0 6px}
 .cert .path span{display:block;width:30px;height:30px;opacity:.5}.cert .path svg{width:100%;height:100%;display:block}
 .cert .path .last{opacity:1;width:38px;height:38px;margin-left:8px;padding-left:10px;border-left:1px solid var(--line);box-sizing:content-box}
 .cert .pcap{font-size:12px;color:var(--sub);margin:0}
+.cert .lead{font-size:15px;line-height:1.9;margin:16px 0 0}
+.cert .txt{font-size:15px;line-height:1.85;margin:0}
+.axes{display:grid;gap:12px;margin:2px 0 0}
+.axr{display:grid;grid-template-columns:6.6em minmax(0,1fr) 6.6em;gap:10px;align-items:center;font-size:13px;color:var(--sub)}
+.axr .r{text-align:right}.axr .on{color:var(--ink);font-weight:700}.axr b{font-weight:700}
+.bar{position:relative;display:block;height:8px;border-radius:4px;background:var(--line)}
+.bar i{position:absolute;top:0;bottom:0;border-radius:4px;background:var(--ink)}
+.sw{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.sw ul{margin:0;padding-left:1.1em;font-size:14px;line-height:1.75}.sw li{margin-bottom:4px}
+.cert .word{font:600 17px/1.7 "Zen Old Mincho",serif;margin:0;text-wrap:balance}
+.cert .lead,.cert .txt,.cert .story{text-wrap:pretty}
+.cert .pair{grid-template-columns:repeat(auto-fit,minmax(9em,1fr))}
+@media(max-width:420px){.sw{grid-template-columns:minmax(0,1fr)}.axr{grid-template-columns:6em minmax(0,1fr) 6em}}
+.tv .hero .cert .lead,.tv .hero .cert .txt{font-size:18px}.tv .hero .axr{font-size:16px}.tv .hero .sw ul{font-size:17px}.tv .hero .cert .word{font-size:21px}
 .cert .sec{font-size:12px;color:var(--sub);letter-spacing:.06em;margin:18px 0 6px}
 .cert .pro{font-size:15px;line-height:1.8;margin:14px 0 0}
 .cert .story{font:600 16px/1.8 "Zen Old Mincho",serif;margin:0;padding:0;border:0}
@@ -1571,13 +1585,32 @@ let CARDS=ALL.slice(0,7);
 const setDeck=ids=>{if(Array.isArray(ids)&&ids.length===7)CARDS=ids.map(i=>ALL[i])};
 const C={start:100,inc:20,dec:20,floor:10,a:20,bet:10,hon:10,foolAll:20,foolHalf:10,pen:10,rounds:5,evAt:[2,4],min:3,max:7,turnSec:180,rankSec:180,finalSec:15,revDelay:2600};
 const kan=['〇','一','二','三','四','五','六','七'];
-/* 本性の5項目。値は0〜1、点の数(0〜4)で言葉を選ぶ */
-const AX=[
- ['本音','損得で動く','やや損得','五分五分','わりと本音','本音一筋'],
- ['読ませない','顔に出る','読まれがち','ふつう','読みにくい','鉄仮面'],
- ['読む力','勘は休業中','たまに当たる','ふつう','よく当てる','読心術'],
- ['我が道','流されやすい','周りに合わせる','ふつう','自分で決める','我が道を行く'],
- ['相場眼','逆張りの失敗','安値づかみ','ふつう','目利き','相場師']];
+/* 16タイプ。並びは [本音/損得][鉄仮面/顔に出る][我が道/協調][観察/直感] の組み合わせ順 */
+const POLES=[['本音','損得'],['鉄仮面','顔に出る'],['我が道','協調'],['観察','直感']];
+const POLE_SW=[
+ [['言うことと行動がぶれない','損な役回りを引き受けがち'],['状況に合わせて、いちばん得な手を選べる','本心が見えないと言われがち']],
+ [['勝負どころでも動じない','何を考えているか分からないと思われがち'],['気持ちが顔に出るので、信頼されやすい','隠しごとには向いていない']],
+ [['流行に左右されず、自分で決められる','周りと足並みがそろわないこともある'],['場の流れを読んで、うまく合わせられる','人に合わせすぎて疲れることもある']],
+ [['人の小さな変化によく気づく','考えすぎて出遅れることがある'],['ひらめきで、迷わず動ける','人の気持ちを読み違えることもある']]];
+const TYPES=[
+ {n:'静かな参謀',sum:'場の空気を誰よりも読みながら、自分の手の内は決して見せない人です。決めたことは曲げず、周りに流されることもありません。',party:'乾杯の音頭は取らないけれど、店選びと終電の段取りは、気づけばこの人が済ませています。口数は少なめでも、話の核心はしっかり押さえています。',word:'たまには手の内を見せてみると、もっと楽になるかもしれません。'},
+ {n:'一匹狼の職人',sum:'自分の物差しを持ち、人の評価より自分の納得を大事にする人です。表情からは心の内が読めず、勘で動いても不思議と筋が通っています。',party:'話題に乗るより、好きなお酒を自分のペースで味わう派。ふとした一言が妙に深く、あとになって思い出されます。',word:'その一言、もう少し早めに口に出してもいいのでは。'},
+ {n:'縁の下の調整役',sum:'本音で動きながら、それを表に出さずに周りに合わせられる人です。人の様子をよく見て、場がうまく回るように静かに手を回します。',party:'グラスが空いた人に、誰より先に気づきます。もめそうな話題を、さりげなく別の話に変えているのもこの人です。',word:'たまには、自分が主役の夜があってもいい。'},
+ {n:'穏やかな聞き役',sum:'自分の気持ちに正直でありながら、それを押しつけない人です。深く考えるより、その場の空気を感覚で受け止めます。',party:'相づちが上手で、話している人はつい長話をしてしまいます。気づけば、みんながこの人の隣に座りたがります。',word:'聞き上手のあなたも、たまには話を聞いてもらいましょう。'},
+ {n:'まっすぐな論客',sum:'思ったことが顔にも口にも出る、裏表のない人です。人をよく観察したうえで、自分の意見をはっきり持っています。',party:'議論が始まると、急に目が輝きます。相手の意見もきちんと聞くので、言い合いになっても後に引きません。',word:'正論は、少し笑いを添えると届きやすくなります。'},
+ {n:'正直すぎる冒険家',sum:'気持ちのままに動き、それが全部顔に出る人です。周りがどうであれ、面白そうな方へ進んでいきます。',party:'「次の店、行こう」と言い出すのは、たいていこの人。予定外の展開を、誰よりも楽しんでいます。',word:'勢いのままで。ただ、スマホの充電だけは忘れずに。'},
+ {n:'みんなの相談役',sum:'自分に正直で、人の気持ちにもよく気づく人です。思いが顔に出るぶん、周りから信頼されています。',party:'夜が更けると、なぜか誰かの悩み相談が始まります。その相手は、たいていこの人です。',word:'人の荷物を、持ちすぎないように。'},
+ {n:'愛されムードメーカー',sum:'感じたことを素直に出し、場の空気にすっと溶け込む人です。考えるより先に、もう笑っています。',party:'この人が笑うと、つられて全員が笑います。いるだけで場が明るくなる、得な役回りです。',word:'その明るさに、みんな助けられています。'},
+ {n:'孤高の策士',sum:'損得をきちんと計算し、それを顔に出さずに自分の道を行く人です。周りの動きも、実はよく見ています。',party:'遊びになると、急に本気になります。普段は静かでも、勝負どころは絶対に外しません。',word:'勝ったあとは、少しだけ手の内を明かしてあげて。'},
+ {n:'勝負師',sum:'ここぞという場面で、勘を頼りに大胆に動く人です。何を考えているかは、表情からはまず読めません。',party:'賭けごとやくじ引きで、なぜか強い人。外れても涼しい顔をしているので、周りはますます読めません。',word:'勝ちが続いた日ほど、引き際を大事に。'},
+ {n:'影の黒幕',sum:'人の動きを読み、損得を考えながら、表向きは周りに合わせる人です。本当の狙いは、最後まで見せません。',party:'話の流れを、気づかれないように行きたい方へ運びます。いつの間にか、この人の案に決まっています。',word:'たまには狙いを明かしても、大丈夫です。'},
+ {n:'ちゃっかり世渡り上手',sum:'場の空気に合わせながら、自分の得はしっかり確保する人です。感覚で動くのに、なぜか損をしません。',party:'おいしいところに、いつの間にかいる人。最後の唐揚げは、たいていこの人のお皿にあります。',word:'その要領のよさ、少しだけ分けてほしい。'},
+ {n:'やり手の商人',sum:'損得の計算が速く、それを隠さない正直な人です。人をよく見て、自分の判断で動きます。',party:'割り勘の計算は、この人に任せれば一瞬です。お得な店やコースにも、やたらと詳しい。',word:'得した話は、みんなにも教えてあげて。'},
+ {n:'憎めない野心家',sum:'欲しいものを欲しいと言える、まっすぐな野心家です。勘を頼りに、自分の道を突き進みます。',party:'将来の大きな話を、いちばん楽しそうに語る人。聞いている側まで、なんだか元気が出てきます。',word:'その夢、次の飲み会で続きを聞かせて。'},
+ {n:'抜け目ない幹事',sum:'周りに合わせながら、人の動きと損得をしっかり見ている人です。表情は素直なので、親しみやすさもあります。',party:'出欠の確認から会計まで、手際よく片づけます。気づけば、毎回この人が幹事になっています。',word:'幹事の役、たまには誰かに譲ってみては。'},
+ {n:'お調子者の人気者',sum:'その場のノリに合わせ、得になりそうな方へ軽やかに乗っていく人です。思っていることは、全部顔に出ます。',party:'盛り上がりそうな話題に、まっ先に飛びつきます。調子に乗りすぎても、なぜか許されてしまう人です。',word:'乗りすぎた翌朝は、お水を多めに。'}];
+/* 相性のいいタイプ:本音/損得と我が道/協調はそのまま、表の出し方と読み方が逆の相手 */
+const MATCH=i=>i^5;
 /* 進み具合:5巡+最後の二択 を6本の線で示す。step 0=開始前、7=終局 */
 const mk=(step,label)=>`<div class="mark">${step===null?'':`<span class="prog" aria-hidden="true">${[1,2,3,4,5,6].map(k=>`<i class="${k<step?'done':k===step?'now':''}"></i>`).join('')}</span>`}<span>${label}</span></div>`;
 const art=i=>`<svg viewBox="0 0 60 60" aria-hidden="true" style="color:var(--ink)">${CARDS[i].art(CARDS[i].c)}</svg>`;
@@ -1617,18 +1650,23 @@ const spark=(hist,i,W=72,H=24)=>{const all=hist.flat(),lo=Math.min(...all),hi=Ma
 const board=(pr,prev,hist,cap)=>`<table class="board"><caption>${cap}</caption>${CARDS.map((c,i)=>{const d=pr[i]-prev[i];return`<tr><td class="ic">${art(i)}</td><td class="bn">${c.n}</td><td class="sp">${hist?spark(hist,i):''}</td><td class="pr num">${pr[i]}</td><td class="df num ${d>0?'up':d<0?'down':''}">${d>0?'▲'+d:d<0?'▼'+(-d):'―'}</td></tr>`}).join('')}</table>`;
 const pubBoard=(V,cap)=>board(V.prices,V.hist[V.hist.length-2]||V.prices,V.hist,cap);
 const pickBtn=(c,attr,pressed,extra='',price)=>`<button class="pick" ${attr} aria-pressed="${pressed}" aria-label="${CARDS[c].n}">${extra}${card(c,price)}</button>`;
-const dots=v=>{const n=Math.max(0,Math.min(4,Math.round(v*4)));return{n,html:`<span class="dots" aria-hidden="true">${[0,1,2,3].map(k=>`<i class="${k<n?'f':''}"></i>`).join('')}</span>`}};
-const certHTML=(d,holder,PL)=>`<article class="cert"><div class="fr">
+/* 4つの傾向の帯。数値は最初の極(本音・鉄仮面・我が道・観察)寄りの割合 */
+const axisRow=(k,pc)=>{const a=pc>=50,dom=a?pc:100-pc;return`<div class="axr"><span class="${a?'on':''}">${POLES[k][0]}${a?` <b class="num">${dom}%</b>`:''}</span><span class="bar" aria-hidden="true"><i style="${a?'left:0':'right:0'};width:${dom}%"></i></span><span class="r ${a?'':'on'}">${a?'':`<b class="num">${dom}%</b> `}${POLES[k][1]}</span></div>`};
+const certHTML=(d,holder,PL)=>{const T=TYPES[d.ty],CD=CARDS[d.card],sw=d.pct.map((pc,k)=>POLE_SW[k][pc>=50?0:1]);
+  return`<article class="cert"><div class="fr">
   <div class="hd"><span class="tt">本性証券</span><span class="no num">第${kan[d.no]}号</span></div>
-  <div class="body"><div>${card(d.card)}</div><div><p class="holder">${esc(holder)}殿</p><p class="mod">${CARDS[d.first].mod}</p><p class="type">${CARDS[d.card].t}</p><p class="face">額面<b class="num">${d.face}</b></p></div></div>
-  <p class="pro">${CARDS[d.card].pro}</p>
+  <div class="body"><div>${card(d.card)}</div><div><p class="holder">${esc(holder)}殿</p><p class="type">${T.n}</p><p class="face">大事にしているもの「${CD.n}」<br>額面<b class="num">${d.face}</b></p></div></div>
+  <p class="lead">${T.sum}いちばん大事にしているのは「${CD.n}」。${CD.pro}</p>
+  <p class="sec">4つの傾向</p><div class="axes" role="img" aria-label="${d.pct.map((pc,k)=>`${pc>=50?POLES[k][0]:POLES[k][1]} ${pc>=50?pc:100-pc}%`).join('、')}">${d.pct.map((pc,k)=>axisRow(k,pc)).join('')}</div>
+  <p class="sec">飲み会でのあなた</p><p class="txt">${T.party}</p>
+  <div class="sw"><div><p class="sec">強み</p><ul>${sw.map(x=>`<li>${x[0]}</li>`).join('')}</ul></div><div><p class="sec">気をつけたいところ</p><ul>${sw.map(x=>`<li>${x[1]}</li>`).join('')}</ul></div></div>
   <p class="sec">今夜の決め手</p>${d.stories.map(t=>`<p class="story">${esc(t)}</p>`).join('')}
-  <div class="path" role="img" aria-label="手放した順:${d.path.map(c=>CARDS[c].n).join('、')}。残したのは${CARDS[d.card].n}">${d.path.map(c=>`<span>${art(c)}</span>`).join('')}<span class="last">${art(d.card)}</span></div>
+  <div class="path" role="img" aria-label="手放した順:${d.path.map(c=>CARDS[c].n).join('、')}。残したのは${CD.n}">${d.path.map(c=>`<span>${art(c)}</span>`).join('')}<span class="last">${art(d.card)}</span></div>
   <p class="pcap">左から手放した順。右端が最後の一枚</p>
-  <p class="sec">本性の内訳</p><dl class="chart">${AX.map((a,k)=>{const x=dots(d.axes[k]);return`<dt>${a[0]}</dt><dd>${x.html}</dd><dd>${a[x.n+1]}</dd>`}).join('')}</dl>
-  ${PL&&d.like!==null?`<p class="sec">相性</p><div class="pair"><div>似た者同士<b>${esc(PL[d.like].name)}さん</b></div>${d.unlike!==null?`<div>正反対<b>${esc(PL[d.unlike].name)}さん</b></div>`:''}</div>`:''}
-  <p class="sec">取扱注意</p><p class="care">${CARDS[d.card].care}</p>
-  <p class="ft">${d.cpu?'CPUの順位は自動で決めています':d.autoRank?'順位は時間切れのため自動で決めました':'今夜限り有効'}</p><span class="seal" aria-hidden="true">本性<br>確認</span></div></article>`;
+  <p class="sec">相性</p><div class="pair">${PL&&d.like!==null?`<div>似た者同士<b>${esc(PL[d.like].name)}さん</b></div>`:''}${PL&&d.unlike!==null?`<div>正反対<b>${esc(PL[d.unlike].name)}さん</b></div>`:''}<div>相性のいいタイプ<b>${TYPES[MATCH(d.ty)].n}</b></div></div>
+  <p class="sec">取扱注意</p><p class="care">${CD.care}</p>
+  <p class="sec">ひとこと</p><p class="word">${T.word}</p>
+  <p class="ft">${d.cpu?'CPUの順位は自動で決めています':d.autoRank?'順位は時間切れのため自動で決めました':'今夜限り有効'}</p><span class="seal" aria-hidden="true">本性<br>確認</span></div></article>`};
 function qrSVG(text){try{const q=new QRLib.QRCode(-1,QRLib.L.M);q.addData(text);q.make();const n=q.getModuleCount();let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))d+=`M${c} ${r}h1v1h-1z`;return`<svg viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges" role="img" aria-label="参加用QRコード"><path d="${d}" fill="#111"/></svg>`}catch(e){return''}}
 const sndBtn=document.getElementById('snd');
 const sndLabel=()=>{const on=SFX.on,rd=SFX.ready;sndBtn.textContent=!on?'音なし':rd?'音あり':'音を出す';sndBtn.classList.toggle('need',on&&!rd);sndBtn.setAttribute('aria-label',!on?'効果音は切っています。押すと鳴らします':rd?'効果音を鳴らしています。押すと切ります':'押すと効果音を鳴らせます')};
@@ -1807,8 +1845,10 @@ function hostMain(opt={}){
       const hitF=facts.filter(f=>f[0]).map(f=>f[1]);
       const stories=(hitF.length?hitF:[`「${CARDS[p.gdrop].n}」と「${c.n}」で最後まで迷い、「${c.n}」を残した。`]).slice(0,2);
       const ops=C.rounds-p.spotN;
-      const axes=[p.hon/(C.rounds+1),p.targeted?1-p.hits/p.targeted:.5,ops?Math.min(1,mine/ops/.8):.5,1-p.maj/C.rounds,S.prices.filter(x=>x<S.prices[p.final]).length/6];
-      return{no:i+1,card:p.final,first:p.disc[0],path:p.disc.slice(0,6),face:S.prices[p.final],stories,axes,cpu:p.cpu,autoRank:p.autoRank,like:null,unlike:null}});
+      /* 4つの軸:本音/損得、鉄仮面/顔に出る、我が道/協調、観察/直感。50%以上なら前者 */
+      const pct=[Math.round(p.hon/(C.rounds+1)*100),p.targeted?Math.round((1-p.hits/p.targeted)*100):50,Math.round((1-p.maj/C.rounds)*100),ops?Math.round(Math.min(1,mine/ops/.8)*100):50];
+      const ty=pct.reduce((s,pc,k)=>s+(pc>=50?0:1<<(3-k)),0);
+      return{no:i+1,card:p.final,path:p.disc.slice(0,6),face:S.prices[p.final],stories,pct,ty,cpu:p.cpu,autoRank:p.autoRank,like:null,unlike:null}});
     /* 相性:手放した順(最後の一枚=7番目)の近さで、似た者同士と正反対を選ぶ */
     const pos=p=>{const o=Array(7);p.disc.slice(0,6).forEach((c,k)=>o[c]=k);o[p.final]=6;return o};
     const PS=P().map(pos);
