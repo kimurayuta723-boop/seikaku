@@ -17,6 +17,7 @@
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
 html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{position:relative}
 body{font:16px/1.85 "Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;letter-spacing:.04em;overflow-x:clip;-webkit-font-smoothing:antialiased}
 main{max-width:600px;margin:0 auto;padding:32px 20px 72px}
 h1{font:600 30px/1.35 "Zen Old Mincho",serif;letter-spacing:.08em;margin:0 0 8px;text-wrap:balance}
@@ -108,6 +109,9 @@ label{display:block;font-size:14px;color:var(--sub);margin:18px 0 6px}
 .qr svg{display:block;width:220px;height:220px}
 .roomcode{font:900 44px/1.1 "Zen Old Mincho",serif;letter-spacing:.3em;margin:6px 0}
 .mode{font-size:13px;color:var(--sub);border:1px solid var(--line);border-radius:6px;padding:8px 12px;margin-top:20px}
+.snd{position:absolute;top:14px;right:14px;z-index:5;min-height:36px;padding:0 14px;border:1px solid var(--line);border-radius:18px;background:var(--bg);color:var(--sub);font:inherit;font-size:13px;cursor:pointer}
+.snd.need{color:var(--ink);border-color:var(--ink)}
+.tv .snd{top:20px;right:24px;font-size:15px;min-height:40px}
 .foot{margin-top:40px;font-size:13px;color:var(--sub)}
 /* テレビ */
 .tv main{max-width:1440px;padding:clamp(24px,3vw,48px) clamp(20px,4vw,64px) 64px}
@@ -136,6 +140,7 @@ label{display:block;font-size:14px;color:var(--sub);margin:18px 0 6px}
 </style>
 </head>
 <body>
+<button id="snd" class="snd" type="button" aria-live="polite"></button>
 <main id="app"></main>
 <script>
 /* ===== 設定 =====
@@ -1413,6 +1418,74 @@ return{QRCode:R("index"),L:R("QRErrorCorrectLevel")}})();
 
 </script>
 <script>
+/* ---------- 効果音(Web Audio で合成。音声ファイルは使わない) ----------
+   世界観:取引所の場立ち+札遊び。拍子木・鐘・おりん・琴・判子・小銭・時計で組み立てる */
+const SFX=(()=>{
+  let ctx=null,B=null,on=true;
+  try{on=localStorage.getItem('saigo-sfx')!=='off'}catch(e){}
+  /* 短い部屋鳴りの残響(左右で少し違う減衰の雑音) */
+  function ir(c,sec=1.3){const n=Math.floor(c.sampleRate*sec),b=c.createBuffer(2,n,c.sampleRate);for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,3.4)*(i<c.sampleRate*.004?0:1)}return b}
+  function bus(c){
+    const dry=c.createGain();dry.gain.value=.9;
+    const comp=c.createDynamicsCompressor();comp.threshold.value=-16;comp.knee.value=8;comp.ratio.value=3;comp.attack.value=.002;comp.release.value=.18;
+    const lim=c.createGain();lim.gain.value=.9;
+    const wet=c.createGain();wet.gain.value=1;const conv=c.createConvolver();conv.buffer=ir(c);
+    const tone=c.createBiquadFilter();tone.type='lowpass';tone.frequency.value=5200;
+    const hp=c.createBiquadFilter();hp.type='highpass';hp.frequency.value=40;
+    dry.connect(hp);wet.connect(conv);conv.connect(tone);tone.connect(hp);hp.connect(comp);comp.connect(lim);lim.connect(c.destination);
+    return{dry,wet};
+  }
+  const env=(g,t,a,v,d)=>{g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(v,t+a);g.gain.exponentialRampToValueAtTime(0.0001,t+a+d)};
+  const out=(c,B,node,w)=>{node.connect(B.dry);const s=c.createGain();s.gain.value=w;node.connect(s);s.connect(B.wet)};
+  const NZ=new WeakMap();
+  const noiseBuf=c=>{if(NZ.has(c))return NZ.get(c);const b=c.createBuffer(1,c.sampleRate,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;NZ.set(c,b);return b};
+  function nz(c,B,t,{f=2000,q=1,type='bandpass',a=.001,d=.05,v=.3,w=.15}={}){const s=c.createBufferSource();s.buffer=noiseBuf(c);const fl=c.createBiquadFilter();fl.type=type;fl.frequency.value=f;fl.Q.value=q;const g=c.createGain();env(g,t,a,v,d);s.connect(fl);fl.connect(g);out(c,B,g,w);s.start(t);s.stop(t+a+d+.05)}
+  function tone(c,B,t,{f=440,type='sine',a=.002,d=.3,v=.3,w=.25,glide=0}={}){const o=c.createOscillator();o.type=type;o.frequency.setValueAtTime(f,t);if(glide)o.frequency.exponentialRampToValueAtTime(f*glide,t+a+d);const g=c.createGain();env(g,t,a,v,d);o.connect(g);out(c,B,g,w);o.start(t);o.stop(t+a+d+.05)}
+  /* 金属の鳴り物(FM合成)。ratio が非整数だと鐘らしい濁りが出る */
+  function fm(c,B,t,{f=880,ratio=3.5,index=3,d=2,v=.2,w=.4}={}){const car=c.createOscillator(),mod=c.createOscillator(),mg=c.createGain(),g=c.createGain();car.frequency.value=f;mod.frequency.value=f*ratio;mg.gain.setValueAtTime(f*index,t);mg.gain.exponentialRampToValueAtTime(f*.02,t+d*.7);mod.connect(mg);mg.connect(car.frequency);env(g,t,.002,v,d);car.connect(g);out(c,B,g,w);car.start(t);mod.start(t);car.stop(t+d+.1);mod.stop(t+d+.1)}
+  /* 琴の弦(カープラス・ストロング法で弦の振動を計算) */
+  const KS=new Map();
+  function pluckBuf(c,f){const k=c.sampleRate+':'+f;if(KS.has(k))return KS.get(k);const sr=c.sampleRate,len=Math.floor(sr*2.4),b=c.createBuffer(1,len,sr),d=b.getChannelData(0),N=Math.max(2,Math.round(sr/f)),line=new Float32Array(N);
+    for(let i=0;i<N;i++)line[i]=(Math.random()*2-1)*(1-Math.abs(i/N-.2));
+    let j=0;for(let i=0;i<len;i++){const a=line[j],b2=line[(j+1)%N];line[j]=.4985*(a+b2);d[i]=a;j=(j+1)%N}
+    let m=0;for(let i=0;i<len;i++)m=Math.max(m,Math.abs(d[i]));for(let i=0;i<len;i++)d[i]/=m||1;KS.set(k,b);return b}
+  function koto(c,B,t,f,{v=.32,w=.3,len=2.2}={}){const s=c.createBufferSource();s.buffer=pluckBuf(c,f);const hp=c.createBiquadFilter();hp.type='highpass';hp.frequency.value=f*.6;const pk=c.createBiquadFilter();pk.type='peaking';pk.frequency.value=Math.min(f*3,9000);pk.Q.value=1.2;pk.gain.value=5;const g=c.createGain();g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+len);s.connect(hp);hp.connect(pk);pk.connect(g);out(c,B,g,w);s.start(t);s.stop(t+len+.05);nz(c,B,t,{f:5000,q:.7,type:'highpass',d:.012,v:v*.25,w:.05})}
+  /* 音階:陽音階(D E G A B)。明るい場面用 */
+  const YO=[293.66,329.63,392,440,493.88,587.33,659.25,783.99,880,987.77];
+  const V={
+    tap:(c,B,t)=>{nz(c,B,t,{f:3000,q:.9,d:.03,v:.42,w:.05});tone(c,B,t,{f:1900,d:.022,v:.09,w:.03})},
+    wood:(c,B,t,v=.5)=>{tone(c,B,t,{f:1180,glide:.94,d:.085,v,w:.32});tone(c,B,t,{f:2950,d:.035,v:v*.28,w:.2});nz(c,B,t,{f:2400,q:2.2,d:.025,v:v*.55,w:.25})},
+    decide:(c,B,t)=>V.wood(c,B,t,.34),
+    hyoshigi:(c,B,t)=>{V.wood(c,B,t,.55);V.wood(c,B,t+.15,.6)},
+    bell:(c,B,t)=>{fm(c,B,t,{f:523.25,ratio:3.48,index:2.6,d:2.6,v:.16,w:.5});fm(c,B,t,{f:784.5,ratio:2.41,index:1.4,d:1.9,v:.07,w:.5});tone(c,B,t,{f:261.6,d:1.6,v:.05,w:.4})},
+    rin:(c,B,t)=>{fm(c,B,t,{f:1396.9,ratio:2.76,index:1.1,d:1.9,v:.2,w:.55});fm(c,B,t+.004,{f:2093,ratio:1.99,index:.6,d:1.3,v:.08,w:.55})},
+    coin:(c,B,t)=>{[2093,2637.02,3135.96].forEach((f,k)=>{tone(c,B,t+k*.065,{f,d:.55-k*.08,v:.09,w:.3});tone(c,B,t+k*.065,{f:f*2.01,d:.18,v:.025,w:.2})});nz(c,B,t,{f:7500,q:.8,type:'highpass',d:.018,v:.06,w:.05})},
+    miss:(c,B,t)=>{tone(c,B,t,{f:196,glide:.62,d:.3,v:.26,w:.1,type:'triangle'});nz(c,B,t,{f:420,q:.8,type:'lowpass',d:.1,v:.12,w:.05})},
+    stamp:(c,B,t)=>{tone(c,B,t,{f:92,glide:.55,d:.17,v:.62,w:.12});nz(c,B,t,{f:850,q:.7,type:'lowpass',d:.06,v:.45,w:.1});nz(c,B,t+.004,{f:2600,q:1.4,d:.022,v:.14,w:.1})},
+    tick:(c,B,t)=>{tone(c,B,t,{f:1760,type:'triangle',d:.035,v:.3,w:.06});nz(c,B,t,{f:4200,q:3,d:.01,v:.14,w:.02})},
+    tickHi:(c,B,t)=>{tone(c,B,t,{f:2349.3,type:'triangle',d:.06,v:.42,w:.08});nz(c,B,t,{f:5000,q:3,d:.012,v:.18,w:.02})},
+    join:(c,B,t)=>{koto(c,B,t,YO[5],{v:.5,len:1.8});koto(c,B,t+.09,YO[7],{v:.36,len:1.8})},
+    reveal:(c,B,t)=>{koto(c,B,t,YO[3],{v:.28});koto(c,B,t+.12,YO[5],{v:.3})},
+    fanfare:(c,B,t)=>{[0,1,2,3,4,5,6,7].forEach((k,n)=>koto(c,B,t+n*.085,YO[k],{v:.22+n*.012,len:2.4}));koto(c,B,t+.85,YO[5],{v:.32,len:2.6});koto(c,B,t+.85,YO[8],{v:.22,len:2.6});V.bell(c,B,t+.85)},
+    countdown:(c,B,t)=>V.tick(c,B,t)
+  };
+  function ensure(){if(!ctx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;ctx=new AC();B=bus(ctx)}if(ctx.state==='suspended')ctx.resume();return true}
+  const listeners=new Set();const notify=()=>listeners.forEach(f=>f());
+  /* 最初に画面を押したときに音を出せる状態にする(ブラウザの決まり) */
+  document.addEventListener('pointerdown',()=>{if(on&&ensure())setTimeout(notify,50)},true);
+  return{
+    play(name,delay=0){if(!on||!V[name])return;if(!ctx||ctx.state!=='running'){if(!ctx)return;ctx.resume()}V[name](ctx,B,ctx.currentTime+.015+delay)},
+    get on(){return on},get ready(){return !!ctx&&ctx.state==='running'},
+    toggle(){on=!on;try{localStorage.setItem('saigo-sfx',on?'on':'off')}catch(e){}if(on){ensure();setTimeout(()=>{V.decide(ctx,B,ctx.currentTime+.02);notify()},60)}notify()},
+    onChange(f){listeners.add(f)},
+    names:Object.keys(V),
+    /* 確認用:音を書き出す */
+    async render(name,sec=3,sr=48000){const c=new OfflineAudioContext(2,Math.floor(sr*sec),sr),b=bus(c);V[name](c,b,.02);return c.startRendering()}
+  };
+})();
+
+</script>
+<script>
 {
 /* ---------- 札とルール ---------- */
 const CARDS=[
@@ -1480,6 +1553,10 @@ const certHTML=(d,holder)=>`<article class="cert"><div class="fr">
   <p class="tags">${d.tags.join('、')}</p>
   <p class="ft">${d.cpu?'CPUの順位は自動で決めています':'今夜限り有効'}</p><span class="seal" aria-hidden="true">本性<br>確認</span></div></article>`;
 function qrSVG(text){try{const q=new QRLib.QRCode(-1,QRLib.L.M);q.addData(text);q.make();const n=q.getModuleCount();let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))d+=`M${c} ${r}h1v1h-1z`;return`<svg viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges" role="img" aria-label="参加用QRコード"><path d="${d}" fill="#111"/></svg>`}catch(e){return''}}
+const sndBtn=document.getElementById('snd');
+const sndLabel=()=>{const on=SFX.on,rd=SFX.ready;sndBtn.textContent=!on?'音なし':rd?'音あり':'音を出す';sndBtn.classList.toggle('need',on&&!rd);sndBtn.setAttribute('aria-label',!on?'効果音は切っています。押すと鳴らします':rd?'効果音を鳴らしています。押すと切ります':'押すと効果音を鳴らせます')};
+sndBtn.addEventListener('click',()=>{if(SFX.on&&!SFX.ready){sndLabel();return}SFX.toggle()});
+SFX.onChange(sndLabel);sndLabel();
 let lastKey='',lastNorm='';
 /* 同じ画面のままなら描き直さず、data-live の数字だけ書き換える(押し損じ防止) */
 function paint(h,key){const live=[...h.matchAll(/data-live>([^<]*)</g)].map(m=>m[1]),norm=h.replace(/data-live>[^<]*</g,'data-live><');
@@ -1643,8 +1720,24 @@ function hostMain(opt={}){
     if(ph==='results'){V.results=S.results;V.frozen=S.frozen}
     return V;
   }
-  function pub(){const V=view();window.__hostV=V;if(net)net.publish(V);if(!EMB)render(V)}
+  function pub(){const V=view();window.__hostV=V;window.__SFX=SFX;if(net)net.publish(V);if(!EMB)render(V)}
+  let cue=null;
+  /* 場面が変わったとき・誰かが決めたときの音(テレビ側) */
+  function hostCues(V){const p=cue;cue={ph:V.phase,r:V.round,j:V.j,n:V.players.length,sub:V.players.filter(x=>x.submitted).length,rk:V.players.filter(x=>x.rankDone).length,bd:(V.betDone||[]).length,left:V.left};if(!p)return;
+    if(V.phase==='lobby'){if(cue.n>p.n)SFX.play('join');return}
+    if(V.phase!==p.ph||V.round!==p.r||V.j!==p.j){
+      if(V.phase==='ranking'||V.phase==='turn')SFX.play('hyoshigi');
+      if(V.phase==='turn'&&V.firedEv)SFX.play('bell',.45);
+      if(V.phase==='reveal')SFX.play('reveal');
+      if(V.phase==='final-bet')SFX.play('hyoshigi');
+      if(V.phase==='final-reveal'){SFX.play('stamp');if((V.lastBets||[]).some(b=>b.w))SFX.play('coin',.3)}
+      if(V.phase==='results')SFX.play('fanfare');
+      return}
+    if(V.phase==='ranking'&&cue.rk>p.rk||V.phase==='turn'&&cue.sub>p.sub||V.phase==='final-bet'&&cue.bd>p.bd)SFX.play('decide');
+    if(V.phase==='final-choose'&&V.left!==p.left&&V.left>0)SFX.play(V.left<=3?'tickHi':'tick');
+  }
   function render(V){
+    hostCues(V);
     const ph=V.phase,PL=V.players;let h='';
     const status=(fn)=>`<ul class="people">${PL.map((p,i)=>`<li><span>${esc(p.name)}</span><span class="st ${fn(p,i)[1]?'ok':''}">${fn(p,i)[0]}</span></li>`).join('')}</ul>`;
     const role=p=>p.id===V.leader?['進行役',1]:p.cpu?['CPU',0]:['',0];
@@ -1686,7 +1779,7 @@ function hostMain(opt={}){
     }
     paint(h,ph+'|'+V.round+'|'+(V.j??''));
   }
-  if(!EMB){app.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled)return;if(acts[b.dataset.act]){acts[b.dataset.act]();window.scrollTo(0,0)}});render(view())}
+  if(!EMB){app.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled)return;if(acts[b.dataset.act]){SFX.play('decide');acts[b.dataset.act]();window.scrollTo(0,0)}});render(view())}
   connect(code,opt.mem).then(n=>{net=n;n.onAction(onAction);pub()}).catch(()=>{app.insertAdjacentHTML('afterbegin','<p class="mode">通信の準備に失敗しました。設定と通信環境を確認して、ページを読み込み直してください。</p>')});
 }
 
@@ -1764,6 +1857,7 @@ function playerMain(code,opt={}){
     paint(h,V?V.phase+'|'+V.round+'|'+(V.j??''):'join');
   }
   app.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled)return;const a=b.dataset.act,c=b.dataset.c===undefined?null:+b.dataset.c;
+    SFX.play(['rk','pd','pg'].includes(a)?'tap':'decide');
     if(a==='ctl'){send({type:'ctl',op:b.dataset.op});window.scrollTo(0,0);return}
     if(a==='join'){const n=document.getElementById('nm').value.trim();if(!n){document.getElementById('nm').focus();return}myName=n;try{localStorage.setItem('saigo-name',n)}catch(e){}joined=true;send({type:'join',name:n});return}
     if(a==='rk'){if(!sel.rank.includes(c))sel.rank.push(c);render();return}
@@ -1777,7 +1871,19 @@ function playerMain(code,opt={}){
     if(a==='keep'){sel.sent=c;send({type:'keep',card:c})}
     render();window.scrollTo(0,0)});
   render();
-  connect(code,opt.mem).then(n=>{net=n;n.onState(s=>{V=s;window.__pV=V;if(joined||V.players.some(p=>p.id===pid))joined=true;render()})}).catch(()=>{app.insertAdjacentHTML('afterbegin','<p class="mode">通信の準備に失敗しました。通信環境を確認して、ページを読み込み直してください。</p>')});
+  let pc=null;
+  function playerCues(V){const me=V.players.findIndex(p=>p.id===pid),p=pc;pc={ph:V.phase,r:V.round,j:V.j,left:V.left,n:V.players.length};if(!p||me<0)return;
+    const changed=V.phase!==p.ph||V.round!==p.r||V.j!==p.j;
+    if(changed){
+      if(TEST){if(V.phase==='ranking'||V.phase==='turn'||V.phase==='final-bet')SFX.play('hyoshigi');if(V.phase==='turn'&&V.firedEv)SFX.play('bell',.45)}
+      if(V.phase==='reveal'){const x=V.reveal[me],mine=V.reveal.find((y,i)=>i===me);if(TEST)SFX.play('reveal');if(x.honest)SFX.play('rin',.25);const myGuess=V.reveal[me];if(myGuess.hit)SFX.play('coin',.55)}
+      if(V.phase==='final-reveal'){const b=(V.lastBets||[]).find(y=>y.i===me);SFX.play('stamp');if(b)SFX.play(b.w?'coin':'miss',.3);else if(me===V.j&&V.gHonest)SFX.play('rin',.3)}
+      if(V.phase==='results')SFX.play(TEST?'fanfare':'stamp');
+      return}
+    if(V.phase==='lobby'&&TEST&&V.players.length>p.n)SFX.play('join');
+    if(V.phase==='final-choose'&&V.left!==p.left&&V.left>0&&(TEST||me===V.j))SFX.play(V.left<=3?'tickHi':'tick');
+  }
+  connect(code,opt.mem).then(n=>{net=n;n.onState(s=>{playerCues(s);V=s;window.__pV=V;if(joined||V.players.some(p=>p.id===pid))joined=true;render()})}).catch(()=>{app.insertAdjacentHTML('afterbegin','<p class="mode">通信の準備に失敗しました。通信環境を確認して、ページを読み込み直してください。</p>')});
 }
 
 /* ================= 入口 ================= */
