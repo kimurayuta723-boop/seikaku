@@ -100,7 +100,12 @@ label{display:block;font-size:14px;color:var(--sub);margin:18px 0 6px}
 .cert .hd{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:16px}
 .cert .tt{font:900 20px/1 "Zen Old Mincho",serif;letter-spacing:.4em}
 .cert .no{font-size:13px;color:var(--sub)}
-.cert .body{display:grid;grid-template-columns:104px minmax(0,1fr);gap:18px;align-items:center}
+.cert .body{display:grid;grid-template-columns:120px minmax(0,1fr);gap:20px;align-items:end}
+.cert .chara{border-radius:10px}
+.cert .hd{border-bottom:2px solid var(--g,var(--line))}
+.chara{display:block;width:100%;height:auto}
+.cert .grp{display:flex;align-items:center;gap:6px;font-size:13px;margin:2px 0 2px}.cert .grp i,.gnav a i,.gsec h2 i{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--g)}
+.cert .love{display:flex;align-items:center;gap:6px;font-size:14px;margin:4px 0 0}.cert .love .mini{display:block;width:24px;height:24px}.cert .love .mini svg{width:100%;height:100%;display:block}
 .cert .holder{font-size:14px;color:var(--sub);margin:0}
 .cert .mod{font:600 15px/1.4 "Zen Old Mincho",serif;letter-spacing:.06em;margin:6px 0 0}
 .cert .type{font:600 25px/1.35 "Zen Old Mincho",serif;letter-spacing:.06em;margin:0 0 6px;text-wrap:balance;word-break:keep-all;overflow-wrap:anywhere}
@@ -112,16 +117,16 @@ label{display:block;font-size:14px;color:var(--sub);margin:18px 0 6px}
 .cert .lead{font-size:15px;line-height:1.9;margin:16px 0 0}
 .cert .txt{font-size:15px;line-height:1.85;margin:0}
 .axes{display:grid;gap:12px;margin:2px 0 0}
-.axr{display:grid;grid-template-columns:6.6em minmax(0,1fr) 6.6em;gap:10px;align-items:center;font-size:13px;color:var(--sub)}
+.axr{display:grid;grid-template-columns:7.8em minmax(40px,1fr) 7.8em;white-space:nowrap;gap:10px;align-items:center;font-size:13px;color:var(--sub)}
 .axr .r{text-align:right}.axr .on{color:var(--ink);font-weight:700}.axr b{font-weight:700}
 .bar{position:relative;display:block;height:8px;border-radius:4px;background:var(--line)}
-.bar i{position:absolute;top:0;bottom:0;border-radius:4px;background:var(--ink)}
+.bar i{position:absolute;top:0;bottom:0;border-radius:4px;background:var(--g,var(--ink))}
 .sw{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
 .sw ul{margin:0;padding-left:1.1em;font-size:14px;line-height:1.75}.sw li{margin-bottom:4px}
 .cert .word{font:600 17px/1.7 "Zen Old Mincho",serif;margin:0;text-wrap:balance}
 .cert .lead,.cert .txt,.cert .story{text-wrap:pretty}
 .cert .pair{grid-template-columns:repeat(auto-fit,minmax(9em,1fr))}
-@media(max-width:420px){.sw{grid-template-columns:minmax(0,1fr)}.axr{grid-template-columns:6em minmax(0,1fr) 6em}}
+@media(max-width:420px){.sw{grid-template-columns:minmax(0,1fr)}.axr{grid-template-columns:7.4em minmax(32px,1fr) 7.4em;font-size:12px}.cert .body{grid-template-columns:minmax(0,1fr)!important;justify-items:center;text-align:center}.cert .body .chara{width:150px}.cert .grp,.cert .love{justify-content:center}}
 .tv .hero .cert .lead,.tv .hero .cert .txt{font-size:18px}.tv .hero .axr{font-size:16px}.tv .hero .sw ul{font-size:17px}.tv .hero .cert .word{font-size:21px}
 .cert .sec{font-size:12px;color:var(--sub);letter-spacing:.06em;margin:18px 0 6px}
 .cert .pro{font-size:15px;line-height:1.8;margin:14px 0 0}
@@ -134,6 +139,7 @@ label{display:block;font-size:14px;color:var(--sub);margin:18px 0 6px}
 .pair div{border-top:1px solid var(--line);padding-top:6px}.pair b{display:block;font:600 16px/1.4 "Zen Old Mincho",serif}
 .care{font-size:14px;margin:0;padding:8px 10px;border:1px dashed var(--line)}
 .hero{max-width:640px;margin:0 auto}
+.hero .cert .body{grid-template-columns:140px minmax(0,1fr)}.tv .hero .cert .body{grid-template-columns:180px minmax(0,1fr)}
 .hero .cert{animation:issue .5s ease-out both}
 .hero .seal{animation:stampIn .32s cubic-bezier(.2,1.7,.4,1) .7s both}
 @keyframes issue{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
@@ -172,7 +178,11 @@ a.tb{display:inline-flex;align-items:center;text-decoration:none}
 .axtab td:first-child{white-space:nowrap;font-weight:600;padding-right:14px}
 .ty .sec{font-size:12px;color:var(--sub);letter-spacing:.06em;margin:16px 0 6px}
 .axtab{width:100%;border-collapse:collapse;font-size:15px}.axtab th,.axtab td{padding:10px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.axtab th{font-size:13px;color:var(--sub);font-weight:400}
-.ty{border-top:1px solid var(--ink);padding:22px 0 26px;scroll-margin-top:16px}
+.gnav a{display:inline-flex;align-items:center;gap:6px}
+.gsec{border-top:4px solid var(--g);margin-top:40px;padding-top:6px}.gsec h2{display:flex;align-items:center;gap:8px;margin:14px 0 2px}.gsec h2 i{width:12px;height:12px}
+.gpoles{font-size:13px;color:var(--sub);margin:0 0 8px}
+.ty{display:grid;grid-template-columns:110px minmax(0,1fr);gap:18px;border-top:1px solid var(--line);padding:22px 0 26px;scroll-margin-top:16px}
+.ty .bar i{background:var(--g)}
 .ty:target{background:var(--card);box-shadow:0 0 0 12px var(--card)}
 .ty h3{font:600 24px/1.4 "Zen Old Mincho",serif;letter-spacing:.06em;margin:0 0 8px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px;padding:0;list-style:none}.chips li{font-size:13px;padding:2px 10px;border:1px solid var(--line);border-radius:12px}
@@ -203,7 +213,7 @@ a.tb{display:inline-flex;align-items:center;text-decoration:none}
 .certs{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:24px}
 .certs .cert{margin:0}
 @media(max-width:900px){.split{grid-template-columns:minmax(0,1fr)}.tv .board .sp{width:72px}.tv .board .sp svg{width:72px}}
-@media(max-width:420px){main{padding:24px 16px 56px}.cert .body{grid-template-columns:80px minmax(0,1fr);gap:14px}.cert .type{font-size:22px}.fan .cd{width:80px;margin-left:-40px}.qr svg{width:180px;height:180px}}
+@media(max-width:420px){main{padding:24px 16px 56px}.ty{grid-template-columns:76px minmax(0,1fr);gap:12px}.cert .body{grid-template-columns:92px minmax(0,1fr);gap:14px}.cert .type{font-size:22px}.fan .cd{width:80px;margin-left:-40px}.qr svg{width:180px;height:180px}}
 @media(prefers-reduced-motion:no-preference){.screen{animation:in .3s ease-out}@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}}
 @media(prefers-reduced-motion:reduce){.pick{transition:none}}
 </style>
@@ -1623,7 +1633,7 @@ const TYPES=[
  {n:'みんなの相談役',sum:'自分に正直で、人の気持ちにもよく気づく人です。思いが顔に出るぶん、周りから信頼されています。',party:'夜が更けると、なぜか誰かの悩み相談が始まります。その相手は、たいていこの人です。',word:'人の荷物を、持ちすぎないように。'},
  {n:'愛されムードメーカー',sum:'感じたことを素直に出し、場の空気にすっと溶け込む人です。考えるより先に、もう笑っています。',party:'この人が笑うと、つられて全員が笑います。いるだけで場が明るくなる、得な役回りです。',word:'その明るさに、みんな助けられています。'},
  {n:'孤高の策士',sum:'損得をきちんと計算し、それを顔に出さずに自分の道を行く人です。周りの動きも、実はよく見ています。',party:'遊びになると、急に本気になります。普段は静かでも、勝負どころは絶対に外しません。',word:'勝ったあとは、少しだけ手の内を明かしてあげて。'},
- {n:'勝負師',sum:'ここぞという場面で、勘を頼りに大胆に動く人です。何を考えているかは、表情からはまず読めません。',party:'賭けごとやくじ引きで、なぜか強い人。外れても涼しい顔をしているので、周りはますます読めません。',word:'勝ちが続いた日ほど、引き際を大事に。'},
+ {n:'涼しい顔の勝負師',sum:'ここぞという場面で、勘を頼りに大胆に動く人です。何を考えているかは、表情からはまず読めません。',party:'賭けごとやくじ引きで、なぜか強い人。外れても涼しい顔をしているので、周りはますます読めません。',word:'勝ちが続いた日ほど、引き際を大事に。'},
  {n:'影の黒幕',sum:'人の動きを読み、損得を考えながら、表向きは周りに合わせる人です。本当の狙いは、最後まで見せません。',party:'話の流れを、気づかれないように行きたい方へ運びます。いつの間にか、この人の案に決まっています。',word:'たまには狙いを明かしても、大丈夫です。'},
  {n:'ちゃっかり世渡り上手',sum:'場の空気に合わせながら、自分の得はしっかり確保する人です。感覚で動くのに、なぜか損をしません。',party:'おいしいところに、いつの間にかいる人。最後の唐揚げは、たいていこの人のお皿にあります。',word:'その要領のよさ、少しだけ分けてほしい。'},
  {n:'やり手の商人',sum:'損得の計算が速く、それを隠さない正直な人です。人をよく見て、自分の判断で動きます。',party:'割り勘の計算は、この人に任せれば一瞬です。お得な店やコースにも、やたらと詳しい。',word:'得した話は、みんなにも教えてあげて。'},
@@ -1632,6 +1642,111 @@ const TYPES=[
  {n:'お調子者の人気者',sum:'その場のノリに合わせ、得になりそうな方へ軽やかに乗っていく人です。思っていることは、全部顔に出ます。',party:'盛り上がりそうな話題に、まっ先に飛びつきます。調子に乗りすぎても、なぜか許されてしまう人です。',word:'乗りすぎた翌朝は、お水を多めに。'}];
 /* 相性のいいタイプ:本音/損得と我が道/協調はそのまま、表の出し方と読み方が逆の相手 */
 const MATCH=i=>i^5;
+/* ---------- 16タイプの組とキャラクター(全身のローポリゴン) ----------
+   組は「本音/損得」×「鉄仮面/顔に出る」で4つ。色は組を見分けるためだけに使い、上着と小物に入れる。
+   形は角ばった多角形を三角形に割り、左上からの光で面ごとに明暗を付ける。線は使わない */
+const GROUPS=[
+ {n:'静の組',c:'#3e5f8a',d:'自分には正直だけれど、それを表には出さない人たち。静かに場を見ています。'},
+ {n:'陽の組',c:'#cf6339',d:'本音も気持ちも、そのまま表に出す人たち。いるだけで場が明るくなります。'},
+ {n:'影の組',c:'#6b4f8f',d:'損得をきちんと計算し、それを表情の奥にしまう人たち。最後に笑うのはこの組です。'},
+ {n:'賑の組',c:'#c48f24',d:'得を狙って、それを隠さない人たち。にぎやかさと抜け目のなさが同居しています。'}];
+const grpOf=i=>GROUPS[i>>2];
+const PG=(()=>{
+  const hex=h=>[1,3,5].map(k=>parseInt(h.slice(k,k+2),16));
+  const toHex=a=>'#'+a.map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
+  const sh=(h,k)=>{const c=hex(h);return toHex(c.map(v=>k>=0?v+(255-v)*k:v*(1+k)))};
+  const LX=-.62,LY=-.78;
+  let seed=1;const rand=()=>(seed=seed*16807%2147483647)/2147483647;
+  const f=n=>n.toFixed(1);
+  /* 面の境目にすき間が見えないよう、同じ色の細い線で縁取る */
+  const poly=(pts,col)=>`<polygon points="${pts.map(p=>f(p[0])+','+f(p[1])).join(' ')}" fill="${col}" stroke="${col}" stroke-width=".6" stroke-linejoin="round"/>`;
+  const lp=(pts,col,c,amp=.22)=>{if(!c){c=[0,0];pts.forEach(p=>{c[0]+=p[0]/pts.length;c[1]+=p[1]/pts.length});c=[c[0]-2,c[1]-3]}
+    let s='';for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length],mx=(a[0]+b[0])/2-c[0],my=(a[1]+b[1])/2-c[1],L=Math.hypot(mx,my)||1,d=(mx*LX+my*LY)/L;s+=poly([c,a,b],sh(col,Math.max(-.24,Math.min(.24,d*amp))))}return s};
+  const ell=(cx,cy,rx,ry,n=9,jit=.06,rot=-90)=>Array.from({length:n},(_,i)=>{const a=(rot+360*i/n)*Math.PI/180,j=1+(rand()-.5)*2*jit;return[cx+Math.cos(a)*rx*j,cy+Math.sin(a)*ry*j]});
+  const mir=pts=>pts.map(p=>[120-p[0],p[1]]);
+  const dot=(x,y,r=2.8,col='#26221e')=>poly(ell(x,y,r,r*1.15,6,0,0),col);
+  const eyes2=(y=55,dx=11,r)=>dot(60-dx,y,r)+dot(60+dx,y,r);
+  const ln=(d,col='#26221e',w=1.6)=>`<path d="${d}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const blush=(y=65)=>poly(ell(41,y,4,3,6,0,0),'#eaa196')+poly(ell(79,y,4,3,6,0,0),'#eaa196');
+  const ear=(pts,col,inner)=>lp(pts,col)+lp(mir(pts),col)+(inner?lp(inner,inner.c||'#f1dcc0')+lp(mir(inner),inner.c||'#f1dcc0'):'');
+  const head=(cx,cy,rx,ry,col,n=10)=>lp(ell(cx,cy,rx,ry,n),col,[cx-4,cy-6]);
+  /* 頭(120×120の中心 60,60 に描き、あとで縮めて体の上に載せる) */
+  const H=[
+   b=>lp(ell(60,60,28,27,10),b,[54,52])+lp([[36,46],[31,22],[48,36]],b)+lp(mir([[36,46],[31,22],[48,36]]),b)+lp(ell(48,58,11.5,11.5,8),'#efe4cf')+lp(ell(72,58,11.5,11.5,8),'#efe4cf')+dot(48,58,4)+dot(72,58,4)+ln('M36.5 58a11.5 11.5 0 0 1 23 0a11.5 11.5 0 0 1-23 0M60.5 58a11.5 11.5 0 0 1 23 0a11.5 11.5 0 0 1-23 0M59.5 57h1')+lp([[55,67],[65,67],[60,77]],'#e1a646'),
+   (b,g)=>ear([[36,48],[38,18],[54,36]],b,Object.assign([[40,42],[40,28],[49,37]],{c:'#d9d5cc'}))+head(60,60,28,27,b)+lp(ell(60,72,14,11,8),'#ebe6dd')+lp([[44,50],[53,52],[44,53]],sh(b,-.35))+lp(mir([[44,50],[53,52],[44,53]]),sh(b,-.35))+eyes2(56,11,2.6)+lp([[56,64],[64,64],[60,69]],'#26221e')+lp([[33,47],[60,37],[87,47],[86,53],[60,43],[34,53]],g,[60,40])+lp([[86,48],[97,44],[93,54]],g),
+   (b,g)=>lp(ell(38,40,7,7,6),b)+lp(ell(82,40,7,7,6),b)+head(60,61,28,26,b)+lp(ell(60,71,14,10,8),'#dcb68d')+eyes2(56)+lp(ell(60,65,4.6,3.2,6),'#26221e')+poly([[55.5,74],[64.5,74],[64.5,82],[55.5,82]],'#fbf8f2')+ln('M60 74v8','#c9bfae',1)+lp([[32,46],[38,32],[50,24],[60,22],[70,24],[82,32],[88,46]],g,[56,30])+lp([[28,46],[92,46],[92,49],[28,49]],sh(g,-.2)),
+   b=>lp(ell(39,35,5,5,6),sh(b,-.1))+lp(ell(81,35,5,5,6),sh(b,-.1))+lp([[34,46],[38,34],[52,30],[68,30],[82,34],[86,46],[86,76],[78,88],[60,90],[42,88],[34,76]],b,[54,48])+lp([[43,54],[54,54],[53,57],[44,57]],'#26221e')+lp(mir([[43,54],[54,54],[53,57],[44,57]]),'#26221e')+lp(ell(60,73,12,8,8),'#8c6647')+dot(55.5,72,1.4)+dot(64.5,72,1.4)+blush(66)+lp(ell(60,24,8,8,7),'#e9c24b')+lp([[60,16],[69,12],[66,18]],'#6c9a4a'),
+   (b,g)=>lp([[46,37],[48,26],[54,30],[57,20],[63,28],[68,22],[72,30],[74,37]],'#d84a3c',[60,32])+head(60,60,25,27,b)+eyes2(54,10)+lp([[54,62],[66,62],[60,72]],'#e8a33a')+lp([[56,72],[64,72],[60,82]],'#d84a3c')+lp([[86,22],[110,22],[110,38],[98,38],[92,44],[93,38],[86,38]],g,[96,28])+ln('M91 30h14','#fbf8f2',2),
+   b=>ear([[35,48],[40,19],[56,38]],b,Object.assign([[40,42],[42,28],[50,38]],{c:'#f4d8b6'}))+head(60,60,28,26,b)+lp([[42,66],[50,62],[60,64],[70,62],[78,66],[74,78],[60,84],[46,78]],'#f7ecdc',[58,70])+poly(ell(48,47,3.4,2.2,6,0,0),'#f7ecdc')+poly(ell(72,47,3.4,2.2,6,0,0),'#f7ecdc')+eyes2(55)+lp([[56,64],[64,64],[60,69]],'#26221e')+lp(ell(60,76,3.4,3,6),'#e27b7b'),
+   b=>lp(ell(38,37,9,9,7),b)+lp(ell(82,37,9,9,7),b)+lp(ell(38,37,4.4,4.4,6),'#c49a74')+lp(ell(82,37,4.4,4.4,6),'#c49a74')+head(60,60,28,28,b,11)+lp(ell(60,70,13,10,8),'#cda67f')+eyes2(55)+lp(ell(60,66,4.6,3.3,6),'#26221e'),
+   (b,g)=>lp(ell(38,38,9,9,7),'#2b2a2e')+lp(ell(82,38,9,9,7),'#2b2a2e')+head(60,61,28,28,b,11)+lp(ell(48,57,7,9.5,7,0,-115),'#2b2a2e')+lp(ell(72,57,7,9.5,7,0,-65),'#2b2a2e')+dot(49,57,2.4,'#fbf8f2')+dot(71,57,2.4,'#fbf8f2')+lp([[56,66],[64,66],[60,70]],'#2b2a2e')+blush(70)+lp([[50,36],[67,32],[61,10]],g)+lp(ell(61,10,3,3,6),'#fbf8f2'),
+   b=>ear([[34,50],[38,19],[56,36]],b,Object.assign([[39,42],[40,28],[49,37]],{c:'#3a2e2a'}))+lp([[32,52],[38,36],[50,29],[60,28],[70,29],[82,36],[88,52],[82,68],[70,80],[60,88],[50,80],[38,68]],b,[56,46])+lp([[36,60],[48,66],[60,88],[50,80],[40,70]],'#f6ecdf')+lp(mir([[36,60],[48,66],[60,88],[50,80],[40,70]]),'#f6ecdf')+lp([[43,55],[53,52],[52,55],[44,57]],'#26221e')+lp(mir([[43,55],[53,52],[52,55],[44,57]]),'#26221e')+lp([[56,82],[64,82],[60,87]],'#26221e'),
+   b=>ear([[36,46],[39,28],[52,38]],'#6f5a49')+head(60,61,28,28,b,11)+lp([[33,58],[42,50],[52,50],[60,55],[68,50],[78,50],[87,58],[80,64],[70,61],[60,66],[50,61],[40,64]],'#4c3d33',[60,54])+dot(49,57,2.4,'#fbf8f2')+dot(71,57,2.4,'#fbf8f2')+lp(ell(60,72,12,9,8),'#ede2d0')+lp([[56,66],[64,66],[60,71]],'#26221e'),
+   b=>lp([[54,34],[58,22],[68,24],[62,28],[62,34]],b)+head(60,60,28,28,b,11)+dot(49,56,4,'#fbf8f2')+dot(71,56,4,'#fbf8f2')+dot(50,56,2,'#111')+dot(72,56,2,'#111')+lp([[52,64],[68,64],[60,82]],'#5d606b',[58,68])+ln('M79 56a8 8 0 1 1-16 0a8 8 0 1 1 16 0','#d3ad4c',2.4)+ln('M78 60q6 14 2 26','#d3ad4c',1.4),
+   b=>lp([[35,48],[39,20],[55,36]],b)+lp(mir([[35,48],[39,20],[55,36]]),'#d98a40')+head(60,61,28,28,b,11)+lp([[33,54],[38,38],[50,32],[56,32],[50,44],[48,52],[38,54]],'#3b3330')+ln('M44 57q5-5 10 0M66 57q5-5 10 0','#26221e',2)+lp([[57,64],[63,64],[60,67]],'#e88a8a')+ln('M54 70q3 3 6 0 3 3 6 0M36 65l-10-2M36 69l-10 2M84 65l10-2M84 69l10 2','#5a524b',1.4)+blush(67),
+   b=>ear([[40,44],[37,24],[50,36]],b)+head(60,61,27,27,b,10)+lp(ell(44,70,9,7,7),'#f1d7b6')+lp(ell(76,70,9,7,7),'#f1d7b6')+eyes2(55)+lp(ell(60,65,3.4,2.6,6),'#26221e'),
+   (b,g)=>{const s='#3a2e2a';return lp(ell(38,40,8,8,7),b)+lp(ell(82,40,8,8,7),b)+lp(ell(38,40,3.8,3.8,6),'#f6e3c6')+lp(ell(82,40,3.8,3.8,6),'#f6e3c6')+head(60,61,28,28,b,11)+poly([[52,36],[55,36],[57,46]],s)+poly([[59,34],[61,34],[60,45]],s)+poly([[65,36],[68,36],[63,46]],s)+poly([[32,58],[42,60],[32,62]],s)+poly([[32,66],[41,66],[33,69]],s)+poly(mir([[32,58],[42,60],[32,62]]),s)+poly(mir([[32,66],[41,66],[33,69]]),s)+lp(ell(60,73,15,10,8),'#f8efe1')+eyes2(56)+lp([[56,67],[64,67],[60,72]],'#26221e')+lp([[46,33],[49,18],[55,26],[60,15],[65,26],[71,18],[74,33]],g,[60,26])},
+   b=>head(60,60,28,28,b,11)+lp([[60,46],[70,49],[78,58],[79,70],[71,80],[60,83],[49,80],[41,70],[42,58],[50,49]],'#f8f6f1',[56,58])+eyes2(59,9,3)+lp([[55,65],[65,65],[60,71]],'#e8a33a')+blush(69),
+   b=>lp(ell(31,59,9,9,7),b)+lp(ell(89,59,9,9,7),b)+lp(ell(31,59,4.5,4.5,6),'#ebcba7')+lp(ell(89,59,4.5,4.5,6),'#ebcba7')+head(60,59,28,28,b,11)+lp([[60,50],[68,44],[78,48],[80,60],[74,74],[60,80],[46,74],[40,60],[42,48],[52,44]],'#ebcba7',[56,56])+eyes2(56,8,2.9)+dot(57,65,1.3)+dot(63,65,1.3)+lp([[50,69],[70,69],[66,76],[60,78],[54,76]],'#7a3f36',[60,71])];
+  /* 手に持つ小物(手の位置を 0,0 として描く) */
+  const I={
+   book:g=>lp([[-9,-12],[9,-14],[10,8],[-8,10]],g,[-2,-6])+poly([[-8,-11],[-6,-11],[-5,9],[-7,9]],sh(g,.4)),
+   hammer:()=>lp([[-1.5,-2],[1.5,-2],[2.5,16],[-0.5,16]],'#8a6a4a')+lp([[-9,-10],[9,-10],[9,-3],[-9,-3]],'#7d838c',[-2,-8]),
+   wrench:()=>lp([[-2,-4],[2,-4],[3,16],[-1,16]],'#9aa0a8')+lp([[-7,-12],[-2,-14],[0,-8],[2,-14],[7,-12],[4,-4],[-4,-4]],'#9aa0a8',[0,-10]),
+   cup:g=>lp([[-8,-10],[8,-10],[6,6],[-6,6]],g,[-2,-6])+ln('M-3 -14q2-3 0-5M3 -14q2-3 0-5','#7a6f63',1.4),
+   scroll:g=>lp([[-11,-5],[11,-5],[11,5],[-11,5]],g,[-4,-3])+lp(ell(-11,0,3,6,6),'#e9dcc3')+lp(ell(11,0,3,6,6),'#e9dcc3'),
+   die:g=>lp([[-9,-11],[9,-8],[8,10],[-10,8]],g,[-3,-6])+dot(-4,-4,1.8,'#fbf8f2')+dot(0,0,1.8,'#fbf8f2')+dot(4,4,1.8,'#fbf8f2'),
+   cane:()=>ln('M0 -4v34','#26221e',2.6)+ln('M0 -4q0-7 7-7','#26221e',2.6),
+   karaage:g=>ln('M2 18L-1 -6',g,2.6)+lp(ell(-2,-10,7,6,7),'#c98738')+lp(ell(4,-15,5.5,5,7),'#d79747'),
+   acorn:()=>lp(ell(0,-4,7,8,7),'#a8713f')+lp([[-8,-8],[0,-15],[8,-8]],'#6f5236'),
+   clip:g=>lp([[-10,-14],[10,-14],[10,12],[-10,12]],'#f1ece2',[-4,-8])+lp([[-5,-17],[5,-17],[5,-12],[-5,-12]],g)+ln('M-6 -6h12M-6 -1h12M-6 4h8','#b9b0a2',1.2),
+   banana:()=>lp([[-2,6],[8,-4],[10,-18],[6,-12],[0,-2]],'#f2cf4a',[4,-6])};
+  /* 体の組み立て。pose: down=両手を下ろす / hold=右手で持つ / up=右手を挙げる */
+  const body=(o,g)=>{const fur=o.fur,cl=o.cloth||g,pants=o.pants||sh(g,-.38),hand=o.hand||fur,feet=o.feet||'#3a332e';let s='';
+    if(o.tail)s+=o.tail(fur);
+    /* 脚と足 */
+    if(o.bird){s+=lp([[51,118],[55,118],[54,141],[52,141]],'#e1a646')+lp(mir([[51,118],[55,118],[54,141],[52,141]]),'#e1a646')+lp([[44,141],[60,141],[56,146],[46,146]],'#e1a646')+lp(mir([[44,141],[60,141],[56,146],[46,146]]),'#e1a646')}
+    else{s+=lp([[46,116],[58,116],[57,140],[47,140]],pants,[50,120])+lp(mir([[46,116],[58,116],[57,140],[47,140]]),pants,[66,120])+lp([[42,139],[58,139],[58,147],[40,147]],feet)+lp(mir([[42,139],[58,139],[58,147],[40,147]]),feet)}
+    /* 胴(上着) */
+    s+=lp([[40,70],[80,70],[86,94],[84,120],[36,120],[34,94]],cl,[52,84],.26);
+    s+=lp([[52,70],[68,70],[60,88]],o.shirt||'#f3eee4',[60,74]);
+    if(o.belt!==false)s+=lp([[35,112],[85,112],[85,118],[35,118]],sh(cl,-.3));
+    /* 左腕(画面の左側) */
+    s+=lp([[36,72],[44,74],[38,104],[30,101]],cl,[38,82])+lp(ell(33,106,5,5,6),hand);
+    /* 右腕 */
+    if(o.pose==='up'){s+=lp([[78,74],[85,71],[98,52],[91,49]],cl,[86,62])+lp(ell(95,46,5,5,6),hand)}
+    else if(o.pose==='hold'){s+=lp([[78,74],[85,73],[93,92],[86,96]],cl,[84,82])+lp(ell(90,97,5,5,6),hand)}
+    else{s+=lp([[76,74],[84,72],[90,101],[82,104]],cl,[82,82])+lp(ell(87,106,5,5,6),hand)}
+    if(o.neck)s+=o.neck(g);
+    return s};
+  const M=[
+   {fur:'#8a6a4c',bird:1,pose:'hold',item:'book',hand:'#8a6a4c'},
+   {fur:'#8b9099',pose:'hold',item:'hammer'},
+   {fur:'#9a6b45',pose:'hold',item:'wrench'},
+   {fur:'#b48a63',pose:'down'},
+   {fur:'#f4efe4',bird:1,pose:'up',hand:'#f4efe4'},
+   {fur:'#d68a45',pose:'up',neck:g=>lp([[46,70],[60,80],[74,70],[70,76],[60,86],[50,76]],sh(g,.15),[60,74])},
+   {fur:'#7b5638',pose:'hold',item:'cup'},
+   {fur:'#f7f4ee',pose:'up',hand:'#2b2a2e',feet:'#2b2a2e'},
+   {fur:'#d9773a',pose:'hold',item:'scroll',tail:f=>lp([[34,118],[16,104],[12,86],[22,94],[30,104]],f,[22,100])+lp([[16,104],[12,86],[16,92]],'#f6ecdf')},
+   {fur:'#a88b6a',pose:'hold',item:'die',tail:f=>lp([[36,116],[20,112],[14,100],[24,102]],'#6f5a49')},
+   {fur:'#2d2f36',bird:1,pose:'hold',item:'cane',hand:'#2d2f36',shirt:'#f3eee4'},
+   {fur:'#f2ece2',pose:'hold',item:'karaage',tail:f=>lp([[36,116],[22,110],[16,96],[20,92],[26,106]],'#d98a40')},
+   {fur:'#c57d47',pose:'hold',item:'acorn',tail:f=>lp([[38,118],[20,112],[10,92],[14,70],[26,62],[22,80],[26,98]],'#b2693a',[20,88])},
+   {fur:'#e39b3d',pose:'up',tail:f=>lp([[36,116],[22,114],[14,102],[18,100],[24,108]],f)+poly([[19,104],[22,103],[21,108]],'#3a2e2a')},
+   {fur:'#2c3038',bird:1,pose:'hold',item:'clip',cloth:'#2c3038',shirt:'#f8f6f1',hand:'#2c3038',belt:false,neck:g=>lp([[50,72],[60,77],[50,82]],g)+lp([[70,72],[60,77],[70,82]],g)},
+   {fur:'#9a6b45',pose:'hold',item:'banana',hand:'#ebcba7',tail:f=>ln('M38 112q-20 4-18-16q2-10 10-6',f,3.4)}];
+  /* 全身(120×170)。頭は縮めて体の上に載せる */
+  const full=(i,g)=>{seed=1000+i*97;const o=M[i];let s=body(o,g);
+    s+=`<g transform="translate(60 47) scale(.92) translate(-60 -60)">${H[i](o.fur,g)}</g>`;
+    /* 小物は手の上に重ね、手で下側を握っているように見せる */
+    if(o.item){const [x,y]=o.pose==='up'?[95,40]:[90,89];s+=`<g transform="translate(${x} ${y})">${I[o.item](g)}</g>`}
+    return s};
+  return{full,sh};
+})();
+/* 全身のキャラクター。背景は組の色をごく薄く、床と影を付ける。暗い表示でも同じ見た目にする */
+const charaSVG=(i,cls='')=>{const g=grpOf(i).c;return`<svg viewBox="0 0 120 158" class="chara ${cls}" role="img" aria-label="${TYPES[i].n}のキャラクター"><rect width="120" height="158" rx="10" style="fill:color-mix(in srgb,${g} 14%,#fbf8f2)"/><polygon points="0,158 0,130 120,118 120,158" style="fill:color-mix(in srgb,${g} 22%,#fbf8f2)"/><ellipse cx="60" cy="147" rx="30" ry="5" style="fill:color-mix(in srgb,${g} 34%,#fbf8f2)"/>${PG.full(i,g)}</svg>`};
+
 /* 進み具合:5巡+最後の二択 を6本の線で示す。step 0=開始前、7=終局 */
 const mk=(step,label)=>`<div class="mark">${step===null?'':`<span class="prog" aria-hidden="true">${[1,2,3,4,5,6].map(k=>`<i class="${k<step?'done':k===step?'now':''}"></i>`).join('')}</span>`}<span>${label}</span></div>`;
 const art=i=>`<svg viewBox="0 0 60 60" aria-hidden="true" style="color:var(--ink)">${CARDS[i].art(CARDS[i].c)}</svg>`;
@@ -1673,10 +1788,10 @@ const pubBoard=(V,cap)=>board(V.prices,V.hist[V.hist.length-2]||V.prices,V.hist,
 const pickBtn=(c,attr,pressed,extra='',price)=>`<button class="pick" ${attr} aria-pressed="${pressed}" aria-label="${CARDS[c].n}">${extra}${card(c,price)}</button>`;
 /* 4つの傾向の帯。数値は最初の極(本音・鉄仮面・我が道・観察)寄りの割合 */
 const axisRow=(k,pc)=>{const a=pc>=50,dom=a?pc:100-pc;return`<div class="axr"><span class="${a?'on':''}">${POLES[k][0]}${a?` <b class="num">${dom}%</b>`:''}</span><span class="bar" aria-hidden="true"><i style="${a?'left:0':'right:0'};width:${dom}%"></i></span><span class="r ${a?'':'on'}">${a?'':`<b class="num">${dom}%</b> `}${POLES[k][1]}</span></div>`};
-const certHTML=(d,holder,PL)=>{const T=TYPES[d.ty],CD=CARDS[d.card],sw=d.pct.map((pc,k)=>POLE_SW[k][pc>=50?0:1]);
-  return`<article class="cert"><div class="fr">
+const certHTML=(d,holder,PL)=>{const T=TYPES[d.ty],G=grpOf(d.ty),CD=CARDS[d.card],sw=d.pct.map((pc,k)=>POLE_SW[k][pc>=50?0:1]);
+  return`<article class="cert" style="--g:${G.c}"><div class="fr">
   <div class="hd"><span class="tt">本性証券</span><span class="no num">第${kan[d.no]}号</span></div>
-  <div class="body"><div>${card(d.card)}</div><div><p class="holder">${esc(holder)}殿</p><p class="type">${T.n}</p><p class="face">大事にしているもの「${CD.n}」<br>額面<b class="num">${d.face}</b></p></div></div>
+  <div class="body"><div>${charaSVG(d.ty)}</div><div><p class="holder">${esc(holder)}殿</p><p class="grp"><i></i>${G.n}</p><p class="type">${T.n}</p><p class="love"><span class="mini">${art(d.card)}</span>大事にしているもの「${CD.n}」</p><p class="face">額面<b class="num">${d.face}</b></p></div></div>
   <p class="lead">${T.sum}いちばん大事にしているのは「${CD.n}」。${CD.pro}</p>
   <p class="sec">4つの傾向</p><div class="axes" role="img" aria-label="${d.pct.map((pc,k)=>`${pc>=50?POLES[k][0]:POLES[k][1]} ${pc>=50?pc:100-pc}%`).join('、')}">${d.pct.map((pc,k)=>axisRow(k,pc)).join('')}</div>
   <p class="sec">飲み会でのあなた</p><p class="txt">${T.party}</p>
@@ -2155,11 +2270,13 @@ function guidePage(){
   <tr><td>鉄仮面 ⇔ 顔に出る</td><td>注目されたときや最後の二択で、人に手の内を読まれた割合。半分以下なら鉄仮面</td></tr>
   <tr><td>我が道 ⇔ 協調</td><td>その巡でいちばん多く手放された札と、同じ札を手放した回数。5回のうち2回以下なら我が道</td></tr>
   <tr><td>観察 ⇔ 直感</td><td>注目の人が手放す札を当てた割合。4割以上なら観察</td></tr></table>
-  <h2>16のタイプ</h2><ul class="gnav">${order.map(i=>`<li><a href="#t${i}">${TYPES[i].n}</a></li>`).join('')}</ul>
-  ${order.map(i=>{const T=TYPES[i],w=sw(i);return`<article class="ty" id="t${i}"><h3>${T.n}</h3><ul class="chips">${poles(i).map(p=>`<li>${p}</li>`).join('')}</ul>
+  <h2>4つの組</h2><p>16のタイプは、「本音/損得」と「鉄仮面/顔に出る」の組み合わせで、4つの組に分かれます。色は組を表しています。</p>
+  <ul class="gnav">${order.map(i=>`<li><a href="#t${i}" style="--g:${grpOf(i).c}"><i></i>${TYPES[i].n}</a></li>`).join('')}</ul>
+  ${GROUPS.map((G,gi)=>`<section class="gsec" style="--g:${G.c}"><h2><i></i>${G.n}</h2><p class="gpoles">${POLES[0][gi>>1]}・${POLES[1][gi&1]}</p><p>${G.d}</p>
+  ${order.filter(i=>i>>2===gi).map(i=>{const T=TYPES[i],w=sw(i);return`<article class="ty" id="t${i}"><div class="tyc">${charaSVG(i)}</div><div><h3>${T.n}</h3><ul class="chips">${poles(i).map(p=>`<li>${p}</li>`).join('')}</ul>
     <p class="txt">${T.sum}</p><p class="sec">飲み会でのあなた</p><p class="txt">${T.party}</p>
     <div class="sw"><div><p class="sec">強み</p><ul>${w.map(x=>`<li>${x[0]}</li>`).join('')}</ul></div><div><p class="sec">気をつけたいところ</p><ul>${w.map(x=>`<li>${x[1]}</li>`).join('')}</ul></div></div>
-    <p class="match">相性のいいタイプ:<a href="#t${MATCH(i)}">${TYPES[MATCH(i)].n}</a></p><p class="word">${T.word}</p></article>`}).join('')}
+    <p class="match">相性のいいタイプ:<a href="#t${MATCH(i)}">${TYPES[MATCH(i)].n}</a></p><p class="word">${T.word}</p></div></article>`}).join('')}</section>`).join('')}
   <h2>最後の一枚(大事にしているもの)</h2><p class="sub">最後まで手放さなかった札が、証券の「大事にしているもの」になります。札は21枚あり、1回のゲームでは7枚を使います。</p>
   <div class="cardlist">${ALL.map((c,i)=>`<div class="cl"><div>${card(i)}</div><div><h4>${c.n}</h4><p>${c.pro}</p><p class="care2">取扱注意:${c.care}</p></div></div>`).join('')}</div>
   <p class="foot">判定の基準は、遊んだ結果を見て調整することがあります。</p>`;
