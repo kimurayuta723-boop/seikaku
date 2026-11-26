@@ -280,7 +280,7 @@ html.tv .now{font-size:19px}html.tv .now .nl{font-size:14px}
 .fcard .fl{font-size:18px;color:var(--sub);margin:0}.fcard .fn{font:900 56px/1.2 "Zen Old Mincho",serif;margin:0 0 12px}
 html.tv .fcard .cd .nm{font-size:26px}html.tv .fcard .res{font-size:18px}
 .stg.focus>.b{justify-content:flex-start}
-html.tv .focus .talk .tq{font-size:33px}html.tv .focus .dbox .dq{font-size:40px}
+html.tv .focus .talk .tq{font-size:31px;margin-bottom:12px}html.tv .focus .dbox .dq{font-size:40px}
 /* 実況 */
 .jk{margin:16px 0 0;padding:12px 0 0;border-top:1px solid var(--line)}
 .jk .dl{font-size:13px;color:var(--sub);letter-spacing:.14em;margin:0 0 4px}
@@ -347,16 +347,64 @@ html[data-scene=dark] h1,html[data-scene=dark] .dist .dn,html[data-scene=dark] .
 .qnm{display:flex;flex-wrap:wrap;gap:2px 12px;font-size:14px}.qnm i{font-style:normal;color:var(--sub);font-size:12px;margin-right:3px}
 .qpick .qx{font-size:13px;color:var(--sub)}.qpick .qline{font-size:14px;margin-top:6px;color:var(--ink)}
 .shr{display:block;width:100%;margin:14px 0 0;min-height:48px}
-/* スマホの「いま」の帯 */
-.pnow{position:sticky;top:0;z-index:5;margin:-4px -20px 16px;padding:10px 20px;background:var(--bg);border-bottom:1px solid var(--line);font-size:14px;font-weight:700}
-.pnow .nl{font-size:11px;font-weight:400;color:var(--sub);letter-spacing:.12em;border:1px solid var(--line);border-radius:4px;padding:1px 6px;margin-right:8px;vertical-align:1px}
-html.tv .pnow{display:none}
-@media(max-width:420px){.pnow{margin:-4px -16px 16px;padding:10px 16px}}
 .pskip{margin:28px 0 0;padding-top:14px;border-top:1px solid var(--line)}.pskip .plain{font-size:14px}.pskip .sub{font-size:12px;margin:6px 0 0}
 .pjoin{display:flex;gap:16px;align-items:center;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
 .pjoin .qr{flex:none;width:auto;padding:8px}.pjoin .qr svg{width:120px;height:120px;display:block}.pjoin .sub{font-size:13px;margin:0 0 6px}.pjoin .roomcode{font-size:34px;margin:0}
+/* ===== スマホ:上部の帯(進み具合・確定点・いま を1つに) ===== */
+.pnow{position:sticky;top:0;z-index:5;margin:-4px -20px 18px;padding:8px 20px 10px;background:var(--bg);border-bottom:1px solid var(--line)}
+.pnow .pt{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.pnow .mark{margin:0;font-size:12px}.pnow .prog i{width:14px}
+.pms{font-size:12px;color:var(--sub);white-space:nowrap}.pms b{font-size:16px;color:var(--ink);margin:0 2px}
+.pnow .pi{margin:4px 0 0;font-size:15px;font-weight:700;line-height:1.5}
+.pnow .nl{font-size:11px;font-weight:400;color:var(--sub);letter-spacing:.12em;border:1px solid var(--line);border-radius:4px;padding:1px 6px;margin-right:8px;vertical-align:1px}
+.pnow~.mark,.pnow~.screen>.mark{display:none}
+@media(max-width:420px){.pnow{margin:-4px -16px 16px;padding:8px 16px 10px}}
+html.tv .pnow{display:none}
+/* 手番:見出しの大きさをそろえ、予想は「相手の手札」として囲む */
+h1.h1s{font-size:24px;margin:22px 0 4px}.pnow+h1.h1s,.pnow~.fold+h1.h1s{margin-top:0}
+.opp{margin-top:12px;padding:10px 10px 12px;border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--ink) 4%,var(--bg))}
+.opp .ol{font-size:12px;color:var(--sub);letter-spacing:.08em;margin:0 0 8px}
+.hand.sm{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}.hand.sm .cd .nm{font-size:12px}.hand.sm .cd .kj{font-size:10px}
+/* 相場のおすすめ(1行) */
+.rec{margin:12px 0 0;padding:10px 12px}.rec .rl{margin-bottom:4px}.rec .r1{margin:0;align-items:center}.rec .dot{color:var(--sub);margin:0 2px}
+.rec .fold.rc{margin:8px 0 0;border-bottom:0}.rec .fold.rc summary{padding:8px 0 0;font-size:13px;font-weight:400;color:var(--sub)}.rec .fold.rc[open]{padding-bottom:0}.rec .fold.rc .sub{margin:6px 0 0}
+/* 名札(スマホ) */
+@media(max-width:700px){html:not(.tv) .plate .pn{font-size:32px}html:not(.tv) .plate{margin-bottom:6px}}
+/* 答え合わせ:札が一度だけめくれる */
+.rhead{display:flex;align-items:center;gap:16px;margin:2px 0 6px}.rhead h1{margin:0;font-size:26px;line-height:1.4}
+.rcard{width:72px;flex:none}.rcard .cd{width:100%}.rcard .cd .nm{font-size:12px}
+.rcard.flip{animation:flipin .5s cubic-bezier(.2,.8,.3,1) both}
+@keyframes flipin{from{transform:perspective(500px) rotateY(90deg);opacity:.3}to{transform:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){.rcard.flip{animation:none}}
+/* 待ち画面:まだ選んでいる人 */
+.pend{margin:14px auto 0;font-size:14px;max-width:22em}.pend span{display:block;font-size:12px;color:var(--sub);letter-spacing:.08em;margin-bottom:2px}
+/* ホーム:遊び方の型 */
+.lmode{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.lm{border:1px solid var(--line);border-radius:10px;padding:14px 14px 16px;background:var(--card);display:flex;flex-direction:column}
+.lm .lf{width:100%;max-width:150px;height:auto;display:block;margin:0 auto 8px;fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}.lm .lf .on{fill:var(--ink)}
+.lm .lt{font:600 17px/1.4 "Zen Old Mincho",serif;margin:0 0 4px}.lm .sub{font-size:13px;margin:0 0 12px;flex:1}.lm .go,.lm .plain{margin:0;width:100%}
+.jrow{display:flex;gap:8px}.jrow .field{flex:1;margin:0}.jrow .plain{flex:none}
+@media(max-width:420px){.lmode{grid-template-columns:minmax(0,1fr)}}
+/* 答え合わせの流れ(テレビ) */
+.flow{list-style:none;padding:0;margin:-4px 0 18px;display:flex;gap:6px;font-size:15px}
+.flow li{color:var(--line)}.flow li:not(:last-child)::after{content:"›";margin-left:10px;color:var(--line);font-weight:400}
+.flow li.done{color:var(--sub)}.flow li.now{color:var(--ink);font-weight:700}
+html[data-scene=dark] .flow li{color:#57524a}html[data-scene=dark] .flow li.now{color:var(--ink)}
+/* 判定発表 */
+.vbig{border-top:4px solid var(--ink);padding-top:14px;margin:0 0 22px}
+.vbig .dl{font-size:15px;color:var(--sub);letter-spacing:.16em;margin:0 0 4px}
+.vbig .vv{font:900 64px/1.25 "Zen Old Mincho",serif;margin:0 0 10px;animation:pop .5s cubic-bezier(.2,1.6,.4,1) both}
+.vbig .vs{font-size:18px;margin:0;color:var(--ink)}
+.vgrp{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.vgrp .gl{font-size:15px;color:var(--sub);margin:0 0 6px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.vgrp .win .gl{color:var(--ink);font-weight:700;border-bottom:2px solid var(--ink)}
+.vgrp ul{list-style:none;padding:0;margin:0}.vgrp li{display:flex;justify-content:space-between;padding:7px 0;font-size:20px;color:var(--sub)}
+.vgrp li.ok{color:var(--ink);font-weight:700}.vgrp li.ok b{color:var(--up)}.vgrp li.none{font-size:16px}
+.vgain{margin:18px 0 0;font-size:17px}
+.vline{font:600 22px/1.5 "Zen Old Mincho",serif;margin:0 0 8px}.vline .dl{font:400 14px/1 "Zen Kaku Gothic New",sans-serif;color:var(--sub);letter-spacing:.12em;margin-right:12px}
+.vbig.sm .vv{font-size:min(30px,8.4vw);white-space:nowrap}.vbig.sm{margin-top:14px}.vme{font-size:16px;margin:6px 0 0}
 /* 待たずに進める */
-html.tv .skipbox{margin-top:auto;display:flex;gap:16px;align-items:center;padding-top:16px}
+html.tv .skipbox{margin-top:auto;display:flex;gap:16px;align-items:center;padding-top:12px}
 html.tv .skipbox .skip{flex:none;font-size:15px;min-height:40px;color:var(--sub)}html.tv .skipbox .sub{font-size:14px;margin:0;line-height:1.6}
 html.tv .skip[data-arm]{color:var(--ink);border-color:var(--ink)}
 /* テレビ:1600×900 の舞台に組み、画面の大きさに合わせて全体を拡大縮小する。スクロールさせない
@@ -379,13 +427,13 @@ html.tv .notice{font-size:18px;margin:16px 0 0;padding:10px 2px}html.tv .notice.
 .stg>.a{grid-column:1;grid-row:1;min-height:0}
 .stg>.b{grid-column:2;grid-row:1/span 2;min-height:0;display:flex;flex-direction:column}
 .stg>.c{grid-column:1;grid-row:2;align-self:start;padding-top:12px}
-.stg.wide{grid-template-rows:minmax(0,1fr) auto}.stg.wide>.b{grid-row:1}.stg.wide>.c{grid-column:1/-1;align-self:end;padding-top:0}
+.stg.wide{grid-template-rows:minmax(0,1fr) auto;row-gap:14px}.stg.wide>.b{grid-row:1}.stg.wide>.c{grid-column:1/-1;align-self:end;padding-top:0}
 /* 残り時間 */
 html.tv .clock{font-size:18px;color:var(--sub);margin:0 0 14px;display:flex;align-items:baseline;gap:14px}
 html.tv .clock .cdv{font:600 56px/1 "Zen Old Mincho",serif;color:var(--ink)}html.tv .clock .cdv.low{color:var(--up)}
 /* 全員の状況表 */
 html.tv .list{font-size:19px}html.tv .list th{font-size:14px;padding:6px 4px}
-html.tv .list td{padding:8px 4px;vertical-align:middle}
+html.tv .list td{padding:6px 4px;vertical-align:middle}
 html.tv .pt .rk{width:3.2em;color:var(--sub)}html.tv .pt td.nm{font-weight:500;max-width:9.5em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}html.tv .pt th,html.tv .pt td{white-space:nowrap}
 html.tv .pt .dd{display:inline-block;min-width:2.6em;margin-left:.3em;font-size:15px;color:var(--sub);text-align:right}html.tv .pt .dd.up{color:var(--up)}
 html.tv .pt .st{font-size:16px;color:var(--sub)}html.tv .pt .st.ok{color:var(--ink)}
@@ -1863,7 +1911,7 @@ const ALL=[
   art:c=>`<g ${L}><path d="M13 10l17 11v30L13 40z" ${P0}/><path d="M47 10L30 21v30l17-11z" fill="${c}"/></g>`}];
 let CARDS=ALL.slice(0,7);
 const setDeck=ids=>{if(Array.isArray(ids)&&ids.length===7)CARDS=ids.map(i=>ALL[i])};
-const C={start:100,inc:20,dec:20,floor:10,a:20,bet:10,hon:5,dv:10,dvLast:20,dfoolSome:5,dfoolMost:10,foolAll:20,foolHalf:10,pen:10,rounds:5,evAt:[2,4],min:3,max:7,turnSec:300,rankSec:300,finalSec:30,revDelay:5600,rollAt:1.6};
+const C={start:100,inc:20,dec:20,floor:10,a:20,bet:10,hon:5,dv:10,dvLast:20,dfoolSome:5,dfoolMost:10,foolAll:20,foolHalf:10,pen:10,rounds:5,evAt:[2,4],min:3,max:7,turnSec:300,rankSec:300,finalSec:30,revDelay:5600,verdictMs:4500,rollAt:1.6};
 const kan=['〇','一','二','三','四','五','六','七'];
 /* 16タイプ。並びは [本音/損得][鉄仮面/顔に出る][我が道/協調][観察/直感] の組み合わせ順 */
 const POLES=[['本音','損得'],['鉄仮面','顔に出る'],['我が道','協調'],['観察','直感']];
@@ -2401,7 +2449,7 @@ function hostMain(opt={}){
     /* この回が始まる前の確定点で最下位の人(注目の人を除く。全員同点なら該当なし)は、当たりが +dvLast */
     const fb=S.fxBase,others=P().map((p,i)=>i).filter(i=>i!==S.spot),lo=Math.min(...others.map(i=>fb[i])),hi=Math.max(...others.map(i=>fb[i]));
     let wrong=0;Object.entries(D.votes).forEach(([i,x])=>{const ok=(x.v==='hon')===D.honest;x.ok=ok;const p=P()[i];p.dVote++;x.last=lo<hi&&fb[i]===lo;x.pt=ok?(x.last?C.dvLast:C.dv):0;if(ok){p.dt+=x.pt;p.dHit++}else wrong++});
-    const gs=Object.keys(D.votes).length;D.gain=!wrong?0:wrong*2>gs?C.dfoolMost:C.dfoolSome;sp.dt+=D.gain;D.wrong=wrong;S.revStep=2;makeJk();pub()}
+    const gs=Object.keys(D.votes).length;D.gain=!wrong?0:wrong*2>gs?C.dfoolMost:C.dfoolSome;sp.dt+=D.gain;D.wrong=wrong;S.revStep=2;S.sum=false;S.sumAt=Date.now()+C.verdictMs;makeJk();pub()}
   /* 最後の二択:選ぶ人と賭ける人が同時に操作する */
   function startFinal(){S.frozen=[...S.prices];S.gOrder=0;openFinal()}
   function openFinal(){
@@ -2500,7 +2548,8 @@ function hostMain(opt={}){
     talkend(){if(S.phase==='reveal'&&S.revStep===1)endTalk(false)}};
   /* 時間で進む処理はすべてここで見る(読み込み直したあとも続きから動く) */
   setInterval(()=>{const now=Date.now();
-    if(S.phase==='reveal'&&S.revStep===0&&now>=S.revAt){if(S.doubt){S.revStep=1;if(S.doubt.cpu)S.talkAt=now+5500;pub()}else{S.revStep=2;makeJk();pub()}}
+    if(S.phase==='reveal'&&S.revStep===2&&!S.sum&&S.sumAt&&now>=S.sumAt){S.sum=true;S.sumAt=null;pub()}
+    if(S.phase==='reveal'&&S.revStep===0&&now>=S.revAt){if(S.doubt){S.revStep=1;if(S.doubt.cpu)S.talkAt=now+5500;pub()}else{S.revStep=2;S.sum=true;makeJk();pub()}}
     if(S.phase==='quiz'&&S.quiz.step===0&&S.quiz.cpuAt&&now>=S.quiz.cpuAt){S.quiz.cpuAt=null;quizCpu()}
     else if(S.phase==='quiz'&&S.quiz.step===0&&S.quiz.revAt&&now>=S.quiz.revAt){S.quiz.revAt=null;closeQuiz()}
     else if(S.phase==='reveal'&&S.revStep===1&&S.doubt&&S.doubt.talk){if(S.talkAt&&now>=S.talkAt)endTalk(false)}
@@ -2517,7 +2566,7 @@ function hostMain(opt={}){
     if(ph==='turn'||ph==='reveal'){V.spot=S.spot;V.spotWhy=S.spotWhy}
     if(ph==='reveal'){V.revStep=S.revStep;
       V.reveal=S.revStep===2?S.reveal:S.revStep===1?Object.assign({},S.reveal,{all:S.reveal.all.map(x=>({pick:x.pick,to:x.to}))}):Object.assign({},S.reveal,{spotPick:null,all:null,bonus:null,hitN:null,guesses:S.reveal.guesses.map(g=>g&&{g:g.g})});
-      V.jk=S.revStep===2?S.jk:null;
+      V.jk=S.revStep===2?S.jk:null;V.sum=!!S.sum;
       if(S.doubt)V.doubt=S.revStep===2?{honest:S.doubt.honest,gain:S.doubt.gain,wrong:S.doubt.wrong,votes:S.doubt.votes}:{done:S.doubt.talk?[]:Object.keys(S.doubt.votes).filter(k=>S.doubt.votes[k].at).map(Number),last:(()=>{const fb=S.fxBase,o=P().map((p,i)=>i).filter(i=>i!==S.spot),lo=Math.min(...o.map(i=>fb[i])),hi=Math.max(...o.map(i=>fb[i]));return lo<hi?o.filter(i=>fb[i]===lo):[]})(),talk:S.doubt.talk,q:S.doubt.q,ask:S.doubt.ask,line:S.doubt.cpu?S.doubt.line:null,nc:S.doubt.nc}}
     if(ph==='final'||ph==='final-reveal'){V.j=S.gOrder;V.frozen=S.frozen;V.betDone=Object.keys(S.bets).map(Number);V.keepDone=S.keepPick!==null;
       if(ph==='final-reveal'){const p=P()[S.gOrder];V.keep=p.final;V.drop=p.gdrop;V.lastBets=S.lastBets;V.gHonest=p.gHonest;V.gAuto=p.gAuto}}
@@ -2570,6 +2619,8 @@ function hostMain(opt={}){
     const mktRow=cap=>`<div class="mkt row7">${CARDS.map((c,i)=>`<div class="mk"><p class="hd2"><span class="ic">${art(i)}</span><span class="bn">${c.n}</span></p><p><span class="pr num">${V.prices[i]}</span>${dfTxt(i)}</p></div>`).join('')}</div><p class="sub cap">${cap}</p>`;
     /* 上部:進み具合と「いま、何をしているか」 */
     const mkT=(s,l,now)=>`<!--H--><div class="hdr">${mk(s,l)}${now?`<p class="now"><span class="nl">いま</span>${now}</p>`:''}</div><!--/H-->`;
+    /* 答え合わせの流れ。いまの段階を濃く、済んだ段階を薄く、これからの段階をさらに薄く */
+    const flow=k=>`<ol class="flow">${['答え合わせ','弁明','ダウト判定','判定発表','まとめ'].map((t,i)=>`<li class="${i<k?'done':i===k?'now':''}">${t}</li>`).join('')}</ol>`;
     const jkBox=L=>L&&L.length?`<div class="jk"><p class="dl">実況</p>${L.map(t=>`<p>${esc(t)}</p>`).join('')}</div>`:'';
     /* 上部の帯(mkT)は列の外に出し、画面の横幅いっぱいに置く */
     const stg=(a,b,c='',cls='')=>{let hd='';a=a.replace(/<!--H-->([\s\S]*?)<!--\/H-->/,(x,y)=>{hd=y;return''});return hd+`<div class="stg ${cls}"><div class="a">${a}</div><div class="b">${b}</div>${c?`<div class="c">${c}</div>`:''}</div>`};
@@ -2599,18 +2650,28 @@ function hostMain(opt={}){
       const bonusT=X.spotTo?`${NM}さんの札は自動で決まりました。`:X.bonus===C.foolAll?`全員を外させたので、${NM}さんに+${C.foolAll}点。`:X.bonus?`半数より多くを外させたので、${NM}さんに+${C.foolHalf}点。`:'';
       const res=`<p class="res">${X.hitN?`予想的中:${hitNames.join('、')}(+${C.a}点)。`:`予想は全員はずれ。`}${bonusT}</p>`;
       const mrow=mktRow(`相場:1枚手放されるごとに+${C.inc}、誰も手放さなければ−${C.dec}。最後の一枚の相場は終局で得点に加わります。`);
-      if(RS===0)h=stg(`${mkT(V.round,kan[V.round]+'巡目','答え合わせ')}${plate('今巡の注目',sp.name)}<h1 class="ansh">手放したのは……</h1><p class="sub">予想が出そろいました。誰がどの札を予想したかは、下のとおりです。</p>${distHTML(X,PL,true)}`,`<div class="drum"><div class="back">${backArt}</div><p class="sub">まもなく発表します</p></div>`,'','');
+      if(RS===0)h=stg(`${mkT(V.round,kan[V.round]+'巡目','答え合わせ')}${flow(0)}${plate('今巡の注目',sp.name)}<h1 class="ansh">手放したのは……</h1><p class="sub">予想が出そろいました。誰がどの札を予想したかは、下のとおりです。</p>${distHTML(X,PL,true)}`,`<div class="drum"><div class="back">${backArt}</div><p class="sub">まもなく発表します</p></div>`,'','');
       else if(RS===1){
-        const left=`${mkT(V.round,kan[V.round]+'巡目',D.talk?`${NM}さんが、理由を話しています`:'スマホで、本音かダウトかを選んでいます')}${plate('今巡の注目',sp.name)}
+        const left=`${mkT(V.round,kan[V.round]+'巡目',D.talk?`${NM}さんが、理由を話しています`:'スマホで、本音かダウトかを選んでいます')}${flow(D.talk?1:2)}${plate('今巡の注目',sp.name)}
           <div class="fcard"><div class="fc">${card(X.spotPick)}</div><div class="ft"><p class="fl">手放したのは</p><p class="fn ${D.talk?'ansn':''}">「${CARDS[X.spotPick].n}」</p>${res}</div></div>`;
         h=D.talk?stg(left,`<div class="talk"><p class="dl">弁明タイム</p><p class="tw"><b>${NM}さん</b>、理由をどうぞ</p><p class="tq">${esc(D.q)}</p>${D.line?`<p class="cline">${NM}さん「${esc(D.line)}」</p>`:''}
             <p class="sub">聞く人は、本音かうそかを見きわめてください。たとえば、こう聞いてみても。</p><p class="ask">「${esc(D.ask)}」</p></div>
             ${D.line?'':go('talkend','話が終わったら、投票へ')}`,'','focus')
           :stg(left,`${D.nc?`<p class="sub ncl">${NM}さんは、ノーコメントでした。</p>`:''}<div class="dbox"><p class="dl">ダウト判定</p><p class="dq">「${CARDS[X.spotPick].n}」は<br><b>${NM}さん</b>の本音?</p><p class="sub">本音=${NM}さんが並べた順位で、残っていた札のうちいちばん下の札。当たれば+${C.dv}点。外れた人がいれば${NM}さんに+${C.dfoolSome}点、半数より多ければ+${C.dfoolMost}点。</p></div>
             ${clock()}<ul class="pgrid dg">${PL.map((p,i)=>i===X.spot?'':`<li><span>${esc(p.name)}</span>${D.done.includes(i)?st('選んだ',1):st('考え中')}</li>`).join('')}</ul>${skipBtn()}`,'','focus');
+      }else if(!V.sum&&D){
+        /* 判定発表:判定と、誰が当てたかだけを見せる */
+        const grp=v=>{const ids=Object.keys(D.votes).map(Number).filter(i=>D.votes[i].v===v);return ids.length?ids.map(i=>`<li class="${D.votes[i].ok?'ok':''}"><span>${esc(PL[i].name)}</span><b class="num">${D.votes[i].ok?'+'+D.votes[i].pt:'はずれ'}</b></li>`).join(''):'<li class="none">なし</li>'};
+        const rightV=D.honest?'hon':'doubt';
+        h=stg(`${mkT(V.round,kan[V.round]+'巡目','ダウト判定の結果')}${flow(3)}${plate('今巡の注目',sp.name)}
+          <div class="fcard"><div class="fc">${card(X.spotPick)}</div><div class="ft"><p class="fl">手放したのは</p><p class="fn">「${CARDS[X.spotPick].n}」</p></div></div>`,
+          `<div class="vbig ${D.honest?'hon':'lie'}"><p class="dl">判定</p><p class="vv">${D.honest?'本音でした':'本音ではありませんでした'}</p><p class="vs">${D.honest?`「${CARDS[X.spotPick].n}」は、${NM}さんが並べた順位で、残っていた札のうちいちばん下でした。`:`「${CARDS[X.spotPick].n}」は、${NM}さんのいちばん下の札ではありませんでした。`}</p></div>
+          <div class="vgrp"><div class="${rightV==='hon'?'win':''}"><p class="gl">「本音」を選んだ人${rightV==='hon'?' 当たり':''}</p><ul>${grp('hon')}</ul></div><div class="${rightV==='doubt'?'win':''}"><p class="gl">「ダウト」を選んだ人${rightV==='doubt'?' 当たり':''}</p><ul>${grp('doubt')}</ul></div></div>
+          <p class="sub vgain">${D.wrong?`${D.wrong}人が外れたので、${NM}さんに+${D.gain}点。`:`全員が当てました。${NM}さんの点はなし。`}</p>`,'','focus');
       }else{const vote=(p,i)=>{if(i===X.spot)return st('注目');const x=D&&D.votes[i];if(!x)return'―';return`${x.v==='hon'?'本音':'ダウト'}<span class="dd ${x.ok?'up':''}">${x.ok?'+'+x.pt:'―'}</span>`};
-        const verdict=D?`<div class="verdict"><p class="dl">ダウト判定</p><p class="vv">${D.honest?'本音でした':'本音ではありませんでした'}</p><p class="sub">${D.honest?'「本音」':'「ダウト」'}を選んだ人に+${C.dv}点。${D.wrong?`${D.wrong}人が外れたので、${NM}さんに+${D.gain}点。`:'全員が当てました。'}</p></div>`:'';
-        h=stg(`${mkT(V.round,kan[V.round]+'巡目','この回の結果')}${plate('今巡の注目',sp.name)}<h1 class="ansh">手放したのは「${CARDS[X.spotPick].n}」</h1>${verdict}${res}${jkBox(V.jk)}`,
+        /* この回のまとめ:判定は1行に縮め、表と相場で全体を確かめる */
+        const vline=D?`<p class="vline"><span class="dl">ダウト判定</span>${D.honest?'本音でした':'本音ではありませんでした'}</p>`:'';
+        h=stg(`${mkT(V.round,kan[V.round]+'巡目','この回のまとめ')}${flow(4)}${plate('今巡の注目',sp.name)}<h1 class="ansh">手放したのは「${CARDS[X.spotPick].n}」</h1>${vline}${res}${jkBox(V.jk)}`,
         `<h2>この回のまとめ</h2>${ptab([['手放した(本音点)',(p,i)=>`${CARDS[X.all[i].pick].n}${X.all[i].to?st(' 自動'):X.all[i].honest?`<span class="dd">+${C.hon}</span>`:''}`],['ダウト',vote]],{dfx:V.dfx})}
         ${go('next',V.round<C.rounds?kan[V.round+1]+'巡目へ':'最後の二択へ')}`,mrow,'wide')}
     }else if(ph==='final'){
@@ -2662,7 +2723,7 @@ function playerMain(code,opt={}){
   let myName='';try{myName=localStorage.getItem('saigo-name')||''}catch(e){}
   let net=null,V=null,joined=false,sel={k:'',d:null,g:null,rank:[],sent:null};
   /* 値動きの折りたたみは、描き直しても開いたままにする */
-  let boardOpen=false;app.addEventListener('toggle',e=>{if(e.target.matches&&e.target.matches('details.bd'))boardOpen=e.target.open},true);
+  let boardOpen=false,flipSeen=null;app.addEventListener('toggle',e=>{if(e.target.matches&&e.target.matches('details.bd'))boardOpen=e.target.open},true);
   const shareBtn=i=>`<button class="plain shr" data-act="share" data-i="${i}">証券を画像で保存・共有</button>`;
   let myRank=null;try{if(!TEST)myRank=JSON.parse(sessionStorage.getItem('saigo-rank')||'null')}catch(e){}
   /* 残りの手札のうち、自分の順位でいちばん下の札(これを手放すと本音点) */
@@ -2682,7 +2743,16 @@ function playerMain(code,opt={}){
     const head=TEST?'ひとりで試す':'部屋 '+esc(code);
     const joinBox=()=>{const u=new URL(location.href);u.search='';u.searchParams.set('room',code);if(params.get('local')==='1')u.searchParams.set('local','1');
       return`<div class="pjoin"><div class="qr">${qrSVG(u.toString())}</div><div><p class="sub">ほかの人は、このQRコードを読み取るか、部屋コードを入れて参加します。</p><p class="roomcode num">${esc(code)}</p></div></div>`};
-    const wait=(t,s='')=>`<div class="wait"><div class="back">${backArt}</div><p class="who">${t}</p>${s?`<p class="sub">${s}</p>`:''}</div>`;
+    const pp=(label,name,isMe)=>isMe?`<div class="plate"><p class="pl">${label}</p><p class="pn">あなた</p></div>`:plate(label,name);
+    /* 6. 待ち画面には、まだ選んでいる人の名前を出す(何を選んだかは出さない) */
+    const pendNames=()=>{if(!V)return[];const P2=V.players,ph2=V.phase;let ids=[];
+      if(ph2==='ranking')ids=P2.map((p,i)=>i).filter(i=>!P2[i].rankDone);
+      else if(ph2==='turn')ids=P2.map((p,i)=>i).filter(i=>!P2[i].submitted);
+      else if(ph2==='final')ids=P2.map((p,i)=>i).filter(i=>i===V.j?!V.keepDone:!V.betDone.includes(i));
+      else if(ph2==='reveal'&&V.revStep===1&&V.doubt&&!V.doubt.talk)ids=P2.map((p,i)=>i).filter(i=>i!==V.reveal.spot&&!V.doubt.done.includes(i));
+      else if(ph2==='quiz'&&V.quiz.step===0)ids=P2.map((p,i)=>i).filter(i=>!V.quiz.done.includes(i));
+      return ids.filter(i=>i!==me).map(i=>esc(P2[i].name))};
+    const wait=(t,s='')=>{const pn=pendNames();return`<div class="wait"><div class="back">${backArt}</div><p class="who">${t}</p>${s?`<p class="sub">${s}</p>`:''}${pn.length?`<p class="pend"><span>まだ選んでいる人</span>${pn.join('、')}</p>`:''}</div>`};
     const first=V&&V.first;
     if(!V||me<0){
       h=`${mk(null,head)}<h1>${TEST?'CPUと遊ぶ':'参加する'}</h1>${TEST?'<p class="sub">テレビも通信も使わずに、最後まで遊べます。</p>':opt.notv?'<p class="sub">テレビなしで、スマホだけで遊ぶ部屋を作ります。まず、あなたの名前を入れてください。</p>':''}${V&&V.phase!=='lobby'&&joined?'<p>この部屋はもう始まっています。次の回から参加してください。</p>':''}
@@ -2709,31 +2779,37 @@ function playerMain(code,opt={}){
         if(M.submitted||sel.sent)h=wait('決めました',sel.sent?(isSpot?`「${CARDS[sel.sent.pick].n}」を手放しました。みんなの予想を待っています。`:`「${CARDS[sel.sent.pick].n}」を手放し、${esc(tp.name)}さんは「${CARDS[sel.sent.guess].n}」を手放すと予想しました。`):'ほかの人を待っています。');
         else{const hon=honestOf(M.hand);h=`${mk(V.round,kan[V.round]+'巡目')}${V.firedEv?`<div class="notice" style="margin-top:0"><b>${/^「/.test(V.firedEv.n)?esc(V.firedEv.n):`「${esc(V.firedEv.n)}」`}</b>が起きました。${esc(V.firedEv.t)}</div>`:''}${isSpot?`<div class="notice" style="margin-top:0"><b>今巡の注目は、あなたです。</b>全員があなたの手放す札を予想しています。全員を外させれば+${C.foolAll}点、半数より多く外させれば+${C.foolHalf}点。</div>`:''}
           ${first&&V.round<=2?`<details class="fold gd"${V.round===1?' open':''}><summary>はじめての方へ:いまやること</summary>${guide(isSpot?['今回はあなたが注目の人です。予想はせず、手放す札を1枚だけ選びます。',`「本音」と書いた札を手放すと+${C.hon}点。みんなの予想を外させると、さらに点がもらえます。`,'選んだら、いちばん下の「これで決める」を押します。決めるまでは何度でも選び直せます。']:[`まず、手放す札を1枚押してください。「本音」と書いた札なら+${C.hon}点です。`,`次に、${esc(tp.name)}さんが手放しそうな札を予想して押してください。当たれば+${C.a}点です。`,'2つ選んだら、いちばん下の「この2つで決める」を押します。決めるまでは何度でも選び直せます。'])}</details>`:''}
-          <h1>${isSpot?'手放す札を選ぶ':'1. 手放す札を選ぶ'}</h1><p class="sub">最後に残した1枚の相場が得点になります。札の右上はあなたの順位です。</p>
+          <h1 class="h1s">${isSpot?'手放す札を選ぶ':'1. 手放す札を選ぶ'}</h1><p class="sub">最後に残した1枚の相場が得点になります。札の右上はあなたの順位です。</p>
           <div class="hand" style="--n:${cols(M.hand.length)}">${M.hand.map(c=>myCard(c,`data-act="pd" data-c="${c}"`,sel.d===c,V.prices[c],c===hon)).join('')}</div>
           ${(()=>{const R=recOf(M.hand,V.prices,V.nextEv,V.players.length);const nm=c=>`<span class="ric">${art(c)}</span>${CARDS[c].n}`;
-            return`<div class="rec"><p class="rl">相場のおすすめ</p><p>手放すなら <button class="rbtn" data-act="pd" data-c="${R.drop}">${nm(R.drop)}</button><span class="rx">見込み ${R.ex(R.drop)}</span></p><p>最後まで残したい <b>${nm(R.keep)}</b><span class="rx">見込み ${R.ex(R.keep)}</span></p><p class="sub">見込みは、いまの相場に${V.nextEv?'次の出来事と、':''}ほかの人に手放されやすさを足した目安です。${hon!==null?(R.drop===hon?'本音の札と同じなので、本音点ももらえます。':`本音の札は「${CARDS[hon].n}」。本音を通すか、相場を取るかです。`):''}</p></div>`})()}
+            return`<div class="rec"><p class="rl">相場で見ると</p><p class="r1">手放す <button class="rbtn" data-act="pd" data-c="${R.drop}">${nm(R.drop)}</button><span class="dot">・</span>残す <b>${nm(R.keep)}</b></p>
+            <details class="fold rc"><summary>見込みの理由</summary><p class="sub">「${CARDS[R.drop].n}」の見込みは${R.ex(R.drop)}、「${CARDS[R.keep].n}」は${R.ex(R.keep)}。いまの相場に${V.nextEv?'次の出来事と、':''}ほかの人に手放されやすさを足した目安です。${hon!==null?(R.drop===hon?'手放す札は本音の札と同じなので、本音点ももらえます。':`本音の札は「${CARDS[hon].n}」。本音を通すか、相場を取るかです。`):''}</p></details></div>`})()}
           ${sel.d===null?'':`<p class="hint">「${CARDS[sel.d].n}」を手放す。${sel.d===hon?`本音どおりなので+${C.hon}点。`:'本音とは違う札なので、本音点はなし。'}この札の相場は上がります。</p>`}
-          ${isSpot?'':`<h2>2. 注目の${esc(tp.name)}さんが手放す札を予想</h2><p class="sub">全員が同じ人を予想しています。当たれば+${C.a}点。</p><div class="hand" style="--n:${cols(tp.hand.length)}">${tp.hand.map(c=>pickBtn(c,`data-act="pg" data-c="${c}"`,sel.g===c)).join('')}</div>`}
+          ${isSpot?'':`<h1 class="h1s">2. ${esc(tp.name)}さんが手放す札を予想</h1><p class="sub">全員が同じ人を予想しています。当たれば+${C.a}点。</p><div class="opp"><p class="ol">${esc(tp.name)}さんの手札</p><div class="hand sm">${tp.hand.map(c=>pickBtn(c,`data-act="pg" data-c="${c}"`,sel.g===c)).join('')}</div></div>`}
           <button class="go" data-act="pok"${sel.d===null||(!isSpot&&sel.g===null)?' disabled':''}>${sel.d===null?'手放す札を選んでください':isSpot?'これで決める':sel.g===null?'予想を選んでください':'この2つで決める'}</button>
           ${V.nextEv?`<div class="notice">${kan[V.round+1]}巡目の前に<b>${/^「/.test(V.nextEv.n)?esc(V.nextEv.n):`「${esc(V.nextEv.n)}」`}</b>が起きます。${esc(V.nextEv.t)}</div>`:''}
           <details class="fold bd"${boardOpen?' open':''}><summary>値動きを見る</summary>${pubBoard(V,'')}</details>`}
       }else if(ph==='reveal'){
         const X=V.reveal,sp=V.players[X.spot],D=V.doubt,isSpot=me===X.spot;
-        const title=ans=>`${mk(V.round,kan[V.round]+'巡目')}<h1 class="wb"><b class="who">${isSpot?'あなた':esc(sp.name)+'さん'}</b>が<wbr>手放したのは${ans?`<wbr><span class="ansn">「${CARDS[X.spotPick].n}」</span>`:'……'}</h1>`;
+        /* 8. 札がめくれるのは、その回で最初に見たときだけ */
+        const fl=ans=>{if(!ans)return'';const k=V.round+'-'+V.revStep;const f=flipSeen!==V.round;if(f)flipSeen=V.round;return`<div class="rcard${f?' flip':''}">${card(X.spotPick)}</div>`};
+        const title=ans=>`${mk(V.round,kan[V.round]+'巡目')}${pp('今巡の注目',sp.name,isSpot)}<div class="rhead">${fl(ans)}<h1 class="ansh">手放したのは${ans?`<br><span class="ansn">「${CARDS[X.spotPick].n}」</span>`:'……'}</h1></div>`;
         const myG=X.guesses[me];
         const predLine=()=>`<p>${isSpot?`${X.guessers}人のうち${X.hitN}人に読まれました。${X.bonus?`<span class="up">+${X.bonus}点</span>`:''}`:myG&&myG.hit?`<span class="up">予想的中、+${C.a}点。</span>`:'予想は外れ。'}</p>`;
         if(V.revStep===0)h=`${title(false)}<p class="sub">${isSpot?'みんなの予想が出そろいました。':myG&&myG.g!==null&&myG.g!==undefined?`あなたの予想は「${CARDS[myG.g].n}」。`:'今巡は予想していません。'}まもなく答え合わせです。</p>${NT()?distHTML(X,V.players,true):`<div class="wait drum" style="padding-top:12px"><div class="back">${backArt}</div></div>`}`;
         else if(V.revStep===1){
           if(D.talk){h=isSpot?`${title(true)}${predLine()}<div class="dq2 talk2"><p class="rl2">弁明タイム</p><p class="q">理由を、みんなに話してください</p><p class="tq2">${esc(D.q)}</p><p class="sub">本音でも、うそでもかまいません。みんなはこのあと、本音かダウトかを選びます。</p>
               <div class="dbtn"><button data-act="talkend">話し終えた</button><button data-act="talkend" data-nc="1">ノーコメント</button></div></div>`
-            :`${title(true)}${predLine()}<div class="dq2 talk2"><p class="rl2">弁明タイム</p><p class="q"><b class="who">${esc(sp.name)}さん</b>の話を聞いてください</p><p class="tq2">${esc(D.q)}</p>${D.line?`<p class="cline">「${esc(D.line)}」</p>`:''}<p class="sub">聞いてみるなら:「${esc(D.ask)}」</p>${LEAD&&!D.line?ctl('talkend','話が終わったら、投票へ'):''}</div>`}
+            :`${title(true)}${predLine()}<div class="dq2 talk2"><p class="rl2">弁明タイム</p><p class="q">${esc(sp.name)}さんの話を聞いてください</p><p class="tq2">${esc(D.q)}</p>${D.line?`<p class="cline">「${esc(D.line)}」</p>`:''}<p class="sub">聞いてみるなら:「${esc(D.ask)}」</p>${LEAD&&!D.line?ctl('talkend','話が終わったら、投票へ'):''}</div>`}
           else if(isSpot)h=`${title(true)}${predLine()}<div class="dq2"><p class="q">いま、みんながダウト判定をしています</p><p class="sub">あなたが手放した札が本音だったかを、ほかの人が当てています。外れた人がいれば+${C.dfoolSome}点、半数より多く外れたら+${C.dfoolMost}点。</p></div>`;
           else if(sel.sent!==null||D.done.includes(me))h=`${title(true)}${predLine()}${wait('選びました',`あなたは「${sel.sent==='hon'?'本音':sel.sent==='doubt'?'ダウト':'―'}」を選びました。全員がそろうと判定を発表します。`)}`;
-          else h=`${title(true)}${predLine()}<div class="dq2"><p class="q">「${CARDS[X.spotPick].n}」は、<b class="who">${esc(sp.name)}さん</b>の本音?</p>
+          else h=`${title(true)}${predLine()}<div class="dq2"><p class="q">「${CARDS[X.spotPick].n}」は、${esc(sp.name)}さんの本音?</p>
             ${first?guide([`本音とは、${esc(sp.name)}さんが最初に並べた順位で、残っていた札のうちいちばん下の札のことです。`,`その札だと思えば「本音」、ちがうと思えば「ダウト」を押してください。当たれば+${C.dv}点です。`,`外れた人がいると、${esc(sp.name)}さんに点が入ります(+${C.dfoolSome}点、半数より多ければ+${C.dfoolMost}点)。`]):`<p class="sub">本音=${esc(sp.name)}さんが並べた順位で、残っていた札のうちいちばん下の札。当たれば+${C.dv}点。</p>`}
             ${D.last&&D.last.includes(me)?`<p class="lastb">あなたはこの回の始めに最下位でした。当たれば+${C.dvLast}点です。</p>`:''}
             <div class="dbtn"><button data-act="dv" data-v="hon">本音だと思う</button><button data-act="dv" data-v="doubt">ダウト!</button></div></div>`}
+        else if(!V.sum&&D){const mv=D.votes[me];
+          h=`${title(true)}<div class="vbig sm ${D.honest?'hon':'lie'}"><p class="dl">判定</p><p class="vv">${D.honest?'本音でした':'本音ではありませんでした'}</p>
+          <p class="vme">${isSpot?(D.gain?`<span class="up">${D.wrong}人が外れたので、+${D.gain}点。</span>`:'全員に見抜かれました。'):mv?(mv.ok?`<span class="up">あなたの読みは当たり。+${mv.pt}点。</span>`:'あなたの読みは外れ。'):'あなたは選んでいません。'}</p></div><p class="sub">まもなく、この回のまとめに進みます。</p>`}
         else{const x=X.all[me],mv=D&&D.votes[me];
           h=`${title(true)}${predLine()}
           ${D?`<div class="verdict sm"><p class="vv">${D.honest?'本音でした':'本音ではありませんでした'}</p><p>${isSpot?(D.gain?`<span class="up">${D.wrong}人が外れたので、+${D.gain}点。</span>`:'全員に見抜かれました。'):mv?(mv.ok?`<span class="up">ダウト判定的中、+${mv.pt}点。${mv.last?'最下位の追い上げ分を含みます。':''}</span>`:'ダウト判定は外れ。'):''}</p></div>`:''}
@@ -2747,18 +2823,18 @@ function playerMain(code,opt={}){
         if(me===V.j){
           if(V.keepDone||sel.sent!==null)h=wait('選びました','みんなの賭けがそろうのを待っています。');
           else{const keepHon=myRank?[...M.hand].sort((a,b)=>myRank.indexOf(a)-myRank.indexOf(b))[0]:null;
-            h=`${mk(6,'最後の二択')}<h1>残す1枚を選ぶ</h1>
+            h=`${mk(6,'最後の二択')}${pp('残す1枚を選ぶ人','',true)}<h1>どちらを残す?</h1>
             ${first?guide(['残したい札を1枚押してください。押すとすぐに決まります。','ほかの人は、あなたがどちらを残すかに賭けています。',`「本音」と書いた札を残すと+${C.hon}点です。`]):''}
             <div class="hand big">${M.hand.map(c=>myCard(c,`data-act="keep" data-c="${c}"`,false,V.frozen[c],c===keepHon)).join('')}</div>
             ${(()=>{const hi=M.hand[0]===M.hand[1]?M.hand[0]:V.frozen[M.hand[0]]>=V.frozen[M.hand[1]]?M.hand[0]:M.hand[1],lo=M.hand.find(c=>c!==hi);
               return`<div class="rec"><p class="rl">相場のおすすめ</p><p>${V.frozen[hi]===V.frozen[lo]?'2枚の相場は同じです。':`残すなら <b><span class="ric">${art(hi)}</span>${CARDS[hi].n}</b><span class="rx">いま ${V.frozen[hi]}</span>`}</p><p class="sub">残した札の最終相場が得点です。表示の相場は止まった時点の値で、このあと全員が手放した札は+${C.inc}されます。${myRank?(keepHon===hi?'本音の札と同じなので、本音点ももらえます。':`本音の札は「${CARDS[keepHon].n}」。残すと+${C.hon}点です。`):''}</p></div>`})()}`}
         }else if(V.betDone.includes(me)||sel.sent!==null)h=wait('賭けました',`${esc(ch.name)}さんが選ぶのを待っています。`);
-        else h=`${mk(6,'最後の二択')}<h1><b class="who">${esc(ch.name)}さん</b>が残すのは</h1>
+        else h=`${mk(6,'最後の二択')}${pp('残す1枚を選ぶ人',ch.name)}<h1>どちらを残す?</h1>
           ${first&&V.j===0?guide([`${esc(ch.name)}さんが残すと思う札を押してください。押すとすぐに賭けが決まります。`,`当たれば+${C.bet}点、外れれば−${C.bet}点です。`,'自信がないときは、下の「賭けない」を押してください。点は動きません。']):`<p class="sub">当たれば+${C.bet}点、外れれば−${C.bet}点。賭けた札は、締め切るまで伏せます。</p>`}
           <div class="hand big">${ch.hand.map(c=>pickBtn(c,`data-act="bet" data-c="${c}"`,false,'',V.frozen[c])).join('')}</div><button class="plain" data-act="nobet" style="display:block;margin:24px auto 0">賭けない</button>`;
       }else if(ph==='final-reveal'){
         const ch=V.players[V.j],b=V.lastBets.find(x=>x.i===me);
-        h=`${mk(6,'最後の二択')}<h1><b class="who">${esc(ch.name)}さん</b>は<span class="ansn">「${CARDS[V.keep].n}」</span>を残した</h1><div class="hand big"><div>${card(V.keep)}</div></div>
+        h=`${mk(6,'最後の二択')}${pp('残す1枚を選んだ人',ch.name,me===V.j)}<h1><span class="ansn">「${CARDS[V.keep].n}」</span>を残した</h1><div class="hand big"><div>${card(V.keep)}</div></div>
           <p style="text-align:center;margin-top:16px">${me===V.j?`${V.gAuto?'進行役が先に進めたため、自動で残りました。':''}手放したのは「${CARDS[V.drop].n}」。${V.gHonest?`本音どおり +${C.hon}点。`:''}`:b?(b.w?`<span class="up">賭けに勝ち、+${C.bet}点</span>`:`賭けに負け、−${C.bet}点`):'賭けていません。'}</p><h2>確定点の順位</h2>${standHTML(V.players,V.dfx,me)}${ctl('next',V.j<V.players.length-1?'次の人へ':'最終相場を出す')}${nextNote}`;
       }else if(ph==='quiz'){const Q=V.quiz,PLs=V.players,L='ABCDEFG';
         const myK=myRank?Q.ranks.findIndex(R=>R.join()===myRank.join()):-1;
@@ -2788,20 +2864,21 @@ function playerMain(code,opt={}){
       }
     }
     /* 遊んでいる間は、画面の上に自分の確定点と順位を出す */
-    if(M&&['turn','reveal','final','final-reveal'].includes(V.phase))h=`<p class="mine">確定<b class="num">${M.fx}</b>点・${rankOf(V.players,me)}位/${V.players.length}人</p>`+h;
     document.documentElement.dataset.scene=V&&V.phase==='reveal'&&V.revStep===0?'dark':'';
     /* 上部の「いま」の帯と、テレビなしの部屋での「待たずに進める」(進行役だけ) */
     if(V&&me>=0&&V.phase!=='lobby'){const P2=V.players,ph2=V.phase,M2=P2[me];let t='';
       if(ph2==='howto')t='遊び方の説明';
       else if(ph2==='ranking')t=M2.rankDone||sel.sent?'全員が並べ終えるのを待っています':'7枚を、大事な順に並べる';
       else if(ph2==='turn'){const sp=P2[V.spot];t=M2.submitted||sel.sent?'ほかの人が選び終えるのを待っています':me===V.spot?'手放す札を選ぶ(あなたが注目の人)':`手放す札と、${esc(sp.name)}さんの予想を選ぶ`}
-      else if(ph2==='reveal'){const X=V.reveal,D=V.doubt,sp=P2[X.spot];t=V.revStep===0?'答え合わせ':V.revStep===2?'この回の結果':D&&D.talk?(me===X.spot?'理由を話す':`${esc(sp.name)}さんの話を聞く`):me===X.spot?'みんなの判定を待つ':D&&D.done.includes(me)||sel.sent?'ほかの人の判定を待っています':'本音か、ダウトかを選ぶ'}
+      else if(ph2==='reveal'){const X=V.reveal,D=V.doubt,sp=P2[X.spot];t=V.revStep===0?'答え合わせ':V.revStep===2?(V.sum||!V.doubt?'この回のまとめ':'ダウト判定の結果'):D&&D.talk?(me===X.spot?'理由を話す':`${esc(sp.name)}さんの話を聞く`):me===X.spot?'みんなの判定を待つ':D&&D.done.includes(me)||sel.sent?'ほかの人の判定を待っています':'本音か、ダウトかを選ぶ'}
       else if(ph2==='final')t=me===V.j?'残す1枚を選ぶ':`${esc(P2[V.j].name)}さんが残す札に賭ける`;
       else if(ph2==='final-reveal')t='賭けの結果';
       else if(ph2==='quiz')t=V.quiz.step?'本音クイズの正解発表':'それぞれの順位の持ち主を当てる';
       else if(ph2==='results')t=V.cer<0?'最終結果':'本性証券';
       const pend=ph2==='ranking'||ph2==='turn'||ph2==='final'||(ph2==='reveal'&&V.revStep===1&&V.doubt&&!V.doubt.talk)||(ph2==='quiz'&&V.quiz.step===0);
-      h=`<p class="pnow"><span class="nl">いま</span>${t}</p>`+h+(NT()&&!TEST&&LEAD&&pend?`<div class="pskip"><button class="plain" data-act="ctl" data-op="skip">待たずに進める</button><p class="sub">スマホが止まった人がいるときだけ使います。まだ決めていない人の分は自動で決まります。減点はありません。</p></div>`:'')}
+      const stp=ph2==='howto'?[null,'遊び方']:ph2==='ranking'?[0,'はじめる前に']:['turn','reveal'].includes(ph2)?[V.round,kan[V.round]+'巡目']:['final','final-reveal'].includes(ph2)?[6,'最後の二択']:[7,ph2==='quiz'?'本音クイズ':'終局'];
+      const score=['turn','reveal','final','final-reveal'].includes(ph2)?`<span class="pms">確定<b class="num">${M2.fx}</b>点・${rankOf(P2,me)}位/${P2.length}人</span>`:'';
+      h=`<div class="pnow"><div class="pt">${mk(stp[0],stp[1])}${score}</div><p class="pi"><span class="nl">いま</span>${t}</p></div>`+h+(NT()&&!TEST&&LEAD&&pend?`<div class="pskip"><button class="plain" data-act="ctl" data-op="skip">待たずに進める</button><p class="sub">スマホが止まった人がいるときだけ使います。まだ決めていない人の分は自動で決まります。減点はありません。</p></div>`:'')}
     paint(h,V?V.phase+'|'+V.round+'|'+(V.j??'')+'|'+(V.cer??'')+'|'+(V.revStep??''):'join');
   }
   /* 本音クイズ:持ち主の選択。同じ人を2回選べないよう、描き直して選択肢を絞る */
@@ -2881,11 +2958,15 @@ function landing(){
   const go=u=>{location.href=u};homeBtn.hidden=true;guideBtn.target='_self';
   /* 途中のゲームがテレビ側に保存されていれば、続きから開けるようにする */
   let resume=null,resumePh=false;try{let best=0;for(let k=0;k<localStorage.length;k++){const key=localStorage.key(k);if(!key.startsWith('saigo-host-'))continue;const sv=JSON.parse(localStorage.getItem(key));if(sv&&!['lobby','results'].includes(sv.phase)&&Date.now()-sv.savedAt<6*3600e3&&sv.savedAt>best){best=sv.savedAt;resume=sv.code;resumePh=!!sv.phoneHost}}}catch(e){}
-  app.innerHTML=`<div class="screen"><div class="fan" aria-hidden="true">${CARDS.map((c,i)=>card(i)).join('')}</div><h1>最後の一枚</h1><p class="sub">7枚の価値観を1枚ずつ手放し、最後に残った1枚で本性を診断します。3〜7人で遊べます。</p>
-  <button class="go" data-act="host">テレビで部屋を作る</button>
-  <button class="plain" data-act="phost" style="margin-top:10px">テレビなしで、スマホだけで遊ぶ</button><p class="sub" style="margin-top:6px">この端末が部屋を作り、進行も受け持ちます。ほかの人は部屋コードかQRコードで参加します。</p>
-  <h2>スマホで参加</h2><label for="cd">部屋コード(4文字)</label><input id="cd" class="field code" maxlength="4" autocomplete="off" autocapitalize="characters"><button class="plain" data-act="join" style="margin-top:12px">参加する</button>
+  /* 9. 遊び方の型を2つ、小さな図で並べる */
+  const figTV=`<svg viewBox="0 0 120 64" class="lf" aria-hidden="true"><rect x="30" y="4" width="60" height="36" rx="3"/><line x1="52" y1="40" x2="48" y2="46"/><line x1="68" y1="40" x2="72" y2="46"/><line x1="44" y1="46" x2="76" y2="46"/>${[10,30,82,102].map(x=>`<rect x="${x}" y="44" width="10" height="18" rx="2"/>`).join('')}</svg>`;
+  const figPh=`<svg viewBox="0 0 120 64" class="lf" aria-hidden="true">${[14,40,66,92].map((x,k)=>`<rect x="${x}" y="${k===0?10:18}" width="${k===0?16:14}" height="${k===0?34:26}" rx="2.5"${k===0?' class="on"':''}/>`).join('')}<line x1="31" y1="27" x2="39" y2="30"/></svg>`;
+  app.innerHTML=`<div class="screen land"><div class="fan" aria-hidden="true">${CARDS.map((c,i)=>card(i)).join('')}</div><h1>最後の一枚</h1><p class="sub">7枚の価値観を1枚ずつ手放し、最後に残った1枚で本性を診断します。3〜7人で遊べます。</p>
+  <h2>部屋を作る</h2>
+  <div class="lmode"><div class="lm">${figTV}<p class="lt">テレビ+各自のスマホ</p><p class="sub">テレビに場の様子を映し、操作は各自のスマホで。いちばん盛り上がる遊び方です。</p><button class="go" data-act="host">テレビで部屋を作る</button></div>
+  <div class="lm">${figPh}<p class="lt">スマホだけ</p><p class="sub">この端末が部屋を作り、進行も受け持ちます。テレビがない場所で。</p><button class="plain" data-act="phost">スマホだけで遊ぶ</button></div></div>
   ${resume?`<p style="margin-top:14px"><button class="plain" data-act="resume">${resumePh?'スマホで':'テレビで'}続きから(部屋 ${esc(resume)})</button></p>`:''}
+  <h2>部屋に参加する</h2><label for="cd">部屋コード(4文字)</label><div class="jrow"><input id="cd" class="field code" maxlength="4" autocomplete="off" autocapitalize="characters"><button class="plain" data-act="join">参加する</button></div><p class="sub">QRコードを読み取った場合は、入力はいりません。</p>
   <h2>ひとりで試す</h2><p class="sub">CPUを相手に、テレビも通信も使わずに遊べます。</p><button class="plain" data-act="test">CPUと遊ぶ</button>
   <h2>診断の解説</h2><p class="sub">16のタイプと、最後の一枚になる21枚の札の意味を読めます。</p><button class="plain" data-act="guide">解説を読む</button>${modeNote()}</div>`;
   app.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const u=new URL(location.href);u.search='';
