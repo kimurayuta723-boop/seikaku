@@ -280,13 +280,13 @@ html.tv .now{font-size:19px}html.tv .now .nl{font-size:14px}
 .fcard .fl{font-size:18px;color:var(--sub);margin:0}.fcard .fn{font:900 56px/1.2 "Zen Old Mincho",serif;margin:0 0 12px}
 html.tv .fcard .cd .nm{font-size:26px}html.tv .fcard .res{font-size:18px}
 .stg.focus>.b{justify-content:flex-start}
-html.tv .focus .talk .tq{font-size:38px}html.tv .focus .dbox .dq{font-size:40px}
+html.tv .focus .talk .tq{font-size:33px}html.tv .focus .dbox .dq{font-size:40px}
 /* 実況 */
 .jk{margin:16px 0 0;padding:12px 0 0;border-top:1px solid var(--line)}
 .jk .dl{font-size:13px;color:var(--sub);letter-spacing:.14em;margin:0 0 4px}
 .jk p:not(.dl){font:600 21px/1.6 "Zen Old Mincho",serif;margin:0 0 4px}
 .jk.sm p:not(.dl){font-size:16px}
-html.tv .jk p:not(.dl){font-size:22px}
+html.tv .jk p:not(.dl){font-size:20px;line-height:1.55}
 /* 本音クイズ */
 .qrank{list-style:none;padding:0;margin:22px 0 0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:14px}
 .qrank li{text-align:center}.qrank .qn{display:block;font:700 22px/1.2 "Zen Old Mincho",serif;margin-bottom:6px}.qrank .cd{width:100%}
@@ -315,6 +315,46 @@ html.tv .qz .plate{margin-bottom:0}
 .qfoot3{margin-top:auto;display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:60px;align-items:end}
 .qfoot3 h2{margin:0 0 6px}.qfoot3 .qbar{display:grid;grid-template-columns:1fr 1fr;column-gap:40px;margin:0}.qfoot3 .qbar li{padding:6px 0;font-size:17px}
 html.tv .qfoot3 .go{margin:0}
+/* 暗転のときは、細い文字が沈まないよう一段太くする */
+html[data-scene=dark] body{font-weight:500}
+html[data-scene=dark] .sub,html[data-scene=dark] .dist .who2,html[data-scene=dark] .plate .pl,html[data-scene=dark] .mark,html[data-scene=dark] .now{font-weight:500}
+html[data-scene=dark] h1,html[data-scene=dark] .dist .dn,html[data-scene=dark] .plate .pn .sn{font-weight:700}
+.lastb{margin:10px 0 0;padding:8px 12px;border:1px solid var(--ink);border-radius:6px;font-size:14px;font-weight:700}
+/* 折りたたみ */
+.fold{margin:18px 0 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.fold summary{list-style:none;cursor:pointer;padding:12px 2px;font-size:15px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.fold summary::-webkit-details-marker{display:none}
+.fold summary::after{content:"開く";font-size:13px;font-weight:400;color:var(--sub)}.fold[open] summary::after{content:"閉じる"}
+.fold[open]{padding-bottom:12px}
+.fold.gd{margin:0 0 18px}.fold.gd .guide{margin-top:0}
+/* 本音クイズ(全員分を一度に) */
+.qall{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:6px}
+.qall li{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--line)}
+.qall li.rv{grid-template-columns:40px 140px 720px 104px minmax(0,1fr);gap:12px}
+.qall .ql{font:900 30px/1 "Zen Old Mincho",serif;text-align:center}
+.qall .qo{font:900 24px/1.2 "Zen Old Mincho",serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.qall .qo small{font-size:.6em;font-weight:600}
+.qcs{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.mc{display:flex;align-items:center;gap:6px;min-width:0}.mc i{font-style:normal;font-size:13px;color:var(--sub);width:1em;text-align:right}
+.mc .ic svg{width:34px;height:34px;display:block}.mc .mn{font:600 17px/1.2 "Zen Old Mincho",serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qall li.rv .mc .ic svg{width:26px;height:26px}.qall li.rv .mc .mn{font-size:15px}.qall li.rv .mc{gap:3px}.qall li.rv .qline{font-size:16px}
+.qok{font-size:15px;color:var(--sub);white-space:nowrap}.qok b{font-size:24px;color:var(--ink);margin-right:2px}
+.qline{font:600 17px/1.5 "Zen Old Mincho",serif;margin:0}
+.qbest .dl{font-size:14px;color:var(--sub);letter-spacing:.14em;margin:0}.qbest .qbn{font:900 44px/1.25 "Zen Old Mincho",serif;margin:0}.qbest .qbn small{font-size:.55em;font-weight:600;margin:0 .2em}.qbest .sub{margin:2px 0 0}
+.qpick{list-style:none;padding:0;margin:14px 0}.qpick li{padding:10px 0;border-bottom:1px solid var(--line)}
+.qpick .qh{display:flex;align-items:center;gap:10px;margin:0 0 6px;flex-wrap:wrap}.qpick .ql{font:900 22px/1 "Zen Old Mincho",serif;width:1.2em}
+.qpick select{flex:1;min-height:44px;font-size:16px;border:1.5px solid var(--ink);border-radius:6px;background:var(--card);color:var(--ink);padding:0 10px}
+.qpick .me{font-size:14px;font-weight:700;border:1px solid var(--ink);border-radius:4px;padding:2px 8px}.qpick li.mine{opacity:.75}
+.qnm{display:flex;flex-wrap:wrap;gap:2px 12px;font-size:14px}.qnm i{font-style:normal;color:var(--sub);font-size:12px;margin-right:3px}
+.qpick .qx{font-size:13px;color:var(--sub)}.qpick .qline{font-size:14px;margin-top:6px;color:var(--ink)}
+.shr{display:block;width:100%;margin:14px 0 0;min-height:48px}
+/* スマホの「いま」の帯 */
+.pnow{position:sticky;top:0;z-index:5;margin:-4px -20px 16px;padding:10px 20px;background:var(--bg);border-bottom:1px solid var(--line);font-size:14px;font-weight:700}
+.pnow .nl{font-size:11px;font-weight:400;color:var(--sub);letter-spacing:.12em;border:1px solid var(--line);border-radius:4px;padding:1px 6px;margin-right:8px;vertical-align:1px}
+html.tv .pnow{display:none}
+@media(max-width:420px){.pnow{margin:-4px -16px 16px;padding:10px 16px}}
+.pskip{margin:28px 0 0;padding-top:14px;border-top:1px solid var(--line)}.pskip .plain{font-size:14px}.pskip .sub{font-size:12px;margin:6px 0 0}
+.pjoin{display:flex;gap:16px;align-items:center;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+.pjoin .qr{flex:none;width:auto;padding:8px}.pjoin .qr svg{width:120px;height:120px;display:block}.pjoin .sub{font-size:13px;margin:0 0 6px}.pjoin .roomcode{font-size:34px;margin:0}
 /* 待たずに進める */
 html.tv .skipbox{margin-top:auto;display:flex;gap:16px;align-items:center;padding-top:16px}
 html.tv .skipbox .skip{flex:none;font-size:15px;min-height:40px;color:var(--sub)}html.tv .skipbox .sub{font-size:14px;margin:0;line-height:1.6}
@@ -378,7 +418,7 @@ html.tv .qr svg{width:236px;height:236px}
 html.tv .roomcode{font-size:64px;margin:0 0 10px}html.tv .url{word-break:break-all;font-size:15px;margin:0}
 html.tv .lobby .mode{margin-top:18px}html.tv .gonote{margin:10px 0 0}
 /* 並べ替え・二択 */
-html.tv .rules{font-size:18px}html.tv .rules li{grid-template-columns:6em minmax(0,1fr);padding:4px 0}
+html.tv .rules{font-size:17px;line-height:1.55}html.tv .rules li{grid-template-columns:6em minmax(0,1fr);padding:4px 0}
 html.tv .guide{margin:14px 0 0}html.tv .guide li{font-size:18px;padding:8px 14px 8px 2.6em}html.tv .guide li::before{top:8px}
 html.tv .hand.big{grid-template-columns:repeat(2,210px);gap:48px;justify-content:start;margin-top:24px;padding:0}
 html.tv .hand.big.one{grid-template-columns:270px;justify-content:center;margin:18px 0 14px}
@@ -1823,7 +1863,7 @@ const ALL=[
   art:c=>`<g ${L}><path d="M13 10l17 11v30L13 40z" ${P0}/><path d="M47 10L30 21v30l17-11z" fill="${c}"/></g>`}];
 let CARDS=ALL.slice(0,7);
 const setDeck=ids=>{if(Array.isArray(ids)&&ids.length===7)CARDS=ids.map(i=>ALL[i])};
-const C={start:100,inc:20,dec:20,floor:10,a:20,bet:10,hon:5,dv:10,dfoolSome:5,dfoolMost:10,foolAll:20,foolHalf:10,pen:10,rounds:5,evAt:[2,4],min:3,max:7,turnSec:300,rankSec:300,finalSec:30,revDelay:5600,rollAt:1.6};
+const C={start:100,inc:20,dec:20,floor:10,a:20,bet:10,hon:5,dv:10,dvLast:20,dfoolSome:5,dfoolMost:10,foolAll:20,foolHalf:10,pen:10,rounds:5,evAt:[2,4],min:3,max:7,turnSec:300,rankSec:300,finalSec:30,revDelay:5600,rollAt:1.6};
 const kan=['〇','一','二','三','四','五','六','七'];
 /* 16タイプ。並びは [本音/損得][鉄仮面/顔に出る][我が道/協調][観察/直感] の組み合わせ順 */
 const POLES=[['本音','損得'],['鉄仮面','顔に出る'],['我が道','協調'],['観察','直感']];
@@ -1978,7 +2018,7 @@ const RULES=`<ul class="rules">
   <li><b>相場</b><span>手放された札は1枚ごとに+${C.inc}、誰も手放さなかった札は−${C.dec}。</span></li>
   <li><b>本音点</b><span>はじめに並べた順位で、残りの中でいちばん下の札を手放すと、1回ごとに+${C.hon}点。</span></li>
   <li><b>予想</b><span>毎巡、注目の1人が手放す札を全員で予想します。当たれば+${C.a}点。</span></li>
-  <li><b>ダウト</b><span>注目の人の札が出たら、本音かどうかを全員で当てます。当たれば+${C.dv}点。注目の人は、外れた人がいれば+${C.dfoolSome}点、半数より多く外れたら+${C.dfoolMost}点。</span></li>
+  <li><b>ダウト</b><span>注目の人の札が出たら、本音かどうかを全員で当てます。当たれば+${C.dv}点(その回の始めに最下位の人は+${C.dvLast}点)。注目の人は、外れた人がいれば+${C.dfoolSome}点、半数より多く外れたら+${C.dfoolMost}点。</span></li>
   <li><b>注目</b><span>注目された人は、全員の予想を外させれば+${C.foolAll}点、半数より多く外させれば+${C.foolHalf}点。</span></li>
   <li><b>賭け</b><span>最後の二択で、人が残す札を当てると+${C.bet}点、外すと−${C.bet}点。</span></li>
 </ul>`;
@@ -2003,7 +2043,7 @@ const HOW=()=>[
     'ひとつめは、手放す札を1枚選ぶことです。手放した札は手元からなくなります。',
     `ふたつめは、その回の「注目の人」が手放しそうな札を予想することです。注目の人はテレビに出ます。当たれば+${C.a}点です。`,
     `注目の人は予想をせず、手放す札だけを選びます。みんなの予想を外させると、+${C.foolHalf}点か+${C.foolAll}点もらえます。全員が選び終えたら、テレビで答え合わせをします。`,
-    `答え合わせのあとは、注目の人が理由を話す「弁明タイム」、続いて「ダウト判定」です。注目の人が手放した札が、その人の本音(並べた順位でいちばん下の札)だったかを全員で当てます。当たれば+${C.dv}点です。注目の人は、外れた人がいれば+${C.dfoolSome}点、半数より多く外れたら+${C.dfoolMost}点です。`]},
+    `答え合わせのあとは、注目の人が理由を話す「弁明タイム」、続いて「ダウト判定」です(その回の始めに最下位の人は、当たると+${C.dvLast}点)。注目の人が手放した札が、その人の本音(並べた順位でいちばん下の札)だったかを全員で当てます。当たれば+${C.dv}点です。注目の人は、外れた人がいれば+${C.dfoolSome}点、半数より多く外れたら+${C.dfoolMost}点です。`]},
   {t:'相場と、最後の二択',lead:'札にはそれぞれ「相場」という値段があり、毎回動きます。',items:[
     `手放された札は、1人につき+${C.inc}。誰も手放さなかった札は−${C.dec}。みんなが手放す札ほど値上がりします。`,
     `5回手放すと、手元は2枚です。1人ずつ順番に、残す1枚を選びます。ほかの人は、どちらを残すか賭けられます。当たれば+${C.bet}点、外れれば−${C.bet}点で、賭けなくてもかまいません。`,
@@ -2091,6 +2131,50 @@ const certHTML=(d,holder,PL)=>{const T=TYPES[d.ty],G=grpOf(d.ty),CD=CARDS[d.card
   <p class="sec">ひとこと</p><p class="word">${T.word}</p>
   <a class="more" href="?guide=1#t${d.ty}" target="_blank" rel="noopener">「${T.n}」の解説を読む</a>
   <p class="ft">${d.cpu?'CPUの順位は自動で決めています':d.autoRank?'順位は待たずに進めたため自動で決めました':'今夜限り有効'}</p><span class="seal" aria-hidden="true">本性<br>確認</span></div></article>`};
+/* ---------- 本性証券を画像にする(1080×1350、SNSの縦長に合わせる) ---------- */
+const svgImg=svg=>new Promise((ok,ng)=>{const s=svg.replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" ');const im=new Image();im.onload=()=>ok(im);im.onerror=ng;im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s)});
+/* 日本語の折り返し。行頭に句読点や閉じかっこが来ないようにする */
+const wrapJ=(ctx,t,w)=>{const out=[];let line='';for(const ch of [...t]){if(ctx.measureText(line+ch).width>w&&line&&!'、。」』)!?ー'.includes(ch)){out.push(line);line=ch}else line+=ch}if(line)out.push(line);return out};
+async function certImage(d,holder){
+  const W=1080,H=1350,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d'),T=TYPES[d.ty],G=grpOf(d.ty),CD=CARDS[d.card];
+  const M='"Zen Old Mincho",serif',K='"Zen Kaku Gothic New",sans-serif',INK='#26221e',SUB='#6f675d',LINE='#d9d2c5';
+  try{await Promise.all([document.fonts.load(`900 64px ${M}`),document.fonts.load(`600 30px ${M}`),document.fonts.load(`400 26px ${K}`),document.fonts.load(`700 26px ${K}`)])}catch(e){}
+  x.fillStyle='#f7f4ee';x.fillRect(0,0,W,H);
+  x.strokeStyle=INK;x.lineWidth=2;x.strokeRect(40,40,W-80,H-80);x.lineWidth=1;x.strokeRect(50,50,W-100,H-100);
+  const L=96,R=W-96;let y=124;
+  x.fillStyle=INK;x.font=`600 34px ${M}`;x.textBaseline='alphabetic';x.fillText('本 性 証 券',L,y);
+  x.font=`400 24px ${K}`;x.fillStyle=SUB;x.textAlign='right';x.fillText(`第${kan[d.no]}号`,R,y);x.textAlign='left';
+  x.fillStyle=G.c;x.fillRect(L,y+20,R-L,4);y+=60;
+  /* キャラクター(左)と名札(右) */
+  const CW=290,CH=CW*158/120;const im=await svgImg(charaSVG(d.ty));x.drawImage(im,L,y,CW,CH);
+  const cx=L+CW+44,cw=R-cx;let cy=y+56;
+  x.fillStyle=INK;x.font=`900 64px ${M}`;x.fillText(holder,cx,cy);const hw=x.measureText(holder).width;x.font=`600 32px ${M}`;x.fillText('殿',cx+hw+10,cy);cy+=58;
+  x.fillStyle=G.c;x.beginPath();x.arc(cx+9,cy-9,9,0,7);x.fill();x.fillStyle=SUB;x.font=`500 26px ${K}`;x.fillText(G.n,cx+28,cy);cy+=70;
+  x.fillStyle=INK;x.font=`900 54px ${M}`;for(const l of wrapJ(x,T.n,cw)){x.fillText(l,cx,cy);cy+=66}
+  cy+=8;x.font=`500 26px ${K}`;x.fillStyle=SUB;x.fillText('大事にしているもの',cx,cy);cy+=44;x.fillStyle=INK;x.font=`600 40px ${M}`;x.fillText(`「${CD.n}」`,cx-8,cy);cy+=58;
+  x.font=`500 26px ${K}`;x.fillStyle=SUB;x.fillText('額面',cx,cy);x.fillStyle=INK;x.font=`700 40px ${K}`;x.fillText(String(d.face),cx+70,cy+2);
+  y+=CH+58;
+  /* 説明 */
+  x.font=`600 30px ${M}`;x.fillStyle=INK;for(const l of wrapJ(x,T.sum,R-L).slice(0,3)){x.fillText(l,L,y);y+=46}
+  y+=10;x.strokeStyle=LINE;x.beginPath();x.moveTo(L,y);x.lineTo(R,y);x.stroke();y+=42;
+  /* 4つの傾向 */
+  x.font=`500 24px ${K}`;x.fillStyle=SUB;x.fillText('4つの傾向',L,y);y+=40;
+  d.pct.forEach((pc,k)=>{const a=pc>=50,dom=a?pc:100-pc,bx=L+250,bw=R-L-500;
+    x.font=`${a?700:400} 26px ${K}`;x.fillStyle=a?INK:SUB;x.fillText(POLES[k][0],L,y);x.textAlign='right';x.font=`${a?400:700} 26px ${K}`;x.fillStyle=a?SUB:INK;x.fillText(POLES[k][1],R,y);x.textAlign='left';
+    x.fillStyle=LINE;x.fillRect(bx,y-14,bw,8);x.fillStyle=G.c;const fw=bw*dom/100;x.fillRect(a?bx:bx+bw-fw,y-14,fw,8);
+    x.fillStyle=INK;x.font=`700 24px ${K}`;x.textAlign=a?'left':'right';x.fillText(dom+'%',a?bx+fw+10:bx+bw-fw-10,y-2);x.textAlign='left';y+=40});
+  y+=6;x.strokeStyle=LINE;x.beginPath();x.moveTo(L,y);x.lineTo(R,y);x.stroke();y+=42;
+  /* 今夜の決め手 */
+  x.font=`500 24px ${K}`;x.fillStyle=SUB;x.fillText('今夜の決め手',L,y);y+=44;x.font=`600 30px ${M}`;x.fillStyle=INK;
+  for(const s of d.stories){for(const l of wrapJ(x,s,R-L).slice(0,2)){x.fillText(l,L,y);y+=46}y+=6}
+  /* ひとことと署名 */
+  y+=10;x.font=`500 24px ${K}`;x.fillStyle=SUB;x.fillText('ひとこと',L,y);y+=42;x.font=`600 30px ${M}`;x.fillStyle=INK;for(const l of wrapJ(x,T.word.replace(/<br>/g,''),R-L).slice(0,2)){x.fillText(l,L,y);y+=44}
+  x.font=`500 22px ${K}`;x.fillStyle=SUB;x.textAlign='right';x.fillText('最後の一枚 ― おうち飲み会の本性診断',R,H-80);x.textAlign='left';
+  return new Promise(ok=>cv.toBlob(ok,'image/png'))}
+/* 共有できる端末では共有シート、できなければ画像として保存する */
+async function shareCert(d,holder){const blob=await certImage(d,holder);if(!blob)return;const f=new File([blob],`本性証券_${holder}.png`,{type:'image/png'});
+  try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'本性証券'});return}}catch(e){if(e&&e.name==='AbortError')return}
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=f.name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000)}
 /* テレビ用の本性証券。横長の1画面に収める。全文は各自のスマホの証券で読む */
 const certTV=(d,holder,PL)=>{const T=TYPES[d.ty],G=grpOf(d.ty),CD=CARDS[d.card],sw=d.pct.map((pc,k)=>POLE_SW[k][pc>=50?0:1]);
   return`<article class="cert tvc" style="--g:${G.c}"><div class="fr">
@@ -2145,8 +2229,8 @@ document.addEventListener('pointerdown',keepAwake,true);document.addEventListene
 const params=new URLSearchParams(location.search);
 const LOCAL=!FIREBASE_CONFIG||params.get('local')==='1';
 /* 確認用:URLに fast=1 を付けると制限時間を短くする */
-if(params.get('fast')==='1'){window.__t=()=>({CARDS,TYPES,mk,certTV,app,talkQ})}
-function loadScript(src){return new Promise((ok,ng)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=ng;document.head.appendChild(s)})}
+if(params.get('fast')==='1'){window.__t=()=>({CARDS,TYPES,mk,certTV,app,talkQ,certImage})}
+const _ls={};function loadScript(src){return _ls[src]||(_ls[src]=new Promise((ok,ng)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=ng;document.head.appendChild(s)}))}
 function memTransport(){let onA=null,onS=null,last=null;const cp=x=>JSON.parse(JSON.stringify(x));
   return{publish:st=>{last=cp(st);if(onS){const v=last;setTimeout(()=>onS(v))}},onAction:f=>{onA=f},send:a=>{const v=cp(a);setTimeout(()=>onA&&onA(v))},onState:f=>{onS=f;if(last)setTimeout(()=>f(last))}}}
 async function connect(room,mem){
@@ -2171,21 +2255,22 @@ const modeNote=()=>LOCAL?`<p class="mode">お試しモードで動いていま�
 
 /* ================= テレビ(進行役) ================= */
 function hostMain(opt={}){
-  const EMB=!!opt.mem;
+  /* MEM=ひとりで試す(通信なし)、PH=スマホだけで遊ぶ(進行役をスマホに内蔵)、EMB=どちらか(テレビ画面を描かない) */
+  const MEM=!!opt.mem,PH=!!opt.phone,EMB=MEM||PH,KEY=PH?'phost':'host';
   if(!EMB){document.documentElement.classList.add('tv');fsEnable();
     /* 1600×900 の舞台を、画面に収まる最大の大きさで中央に置く */
     const fit=()=>{const s=Math.min(innerWidth/1600,innerHeight/900);document.body.style.transform=`translate(${((innerWidth-1600*s)/2).toFixed(1)}px,${((innerHeight-900*s)/2).toFixed(1)}px) scale(${s.toFixed(4)})`};
     fit();addEventListener('resize',fit);document.addEventListener('fullscreenchange',()=>setTimeout(fit,60))}
-  const A='ACDEFGHJKLMNPQRTUVWXY';const given=(params.get('host')||'').toUpperCase();
-  const code=EMB?'TEST':given.length===4?given:Array.from({length:4},()=>A[Math.floor(rnd()*A.length)]).join('');
-  if(!EMB&&given!==code){const u=new URL(location.href);u.searchParams.set('host',code);history.replaceState(null,'',u)}
+  const A='ACDEFGHJKLMNPQRTUVWXY';const given=(params.get(KEY)||'').toUpperCase();
+  const code=MEM?'TEST':given.length===4?given:Array.from({length:4},()=>A[Math.floor(rnd()*A.length)]).join('');
+  if(!MEM&&given!==code){const u=new URL(location.href);u.searchParams.set(KEY,code);history.replaceState(null,'',u)}
   const joinURL=(()=>{const u=new URL(location.href);u.search='';u.searchParams.set('room',code);if(params.get('local')==='1')u.searchParams.set('local','1');return u.toString()})();
   const SAVE='saigo-host-'+code;
   let net=null;
   const S={code,phase:'lobby',players:[],round:0,prices:Array(7).fill(C.start),hist:[Array(7).fill(C.start)],gameNo:0,decks:null,deck:null};
   /* 読み込み直したときは、保存しておいた状態から再開する */
   let restored=false;
-  if(!EMB){try{const sv=JSON.parse(localStorage.getItem(SAVE)||'null');if(sv&&sv.code===code&&Date.now()-(sv.savedAt||0)<6*3600e3){Object.assign(S,sv);restored=true}}catch(e){}}
+  if(!MEM){try{const sv=JSON.parse(localStorage.getItem(SAVE)||'null');if(sv&&sv.code===code&&Date.now()-(sv.savedAt||0)<6*3600e3){Object.assign(S,sv);restored=true}}catch(e){}}
   const nextDecks=()=>{const ids=shuffle(ALL.map((x,i)=>i));return[ids.slice(0,7),ids.slice(7,14),ids.slice(14,21)]};
   if(!S.decks)S.decks=nextDecks();
   setDeck(S.deck||S.decks[S.gameNo%3]);
@@ -2287,33 +2372,35 @@ function hostMain(opt={}){
       [S.round>=2&&fx[ord[0]]-fx[ord[ord.length-1]]<=15,2,`首位と最下位の差は、わずか${fx[ord[0]]-fx[ord[ord.length-1]]}点。まだ誰にでも勝ち目があります。`],
       [P().length>=3&&fx[ord[0]]-fx[ord[1]]>=40,2,`${P()[ord[0]].name}さん、2位に${fx[ord[0]]-fx[ord[1]]}点差。独走態勢です。`]],rnd)}
   /* ---------- 「この順位、誰の?」クイズ ---------- */
-  function startQuiz(){S.quiz={order:shuffle(P().map((p,i)=>i)),k:0,step:0,votes:{},decoy:null,right:P().map(()=>0),cpuAt:Date.now()+1800};S.phase='quiz';pub()}
-  function quizCpu(){const Q=S.quiz,o=Q.order[Q.k];P().forEach((p,i)=>{if(!p.cpu)return;const others=P().map((x,j)=>j).filter(j=>j!==i);
-      if(i===o){if(Q.decoy===null)Q.decoy=others[Math.floor(rnd()*others.length)]}
-      else if(Q.votes[i]===undefined)Q.votes[i]=rnd()<.4?o:others[Math.floor(rnd()*others.length)]});checkQuiz()}
-  function checkQuiz(){const Q=S.quiz,o=Q.order[Q.k];if(Q.step!==0)return;
-    if(Q.decoy!==null&&P().every((p,i)=>i===o||Q.votes[i]!==undefined))closeQuiz();else pub()}
-  function closeQuiz(){const Q=S.quiz,o=Q.order[Q.k],p=P()[o],nm=p.name+'さん',R=p.rank,vs=Object.entries(Q.votes).map(([i,v])=>[+i,v]);
-    vs.forEach(([i,v])=>{if(v===o)Q.right[i]++});
-    const ok=vs.filter(x=>x[1]===o),cnt=P().map((x,j)=>vs.filter(v=>v[1]===j).length),dc=Q.decoy;
-    const top=CARDS[R[0]].n,bot=CARDS[R[6]].n,same=P().filter(x=>x.rank[0]===R[0]).length,lostAt=p.disc.indexOf(R[0])+1;
-    const rd=r=>r===6?'最後の二択':kan[r]+'巡目';
-    Q.jk=pickLines([
-      [vs.length>=2&&ok.length===vs.length,4,`全員正解。${nm}、わかりやすすぎます。`],
-      [vs.length>=2&&ok.length===0,5,`正解者ゼロ。${nm}は、謎に包まれています。`],
-      [vs.length>=3&&ok.length===1,3,ok.length===1?`見抜いたのは${P()[ok[0][0]].name}さんただ1人。さすがの観察眼です。`:''],
-      [dc!==null&&cnt[dc]>cnt[o],5,dc!==null?`身代わり作戦、成功。疑われた${P()[dc].name}さん、おつかれさまでした。`:''],
-      [true,3,TOP_LINE[top]||`1位は「${top}」。らしさ全開です。`],
-      [true,2,BOTTOM_LINE[bot]||`いちばん下は「${bot}」。「${bot}」が聞いたら泣いてしまいます。`],
-      [same===1&&P().length>=3,3,`「${top}」を1位にしたのは、${nm}だけでした。`],
-      [same>=3,2,`1位が「${top}」の人は、今夜${same}人。多数派です。`],
-      [p.final===R[0],2,`最後まで「${top}」を守り抜きました。初志貫徹です。`],
-      [lostAt>0&&lostAt<=2,4,`1位の「${top}」を、${rd(lostAt)}であっさり手放していました。`]],rnd);
+  function startQuiz(){S.quiz={order:shuffle(P().map((p,i)=>i)),step:0,ans:{},right:P().map(()=>0),cpuAt:Date.now()+2500,revAt:null};S.phase='quiz';pub()}
+  /* CPU:それぞれの順位について、4割は持ち主を当て、残りは自分以外からくじで選ぶ */
+  function quizCpu(){const Q=S.quiz;P().forEach((p,i)=>{if(!p.cpu||Q.ans[i])return;const mp={},others=P().map((x,j)=>j).filter(j=>j!==i);
+      Q.order.forEach((o,k)=>{if(o===i)return;mp[k]=rnd()<.4?o:others[Math.floor(rnd()*others.length)]});Q.ans[i]=mp});checkQuiz()}
+  function checkQuiz(){const Q=S.quiz;if(Q.step!==0||Q.revAt)return;if(!Q.cpuAt&&P().every((p,i)=>Q.ans[i]))Q.revAt=Date.now()+1200;pub()}
+  function closeQuiz(){const Q=S.quiz;if(Q.step!==0)return;const n=P().length,rd=r=>r===6?'最後の二択':kan[r]+'巡目';
+    Q.stats=Q.order.map((o,k)=>{const p=P()[o],nm=p.name+'さん',R=p.rank,vs=Object.entries(Q.ans).filter(([i])=>+i!==o).map(([i,mp])=>[+i,mp[k]]).filter(x=>x[1]!==undefined);
+      vs.forEach(([i,v])=>{if(v===o)Q.right[i]++});
+      const ok=vs.filter(x=>x[1]===o).length,top=CARDS[R[0]].n,bot=CARDS[R[6]].n,same=P().filter(x=>x.rank[0]===R[0]).length,lostAt=p.disc.indexOf(R[0])+1;
+      const cnt=P().map((x,j)=>vs.filter(v=>v[1]===j).length),mis=cnt.map((c,j)=>[c,j]).filter(x=>x[1]!==o).sort((a,b)=>b[0]-a[0])[0];
+      const line=pickLines([
+        [vs.length>=2&&ok===vs.length,4,`全員正解。${nm}、わかりやすすぎます。`],
+        [vs.length>=2&&ok===0,5,`正解者ゼロ。${nm}は、謎に包まれています。`],
+        [vs.length>=3&&ok===1,3,`見抜いたのは、ただ1人。`],
+        [mis&&mis[0]>ok&&mis[0]>=2,4,mis?`${P()[mis[1]].name}さんの順位だと思われていました。`:''],
+        [true,3,TOP_LINE[top]||`1位は「${top}」。らしさ全開です。`],
+        [true,2,BOTTOM_LINE[bot]||`いちばん下は「${bot}」。「${bot}」が聞いたら泣いてしまいます。`],
+        [same===1&&n>=3,3,`「${top}」を1位にしたのは、${nm}だけ。`],
+        [same>=3,2,`1位が「${top}」の人は、今夜${same}人。多数派です。`],
+        [p.final===R[0],2,`最後まで「${top}」を守り抜きました。`],
+        [lostAt>0&&lostAt<=2,4,`1位の「${top}」を、${rd(lostAt)}であっさり手放していました。`]],rnd,1)[0];
+      return{ok,tot:vs.length,line}});
     Q.step=1;pub()}
   /* 弁明が終わったら投票を始める。CPUの投票は少し遅らせる */
   function endTalk(nc){const D=S.doubt;if(!D||!D.talk)return;D.talk=false;D.nc=!!nc;S.talkAt=null;if(nc)P()[S.spot].noCom=(P()[S.spot].noCom||0)+1;S.cpuVoteAt=Date.now()+1500;pub()}
   function closeDoubt(){const D=S.doubt,sp=P()[S.spot];if(!D||S.revStep!==1)return;
-    let wrong=0;Object.entries(D.votes).forEach(([i,x])=>{const ok=(x.v==='hon')===D.honest;x.ok=ok;const p=P()[i];p.dVote++;if(ok){p.dt+=C.dv;p.dHit++}else wrong++});
+    /* この回が始まる前の確定点で最下位の人(注目の人を除く。全員同点なら該当なし)は、当たりが +dvLast */
+    const fb=S.fxBase,others=P().map((p,i)=>i).filter(i=>i!==S.spot),lo=Math.min(...others.map(i=>fb[i])),hi=Math.max(...others.map(i=>fb[i]));
+    let wrong=0;Object.entries(D.votes).forEach(([i,x])=>{const ok=(x.v==='hon')===D.honest;x.ok=ok;const p=P()[i];p.dVote++;x.last=lo<hi&&fb[i]===lo;x.pt=ok?(x.last?C.dvLast:C.dv):0;if(ok){p.dt+=x.pt;p.dHit++}else wrong++});
     const gs=Object.keys(D.votes).length;D.gain=!wrong?0:wrong*2>gs?C.dfoolMost:C.dfoolSome;sp.dt+=D.gain;D.wrong=wrong;S.revStep=2;makeJk();pub()}
   /* 最後の二択:選ぶ人と賭ける人が同時に操作する */
   function startFinal(){S.frozen=[...S.prices];S.gOrder=0;openFinal()}
@@ -2381,13 +2468,14 @@ function hostMain(opt={}){
   }
   function onAction(a){
     if(!a||typeof a!=='object')return;const i=P().findIndex(p=>p.id===a.pid),p=P()[i];
-    if(a.type==='join'){const name=String(a.name||'').trim().slice(0,10)||'名無し';
-      if(p){p.name=name}else if(S.phase==='lobby'&&P().length<C.max){S.players.push(newPlayer(a.pid,name,false));if(EMB)while(P().length<4)addCpu()}pub();return}
+    if(a.type==='join'){const name=[...String(a.name||'').trim()].slice(0,5).join('')||'名無し';
+      if(p){p.name=name}else if(S.phase==='lobby'&&P().length<C.max){S.players.push(newPlayer(a.pid,name,false));if(MEM)while(P().length<4)addCpu()}pub();return}
     if(!p||p.cpu)return;
     if(a.type==='ctl'){if(leaderId()===a.pid&&acts[a.op]){acts[a.op]()}return}
     if(a.type==='rank'&&S.phase==='ranking'&&p.rank.length<7){const o=a.order;if(Array.isArray(o)&&o.length===7&&new Set(o).size===7&&o.every(x=>x>=0&&x<7)){p.rank=o.map(Number);checkRanking()}}
     else if(a.type==='turn'&&S.phase==='turn'&&p.pick===null){const t=P()[S.spot],self=i===S.spot;if(p.hand.includes(a.pick)&&(self||t.hand.includes(a.guess))){p.pick=a.pick;p.guess=self?null:a.guess;checkTurn()}}
-    else if(a.type==='qv'&&S.phase==='quiz'&&S.quiz.step===0&&S.quiz.k<S.quiz.order.length&&Number.isInteger(a.who)&&a.who!==i&&P()[a.who]){const Q=S.quiz;if(i===Q.order[Q.k]){if(Q.decoy===null)Q.decoy=a.who}else if(Q.votes[i]===undefined)Q.votes[i]=a.who;checkQuiz()}
+    else if(a.type==='qa'&&S.phase==='quiz'&&S.quiz.step===0&&!S.quiz.ans[i]&&a.map&&typeof a.map==='object'){const Q=S.quiz,mp={};
+      Q.order.forEach((o,k)=>{if(o===i)return;const w=a.map[k];if(Number.isInteger(w)&&w!==i&&P()[w])mp[k]=w});Q.ans[i]=mp;checkQuiz()}
     else if(a.type==='talkend'&&S.phase==='reveal'&&S.revStep===1&&i===S.spot)endTalk(!!a.nc);
     else if(a.type==='doubt'&&S.phase==='reveal'&&S.revStep===1&&S.doubt&&!S.doubt.talk&&i!==S.spot&&!S.doubt.votes[i]&&(a.v==='hon'||a.v==='doubt')){S.doubt.votes[i]={v:a.v,at:1};checkDoubt()}
     else if(a.type==='bet'&&S.phase==='final'&&i!==S.gOrder&&!(i in S.bets)){const ch=P()[S.gOrder];S.bets[i]=ch.hand.includes(a.card)?a.card:null;checkFinal()}
@@ -2402,7 +2490,7 @@ function hostMain(opt={}){
     next(){if(S.phase==='reveal'&&S.revStep===2){S.round<C.rounds?startRound():startFinal()}else if(S.phase==='final-reveal'){S.gOrder++;openFinal()}},
     nextcert(){if(S.phase==='results'&&S.cer<P().length){S.cer++;pub()}},
     quiz(){if(S.phase==='results'&&S.cer<0)startQuiz()},
-    quiznext(){if(S.phase!=='quiz')return;const Q=S.quiz;if(Q.step===1){Q.k++;Q.step=0;Q.votes={};Q.decoy=null;if(Q.k<Q.order.length)Q.cpuAt=Date.now()+1800;pub()}else if(Q.k>=Q.order.length){S.phase='results';S.cer=0;pub()}},
+    quiznext(){if(S.phase==='quiz'&&S.quiz.step===1){S.phase='results';S.cer=0;pub()}},
     quizskip(){if(S.phase==='quiz'||S.phase==='results'&&S.cer<0){S.phase='results';S.cer=0;pub()}},
     again(){if(S.phase==='results')startGame()},
     hownext(){if(S.phase!=='howto')return;S.how++;if(S.how>=HOW_N)startRanking();else pub()},
@@ -2414,12 +2502,13 @@ function hostMain(opt={}){
   setInterval(()=>{const now=Date.now();
     if(S.phase==='reveal'&&S.revStep===0&&now>=S.revAt){if(S.doubt){S.revStep=1;if(S.doubt.cpu)S.talkAt=now+5500;pub()}else{S.revStep=2;makeJk();pub()}}
     if(S.phase==='quiz'&&S.quiz.step===0&&S.quiz.cpuAt&&now>=S.quiz.cpuAt){S.quiz.cpuAt=null;quizCpu()}
+    else if(S.phase==='quiz'&&S.quiz.step===0&&S.quiz.revAt&&now>=S.quiz.revAt){S.quiz.revAt=null;closeQuiz()}
     else if(S.phase==='reveal'&&S.revStep===1&&S.doubt&&S.doubt.talk){if(S.talkAt&&now>=S.talkAt)endTalk(false)}
     else if(S.phase==='reveal'&&S.revStep===1){if(S.cpuVoteAt&&now>=S.cpuVoteAt){S.cpuVoteAt=null;Object.values(S.doubt.votes).forEach(x=>x.at=1);checkDoubt()}else if(S.dAt&&now>=S.dAt){S.dAt=null;closeDoubt()}}
     else if(S.phase==='final'){const ch=P()[S.gOrder];if(S.cpuAt&&now>=S.cpuAt&&S.keepPick===null){let k=null,bu=-1e9;for(const x of ch.hand){const u=(1-ch.g)*ch.v[x]+ch.g*S.frozen[x]/200+gauss()*.03;if(u>bu){bu=u;k=x}}S.keepPick=k;S.cpuAt=null;checkFinal()}}
   },300);
   function view(){
-    const ph=S.phase,V={code,now:Date.now(),phase:ph,leader:leaderId(),round:S.round,prices:S.prices,hist:S.hist,deck:S.deck||S.decks[S.gameNo%3],first:S.gameNo<=1,
+    const ph=S.phase,V={code,notv:EMB,now:Date.now(),phase:ph,leader:leaderId(),round:S.round,prices:S.prices,hist:S.hist,deck:S.deck||S.decks[S.gameNo%3],first:S.gameNo<=1,
       how:ph==='howto'?S.how:null,
       firedEv:S.firedEv&&ph==='turn'?{n:S.firedEv.n,t:evText(S.firedEv)}:null,
       nextEv:(()=>{if(ph!=='turn')return null;const nx=C.evAt.indexOf(S.round+1);return nx>=0?{n:S.events[nx].n,t:evText(S.events[nx]),e:S.events[nx].e}:null})(),
@@ -2429,20 +2518,19 @@ function hostMain(opt={}){
     if(ph==='reveal'){V.revStep=S.revStep;
       V.reveal=S.revStep===2?S.reveal:S.revStep===1?Object.assign({},S.reveal,{all:S.reveal.all.map(x=>({pick:x.pick,to:x.to}))}):Object.assign({},S.reveal,{spotPick:null,all:null,bonus:null,hitN:null,guesses:S.reveal.guesses.map(g=>g&&{g:g.g})});
       V.jk=S.revStep===2?S.jk:null;
-      if(S.doubt)V.doubt=S.revStep===2?{honest:S.doubt.honest,gain:S.doubt.gain,wrong:S.doubt.wrong,votes:S.doubt.votes}:{done:S.doubt.talk?[]:Object.keys(S.doubt.votes).filter(k=>S.doubt.votes[k].at).map(Number),talk:S.doubt.talk,q:S.doubt.q,ask:S.doubt.ask,line:S.doubt.cpu?S.doubt.line:null,nc:S.doubt.nc}}
+      if(S.doubt)V.doubt=S.revStep===2?{honest:S.doubt.honest,gain:S.doubt.gain,wrong:S.doubt.wrong,votes:S.doubt.votes}:{done:S.doubt.talk?[]:Object.keys(S.doubt.votes).filter(k=>S.doubt.votes[k].at).map(Number),last:(()=>{const fb=S.fxBase,o=P().map((p,i)=>i).filter(i=>i!==S.spot),lo=Math.min(...o.map(i=>fb[i])),hi=Math.max(...o.map(i=>fb[i]));return lo<hi?o.filter(i=>fb[i]===lo):[]})(),talk:S.doubt.talk,q:S.doubt.q,ask:S.doubt.ask,line:S.doubt.cpu?S.doubt.line:null,nc:S.doubt.nc}}
     if(ph==='final'||ph==='final-reveal'){V.j=S.gOrder;V.frozen=S.frozen;V.betDone=Object.keys(S.bets).map(Number);V.keepDone=S.keepPick!==null;
       if(ph==='final-reveal'){const p=P()[S.gOrder];V.keep=p.final;V.drop=p.gdrop;V.lastBets=S.lastBets;V.gHonest=p.gHonest;V.gAuto=p.gAuto}}
     if(ph==='results'){V.results=S.results;V.frozen=S.frozen;V.cer=S.cer}
-    if(ph==='quiz'){const Q=S.quiz,o=Q.order[Q.k];V.quiz={k:Q.k,n:Q.order.length,step:Q.step,right:Q.right,
-      rank:o!==undefined?P()[o].rank:null,owner:Q.step===1?o:null,done:Object.keys(Q.votes).map(Number).concat(Q.decoy!==null?[o]:[]),
-      votes:Q.step===1?Q.votes:null,decoy:Q.step===1?Q.decoy:null,jk:Q.step===1?Q.jk:null}}
+    if(ph==='quiz'){const Q=S.quiz;V.quiz={step:Q.step,n:Q.order.length,ranks:Q.order.map(o=>P()[o].rank),done:Object.keys(Q.ans).map(Number),
+      owners:Q.step===1?Q.order:null,stats:Q.step===1?Q.stats:null,right:Q.step===1?Q.right:null,ans:Q.step===1?Q.ans:null}}
     return V;
   }
   if(!EMB)homeMsg=()=>['lobby','results'].includes(S.phase)?null:'テレビ側を離れると、遊んでいる全員の進行が止まります。同じURLで開き直せば、続きから再開できます。';
-  function pub(){const V=view();window.__hostV=V;window.__SFX=SFX;if(net)net.publish(V);if(!EMB){try{localStorage.setItem(SAVE,JSON.stringify(Object.assign({},S,{savedAt:Date.now()})))}catch(e){}render(V)}}
+  function pub(){const V=view();window.__hostV=V;window.__SFX=SFX;if(net)net.publish(V);if(!MEM){try{localStorage.setItem(SAVE,JSON.stringify(Object.assign({},S,{savedAt:Date.now(),phoneHost:PH})))}catch(e){}}if(!EMB)render(V)}
   let cue=null;
   /* 場面が変わったとき・誰かが決めたときの音(テレビ側) */
-  function hostCues(V){const p=cue;cue={ph:V.phase,r:V.round,j:V.j,cer:V.cer,rs:V.revStep,qk:V.quiz?V.quiz.k:null,qs:V.quiz?V.quiz.step:null,dv:V.doubt&&V.doubt.done?V.doubt.done.length:0,n:V.players.length,sub:V.players.filter(x=>x.submitted).length,rk:V.players.filter(x=>x.rankDone).length,bd:(V.betDone||[]).length+(V.keepDone?1:0)};if(!p)return;
+  function hostCues(V){const p=cue;cue={ph:V.phase,r:V.round,j:V.j,cer:V.cer,rs:V.revStep,qs:V.quiz?V.quiz.step:null,dv:V.doubt&&V.doubt.done?V.doubt.done.length:0,n:V.players.length,sub:V.players.filter(x=>x.submitted).length,rk:V.players.filter(x=>x.rankDone).length,bd:(V.betDone||[]).length+(V.keepDone?1:0)};if(!p)return;
     if(V.phase==='lobby'){if(cue.n>p.n)SFX.play('join');return}
     if(V.phase!==p.ph||V.round!==p.r||V.j!==p.j){
       if(V.phase==='ranking'||V.phase==='turn'||V.phase==='final')SFX.play('hyoshigi');
@@ -2452,8 +2540,7 @@ function hostMain(opt={}){
       if(V.phase==='results'&&p.ph!=='quiz')SFX.play('fanfare');if(V.phase==='quiz')SFX.play('hyoshigi');
       return}
     if(V.phase==='reveal'&&V.revStep>=1&&p.rs===0){SFX.play('ta');if(V.reveal.hitN)SFX.play('coin',.45)}
-    if(V.phase==='quiz'&&V.quiz.step===1&&(p.qs!==1||p.qk!==V.quiz.k))SFX.play('ta');
-    if(V.phase==='quiz'&&V.quiz.k!==p.qk&&V.quiz.k>=V.quiz.n)SFX.play('fanfare');
+    if(V.phase==='quiz'&&V.quiz.step===1&&p.qs===0){SFX.play('ta');SFX.play('fanfare',1.2)}
     if(V.phase==='reveal'&&V.revStep===2&&p.rs===1&&V.doubt){SFX.play('stamp');SFX.play(V.doubt.honest?'rin':'miss',.25)}
     if(V.phase==='reveal'&&V.revStep===1&&V.doubt&&cue.dv>p.dv)SFX.play('decide');
     if(V.phase==='results'&&V.cer!==p.cer){if(V.cer>=0&&V.cer<V.players.length)SFX.play('stamp',.7);else if(V.cer>=V.players.length)SFX.play('reveal')}
@@ -2521,7 +2608,7 @@ function hostMain(opt={}){
             ${D.line?'':go('talkend','話が終わったら、投票へ')}`,'','focus')
           :stg(left,`${D.nc?`<p class="sub ncl">${NM}さんは、ノーコメントでした。</p>`:''}<div class="dbox"><p class="dl">ダウト判定</p><p class="dq">「${CARDS[X.spotPick].n}」は<br><b>${NM}さん</b>の本音?</p><p class="sub">本音=${NM}さんが並べた順位で、残っていた札のうちいちばん下の札。当たれば+${C.dv}点。外れた人がいれば${NM}さんに+${C.dfoolSome}点、半数より多ければ+${C.dfoolMost}点。</p></div>
             ${clock()}<ul class="pgrid dg">${PL.map((p,i)=>i===X.spot?'':`<li><span>${esc(p.name)}</span>${D.done.includes(i)?st('選んだ',1):st('考え中')}</li>`).join('')}</ul>${skipBtn()}`,'','focus');
-      }else{const vote=(p,i)=>{if(i===X.spot)return st('注目');const x=D&&D.votes[i];if(!x)return'―';return`${x.v==='hon'?'本音':'ダウト'}<span class="dd ${x.ok?'up':''}">${x.ok?'+'+C.dv:'―'}</span>`};
+      }else{const vote=(p,i)=>{if(i===X.spot)return st('注目');const x=D&&D.votes[i];if(!x)return'―';return`${x.v==='hon'?'本音':'ダウト'}<span class="dd ${x.ok?'up':''}">${x.ok?'+'+x.pt:'―'}</span>`};
         const verdict=D?`<div class="verdict"><p class="dl">ダウト判定</p><p class="vv">${D.honest?'本音でした':'本音ではありませんでした'}</p><p class="sub">${D.honest?'「本音」':'「ダウト」'}を選んだ人に+${C.dv}点。${D.wrong?`${D.wrong}人が外れたので、${NM}さんに+${D.gain}点。`:'全員が当てました。'}</p></div>`:'';
         h=stg(`${mkT(V.round,kan[V.round]+'巡目','この回の結果')}${plate('今巡の注目',sp.name)}<h1 class="ansh">手放したのは「${CARDS[X.spotPick].n}」</h1>${verdict}${res}${jkBox(V.jk)}`,
         `<h2>この回のまとめ</h2>${ptab([['手放した(本音点)',(p,i)=>`${CARDS[X.all[i].pick].n}${X.all[i].to?st(' 自動'):X.all[i].honest?`<span class="dd">+${C.hon}</span>`:''}`],['ダウト',vote]],{dfx:V.dfx})}
@@ -2538,18 +2625,16 @@ function hostMain(opt={}){
       <div class="hand big one"><div>${card(V.keep)}</div></div><p class="sub" style="text-align:center">${V.gAuto?'待たずに進めたため、自動で残りました。':''}手放したのは「${CARDS[V.drop].n}」${V.gHonest?`。本音どおり +${C.hon}`:''}</p>`,
       `<h2>賭けの結果</h2>${ptab([['賭け',(p,i)=>i===V.j?st('残した人'):bet[i]?`${CARDS[bet[i].c].n} <span class="num ${bet[i].w?'up':''}">${bet[i].w?'+'+C.bet:'−'+C.bet}</span>`:st('賭けず')]],{dfx:V.dfx})}
       ${go('next',V.j<PL.length-1?'次の人へ':'最終相場を出す')}`);
-    }else if(ph==='quiz'){const Q=V.quiz;
-      const rk=Q.rank?`<ol class="qrank">${Q.rank.map((c,k)=>`<li><span class="qn num">${k+1}</span>${card(c)}</li>`).join('')}</ol>`:'';
-      if(Q.k>=Q.n){const ord=PL.map((p,i)=>i).sort((a,b)=>Q.right[b]-Q.right[a]),best=Q.right[ord[0]],bs=ord.filter(i=>Q.right[i]===best);
-        h=stg(`${mkT(7,'本音クイズ','クイズの結果')}${plate('名探偵',bs.map(i=>PL[i].name))}<p class="res">${Q.n}問中${best}問正解。${best===0?'今夜は全員、見る目がありませんでした。':best===Q.n?'全問正解。何もかもお見通しです。':'この人の前では、うそはつけません。'}</p>`,
-          `<h2>正解数</h2><table class="list pt"><tr><th>名前</th><th class="r">正解</th></tr>${ord.map(i=>`<tr><td class="nm">${esc(PL[i].name)}</td><td class="r num">${Q.right[i]}問</td></tr>`).join('')}</table>${go('quiznext','本性証券を発行する')}`)}
-      /* クイズは順位そのものが主役。札を画面の横幅いっぱいに大きく並べ、状況は下に小さく置く */
-      else if(Q.step===0)h=`${mkT(7,`本音クイズ ${Q.k+1}/${Q.n}`,'スマホで、この順位が誰のものかを当てています').replace(/<!--\/?H-->/g,'')}<div class="qz"><h1>この順位、誰のもの?</h1><p class="sub">だれかが最初に並べた「大事な順」です。持ち主のスマホには、ばれないように身代わりを選ぶ画面が出ています。</p>${rk}
-          <div class="qfoot"><p class="clock">まだ選んでいる人<span class="cdv num">${pend()}</span>人</p><ul class="qst">${PL.map((p,i)=>`<li class="${Q.done.includes(i)?'ok':''}">${esc(p.name)}</li>`).join('')}</ul>${skipBtn()}</div></div>`;
-      else{const o=Q.owner,cnt=PL.map((p,j)=>Object.values(Q.votes).filter(v=>v===j).length),mx=Math.max(1,...cnt);
-        h=`${mkT(7,`本音クイズ ${Q.k+1}/${Q.n}`,'正解発表').replace(/<!--\/?H-->/g,'')}<div class="qz"><div class="qtop">${plate('この順位は',PL[o].name)}${jkBox(Q.jk)}</div>${rk}
-          <div class="qfoot3"><div><h2>だれだと思われたか</h2>${cnt.some(x=>x)?'':'<p class="sub">票はありませんでした。</p>'}<ul class="qbar">${PL.map((p,j)=>cnt[j]?`<li class="${j===o?'ok':''}"><span class="nm">${esc(p.name)}${j===o?' (正解)':j===Q.decoy?' (身代わり)':''}</span><span class="bar"><i style="width:${cnt[j]/mx*100}%"></i></span><span class="num">${cnt[j]}票</span></li>`:'').join('')}</ul></div>
-          ${go('quiznext',Q.k<Q.n-1?'次の問題へ':'クイズの結果へ')}</div></div>`}
+    }else if(ph==='quiz'){const Q=V.quiz,L='ABCDEFG';
+      /* 全員分の順位を一覧で出す。列:記号/(発表後は持ち主)/7枚/(発表後は正解数と実況) */
+      const row=(k,R)=>`<li class="${Q.step?'rv':''}"><span class="ql">${L[k]}</span>${Q.step?`<span class="qo">${esc(PL[Q.owners[k]].name)}<small>さん</small></span>`:''}<span class="qcs">${R.map((c,j)=>`<span class="mc"><i class="num">${j+1}</i><span class="ic">${art(c)}</span><span class="mn">${CARDS[c].n}</span></span>`).join('')}</span>${Q.step?`<span class="qok"><b class="num">${Q.stats[k].ok}</b>/${Q.stats[k].tot}人正解</span><span class="qline">${esc(Q.stats[k].line||'')}</span>`:''}</li>`;
+      if(Q.step===0)h=`${mkT(7,'本音クイズ','スマホで、それぞれの順位が誰のものかを当てています').replace(/<!--\/?H-->/g,'')}<div class="qz"><h1>この順位、それぞれ誰のもの?</h1><p class="sub">全員が最初に並べた「大事な順」です。スマホで、AからGまでの持ち主を当ててください。自分の順位は、ばれないように知らんぷりで。</p>
+          <ol class="qall">${Q.ranks.map((R,k)=>row(k,R)).join('')}</ol>
+          <div class="qfoot"><p class="clock">まだ答えている人<span class="cdv num">${pend()}</span>人</p><ul class="qst">${PL.map((p,i)=>`<li class="${Q.done.includes(i)?'ok':''}">${esc(p.name)}</li>`).join('')}</ul>${skipBtn()}</div></div>`;
+      else{const best=Math.max(...Q.right),bs=PL.map((p,i)=>i).filter(i=>Q.right[i]===best),tot=Q.n-1;
+        h=`${mkT(7,'本音クイズ','正解発表').replace(/<!--\/?H-->/g,'')}<div class="qz"><ol class="qall">${Q.ranks.map((R,k)=>row(k,R)).join('')}</ol>
+          <div class="qfoot3"><div class="qbest"><p class="dl">名探偵</p><p class="qbn">${bs.map(i=>`${esc(PL[i].name)}<small>さん</small>`).join('<small>と</small>')}</p><p class="sub">${tot}問中${best}問正解。${best===0?'今夜は全員、見る目がありませんでした。':best===tot?'全問正解。何もかもお見通しです。':'この人の前では、うそはつけません。'}</p></div>
+          ${go('quiznext','本性証券を発行する')}</div></div>`}
     }else if(ph==='results'){
       const R=V.results,win=R.rows.filter(x=>x.t===R.rows[0].t&&x.a===R.rows[0].a),n=PL.length;
       const table=`<table class="list score"><tr><th>名前</th><th class="r">予想</th><th class="r">本音</th><th class="r">注目</th><th class="r">ダウト</th>${R.anyPen?'<th class="r">時間切れ</th>':''}<th class="r">最後の一枚</th><th class="r">賭け</th><th class="r">合計</th></tr>${R.rows.map(x=>`<tr><td>${esc(PL[x.i].name)}</td><td class="r num">${x.a}</td><td class="r num">${x.h}</td><td class="r num">${x.f}</td><td class="r num">${x.d}</td>${R.anyPen?`<td class="r num">${sgn(x.m)}</td>`:''}<td class="r num">${x.b}</td><td class="r num">${sgn(x.bet)}</td><td class="r num"><b>${x.t}</b></td></tr>`).join('')}</table>`;
@@ -2570,10 +2655,15 @@ function hostMain(opt={}){
 /* ================= スマホ(参加者) ================= */
 function playerMain(code,opt={}){
   const TEST=!!opt.mem;
+  /* HOSTPH=この端末が進行役を兼ねる(テレビの効果音もこの端末で鳴らす)。NT()=テレビなしの部屋(テレビに出す情報もスマホに出す) */
+  const HOSTPH=TEST||!!opt.notv,NT=()=>TEST||!!(V&&V.notv);
   let pid=null;try{pid=TEST?null:sessionStorage.getItem('saigo-pid')}catch(e){}
   if(!pid){pid='p'+Date.now().toString(36)+Math.floor(rnd()*1e6).toString(36);try{if(!TEST)sessionStorage.setItem('saigo-pid',pid)}catch(e){}}
   let myName='';try{myName=localStorage.getItem('saigo-name')||''}catch(e){}
   let net=null,V=null,joined=false,sel={k:'',d:null,g:null,rank:[],sent:null};
+  /* 値動きの折りたたみは、描き直しても開いたままにする */
+  let boardOpen=false;app.addEventListener('toggle',e=>{if(e.target.matches&&e.target.matches('details.bd'))boardOpen=e.target.open},true);
+  const shareBtn=i=>`<button class="plain shr" data-act="share" data-i="${i}">証券を画像で保存・共有</button>`;
   let myRank=null;try{if(!TEST)myRank=JSON.parse(sessionStorage.getItem('saigo-rank')||'null')}catch(e){}
   /* 残りの手札のうち、自分の順位でいちばん下の札(これを手放すと本音点) */
   /* 相場のおすすめ。見込み=いまの相場+次の出来事の値動き+(人気の低い札ほど、ほかの人に手放されて上がりやすい分) */
@@ -2583,26 +2673,28 @@ function playerMain(code,opt={}){
   const rkBadge=(c,hon)=>myRank?`<span class="rk${hon?' hon':''}">${hon?'本音':myRank.indexOf(c)+1+'位'}</span>`:'';
   const myCard=(c,attr,pressed,price,hon)=>pickBtn(c,attr,pressed,'',price).replace('<span class="in"></span>','<span class="in"></span>'+rkBadge(c,hon));
   const send=a=>{if(net)net.send(Object.assign({pid},a))};
-  homeMsg=()=>!V||['lobby','results'].includes(V.phase)||!V.players.some(p=>p.id===pid)?null:TEST?'ひとりで試している途中です。ホームに戻ると、このゲームは終わります。':'途中で抜けると、その間の手番は時間切れになり、減点されます。同じURLで開き直せば戻れます。';
+  homeMsg=()=>!V||['lobby','results'].includes(V.phase)||!V.players.some(p=>p.id===pid)?null:TEST?'ひとりで試している途中です。ホームに戻ると、このゲームは終わります。':(opt.notv?'あなたの端末が進行役です。ホームに戻ると、全員の進行が止まります。同じURLで開き直せば続きから再開できます。':'途中で抜けると、その間は進行役が「待たずに進める」で先に進めることがあります。同じURLで開き直せば戻れます。');
   function render(){
     let h='';const me=V?V.players.findIndex(p=>p.id===pid):-1,M=me>=0?V.players[me]:null,LEAD=!!V&&V.leader===pid;
     const ctl=(op,label)=>LEAD?`<button class="go" data-act="ctl" data-op="${op}">${label}</button>`:'';
     const people=()=>`<ul class="people">${V.players.map(p=>`<li><span>${esc(p.name)}${p.id===pid?' <span class="sub">あなた</span>':''}</span><span class="st">${p.id===V.leader?'進行役':p.cpu?'CPU':''}</span></li>`).join('')}</ul>`;
     const nextNote=LEAD?'':`<p class="sub" style="margin-top:16px">進行役が次へ進めます。</p>`;
     const head=TEST?'ひとりで試す':'部屋 '+esc(code);
+    const joinBox=()=>{const u=new URL(location.href);u.search='';u.searchParams.set('room',code);if(params.get('local')==='1')u.searchParams.set('local','1');
+      return`<div class="pjoin"><div class="qr">${qrSVG(u.toString())}</div><div><p class="sub">ほかの人は、このQRコードを読み取るか、部屋コードを入れて参加します。</p><p class="roomcode num">${esc(code)}</p></div></div>`};
     const wait=(t,s='')=>`<div class="wait"><div class="back">${backArt}</div><p class="who">${t}</p>${s?`<p class="sub">${s}</p>`:''}</div>`;
     const first=V&&V.first;
     if(!V||me<0){
-      h=`${mk(null,head)}<h1>${TEST?'CPUと遊ぶ':'参加する'}</h1>${TEST?'<p class="sub">テレビも通信も使わずに、最後まで遊べます。</p>':''}${V&&V.phase!=='lobby'&&joined?'<p>この部屋はもう始まっています。次の回から参加してください。</p>':''}
-      <label for="nm">名前(10文字まで)</label><input id="nm" class="field" maxlength="10" value="${esc(myName)}" autocomplete="nickname">
-      <button class="go" data-act="join">${TEST?'始める':'参加する'}</button>${!V&&!TEST?'<p class="sub" style="margin-top:14px">テレビとつないでいます。</p>':''}${TEST?'':modeNote()}`;
+      h=`${mk(null,head)}<h1>${TEST?'CPUと遊ぶ':'参加する'}</h1>${TEST?'<p class="sub">テレビも通信も使わずに、最後まで遊べます。</p>':opt.notv?'<p class="sub">テレビなしで、スマホだけで遊ぶ部屋を作ります。まず、あなたの名前を入れてください。</p>':''}${V&&V.phase!=='lobby'&&joined?'<p>この部屋はもう始まっています。次の回から参加してください。</p>':''}
+      <label for="nm">名前(5文字まで)</label><input id="nm" class="field" maxlength="5" value="${esc(myName)}" autocomplete="nickname">
+      <button class="go" data-act="join">${TEST?'始める':'参加する'}</button>${!V&&!TEST?`<p class="sub" style="margin-top:14px">${opt.notv?'部屋を準備しています。':'テレビとつないでいます。'}</p>`:''}${TEST?'':modeNote()}`;
     }else{
-      const ph=V.phase,key=ph+'|'+V.round+'|'+(V.j??'')+'|'+(V.cer??'')+'|'+(V.quiz?V.quiz.k:'');if(sel.k!==key){sel={k:key,d:null,g:null,rank:[],sent:null}}
+      const ph=V.phase,key=ph+'|'+V.round+'|'+(V.j??'')+'|'+(V.cer??'');if(sel.k!==key){sel={k:key,d:null,g:null,rank:[],sent:null}}
       if(ph==='lobby'){
-        if(LEAD){const n=V.players.length;h=`${mk(null,head)}<h1>参加者 <span class="num">${n}/${C.max}</span>人</h1><p class="sub">あなたが進行役です。足りない人数はCPUで補えます。</p>${people()}
+        if(LEAD){const n=V.players.length;h=`${mk(null,head)}<h1>参加者 <span class="num">${n}/${C.max}</span>人</h1><p class="sub">あなたが進行役です。足りない人数はCPUで補えます。</p>${NT()&&!TEST?joinBox():''}${people()}
           <div class="row"><button class="plain" data-act="ctl" data-op="cpu"${n>=C.max?' disabled':''}>CPUを加える</button><button class="plain" data-act="ctl" data-op="uncpu"${V.players.some(p=>p.cpu)?'':' disabled'}>CPUを減らす</button></div>
           <button class="go" data-act="ctl" data-op="start"${n<C.min?' disabled':''}>${n<C.min?`あと${C.min-n}人で始められます`:'この顔ぶれで始める'}</button>`}
-        else h=wait(`${esc(M.name)}さん`,'進行役が始めるのを待っています。')+people();
+        else h=wait(`${esc(M.name)}さん`,'進行役が始めるのを待っています。')+(NT()?joinBox():'')+people();
       }else if(ph==='howto'){const k=V.how,last=k===HOW_N-1;
         h=`${mk(null,`遊び方 ${k+1}/${HOW_N}`)}${howText(k)}${howFig(k)}${LEAD?`${ctl('hownext',last?'わかった、始める':'次へ')}<div class="row howrow">${k?'<button class="plain" data-act="ctl" data-op="howback">戻る</button>':''}${last?'':'<button class="plain" data-act="ctl" data-op="howskip">説明を飛ばす</button>'}</div>`:'<p class="sub" style="margin-top:18px">テレビと同じ説明です。進行役が次へ進めます。</p>'}`;
       }else if(ph==='ranking'){
@@ -2616,21 +2708,22 @@ function playerMain(code,opt={}){
         const isSpot=me===V.spot,tp=V.players[V.spot];
         if(M.submitted||sel.sent)h=wait('決めました',sel.sent?(isSpot?`「${CARDS[sel.sent.pick].n}」を手放しました。みんなの予想を待っています。`:`「${CARDS[sel.sent.pick].n}」を手放し、${esc(tp.name)}さんは「${CARDS[sel.sent.guess].n}」を手放すと予想しました。`):'ほかの人を待っています。');
         else{const hon=honestOf(M.hand);h=`${mk(V.round,kan[V.round]+'巡目')}${V.firedEv?`<div class="notice" style="margin-top:0"><b>${/^「/.test(V.firedEv.n)?esc(V.firedEv.n):`「${esc(V.firedEv.n)}」`}</b>が起きました。${esc(V.firedEv.t)}</div>`:''}${isSpot?`<div class="notice" style="margin-top:0"><b>今巡の注目は、あなたです。</b>全員があなたの手放す札を予想しています。全員を外させれば+${C.foolAll}点、半数より多く外させれば+${C.foolHalf}点。</div>`:''}
-          ${first&&V.round<=2?`<h2 style="margin-top:0">いまやること</h2>${guide(isSpot?['今回はあなたが注目の人です。予想はせず、手放す札を1枚だけ選びます。',`「本音」と書いた札を手放すと+${C.hon}点。みんなの予想を外させると、さらに点がもらえます。`,'選んだら、いちばん下の「これで決める」を押します。決めるまでは何度でも選び直せます。']:[`まず、手放す札を1枚押してください。「本音」と書いた札なら+${C.hon}点です。`,`次に、${esc(tp.name)}さんが手放しそうな札を予想して押してください。当たれば+${C.a}点です。`,'2つ選んだら、いちばん下の「この2つで決める」を押します。決めるまでは何度でも選び直せます。'])}`:''}
+          ${first&&V.round<=2?`<details class="fold gd"${V.round===1?' open':''}><summary>はじめての方へ:いまやること</summary>${guide(isSpot?['今回はあなたが注目の人です。予想はせず、手放す札を1枚だけ選びます。',`「本音」と書いた札を手放すと+${C.hon}点。みんなの予想を外させると、さらに点がもらえます。`,'選んだら、いちばん下の「これで決める」を押します。決めるまでは何度でも選び直せます。']:[`まず、手放す札を1枚押してください。「本音」と書いた札なら+${C.hon}点です。`,`次に、${esc(tp.name)}さんが手放しそうな札を予想して押してください。当たれば+${C.a}点です。`,'2つ選んだら、いちばん下の「この2つで決める」を押します。決めるまでは何度でも選び直せます。'])}</details>`:''}
           <h1>${isSpot?'手放す札を選ぶ':'1. 手放す札を選ぶ'}</h1><p class="sub">最後に残した1枚の相場が得点になります。札の右上はあなたの順位です。</p>
           <div class="hand" style="--n:${cols(M.hand.length)}">${M.hand.map(c=>myCard(c,`data-act="pd" data-c="${c}"`,sel.d===c,V.prices[c],c===hon)).join('')}</div>
           ${(()=>{const R=recOf(M.hand,V.prices,V.nextEv,V.players.length);const nm=c=>`<span class="ric">${art(c)}</span>${CARDS[c].n}`;
             return`<div class="rec"><p class="rl">相場のおすすめ</p><p>手放すなら <button class="rbtn" data-act="pd" data-c="${R.drop}">${nm(R.drop)}</button><span class="rx">見込み ${R.ex(R.drop)}</span></p><p>最後まで残したい <b>${nm(R.keep)}</b><span class="rx">見込み ${R.ex(R.keep)}</span></p><p class="sub">見込みは、いまの相場に${V.nextEv?'次の出来事と、':''}ほかの人に手放されやすさを足した目安です。${hon!==null?(R.drop===hon?'本音の札と同じなので、本音点ももらえます。':`本音の札は「${CARDS[hon].n}」。本音を通すか、相場を取るかです。`):''}</p></div>`})()}
           ${sel.d===null?'':`<p class="hint">「${CARDS[sel.d].n}」を手放す。${sel.d===hon?`本音どおりなので+${C.hon}点。`:'本音とは違う札なので、本音点はなし。'}この札の相場は上がります。</p>`}
           ${isSpot?'':`<h2>2. 注目の${esc(tp.name)}さんが手放す札を予想</h2><p class="sub">全員が同じ人を予想しています。当たれば+${C.a}点。</p><div class="hand" style="--n:${cols(tp.hand.length)}">${tp.hand.map(c=>pickBtn(c,`data-act="pg" data-c="${c}"`,sel.g===c)).join('')}</div>`}
+          <button class="go" data-act="pok"${sel.d===null||(!isSpot&&sel.g===null)?' disabled':''}>${sel.d===null?'手放す札を選んでください':isSpot?'これで決める':sel.g===null?'予想を選んでください':'この2つで決める'}</button>
           ${V.nextEv?`<div class="notice">${kan[V.round+1]}巡目の前に<b>${/^「/.test(V.nextEv.n)?esc(V.nextEv.n):`「${esc(V.nextEv.n)}」`}</b>が起きます。${esc(V.nextEv.t)}</div>`:''}
-          <button class="go" data-act="pok"${sel.d===null||(!isSpot&&sel.g===null)?' disabled':''}>${sel.d===null?'手放す札を選んでください':isSpot?'これで決める':sel.g===null?'予想を選んでください':'この2つで決める'}</button>${TEST?`<h2>値動き</h2>${pubBoard(V,'')}`:''}`}
+          <details class="fold bd"${boardOpen?' open':''}><summary>値動きを見る</summary>${pubBoard(V,'')}</details>`}
       }else if(ph==='reveal'){
         const X=V.reveal,sp=V.players[X.spot],D=V.doubt,isSpot=me===X.spot;
-        const title=ans=>`${mk(V.round,kan[V.round]+'巡目')}<h1 class="wb"><b class="who">${esc(sp.name)}さん</b>が<wbr>手放したのは${ans?`<wbr><span class="ansn">「${CARDS[X.spotPick].n}」</span>`:'……'}</h1>`;
+        const title=ans=>`${mk(V.round,kan[V.round]+'巡目')}<h1 class="wb"><b class="who">${isSpot?'あなた':esc(sp.name)+'さん'}</b>が<wbr>手放したのは${ans?`<wbr><span class="ansn">「${CARDS[X.spotPick].n}」</span>`:'……'}</h1>`;
         const myG=X.guesses[me];
         const predLine=()=>`<p>${isSpot?`${X.guessers}人のうち${X.hitN}人に読まれました。${X.bonus?`<span class="up">+${X.bonus}点</span>`:''}`:myG&&myG.hit?`<span class="up">予想的中、+${C.a}点。</span>`:'予想は外れ。'}</p>`;
-        if(V.revStep===0)h=`${title(false)}<p class="sub">${isSpot?'みんなの予想が出そろいました。':myG&&myG.g!==null&&myG.g!==undefined?`あなたの予想は「${CARDS[myG.g].n}」。`:'今巡は予想していません。'}まもなく答え合わせです。</p>${TEST?distHTML(X,V.players,true):`<div class="wait drum" style="padding-top:12px"><div class="back">${backArt}</div></div>`}`;
+        if(V.revStep===0)h=`${title(false)}<p class="sub">${isSpot?'みんなの予想が出そろいました。':myG&&myG.g!==null&&myG.g!==undefined?`あなたの予想は「${CARDS[myG.g].n}」。`:'今巡は予想していません。'}まもなく答え合わせです。</p>${NT()?distHTML(X,V.players,true):`<div class="wait drum" style="padding-top:12px"><div class="back">${backArt}</div></div>`}`;
         else if(V.revStep===1){
           if(D.talk){h=isSpot?`${title(true)}${predLine()}<div class="dq2 talk2"><p class="rl2">弁明タイム</p><p class="q">理由を、みんなに話してください</p><p class="tq2">${esc(D.q)}</p><p class="sub">本音でも、うそでもかまいません。みんなはこのあと、本音かダウトかを選びます。</p>
               <div class="dbtn"><button data-act="talkend">話し終えた</button><button data-act="talkend" data-nc="1">ノーコメント</button></div></div>`
@@ -2639,13 +2732,14 @@ function playerMain(code,opt={}){
           else if(sel.sent!==null||D.done.includes(me))h=`${title(true)}${predLine()}${wait('選びました',`あなたは「${sel.sent==='hon'?'本音':sel.sent==='doubt'?'ダウト':'―'}」を選びました。全員がそろうと判定を発表します。`)}`;
           else h=`${title(true)}${predLine()}<div class="dq2"><p class="q">「${CARDS[X.spotPick].n}」は、<b class="who">${esc(sp.name)}さん</b>の本音?</p>
             ${first?guide([`本音とは、${esc(sp.name)}さんが最初に並べた順位で、残っていた札のうちいちばん下の札のことです。`,`その札だと思えば「本音」、ちがうと思えば「ダウト」を押してください。当たれば+${C.dv}点です。`,`外れた人がいると、${esc(sp.name)}さんに点が入ります(+${C.dfoolSome}点、半数より多ければ+${C.dfoolMost}点)。`]):`<p class="sub">本音=${esc(sp.name)}さんが並べた順位で、残っていた札のうちいちばん下の札。当たれば+${C.dv}点。</p>`}
-            <div class="dbtn"><button data-act="dv" data-v="hon">本音だと思う</button><button data-act="dv" data-v="doubt">ダウト!</button></div></div>${TEST?distHTML(X,V.players):''}`}
+            ${D.last&&D.last.includes(me)?`<p class="lastb">あなたはこの回の始めに最下位でした。当たれば+${C.dvLast}点です。</p>`:''}
+            <div class="dbtn"><button data-act="dv" data-v="hon">本音だと思う</button><button data-act="dv" data-v="doubt">ダウト!</button></div></div>`}
         else{const x=X.all[me],mv=D&&D.votes[me];
           h=`${title(true)}${predLine()}
-          ${D?`<div class="verdict sm"><p class="vv">${D.honest?'本音でした':'本音ではありませんでした'}</p><p>${isSpot?(D.gain?`<span class="up">${D.wrong}人が外れたので、+${D.gain}点。</span>`:'全員に見抜かれました。'):mv?(mv.ok?`<span class="up">ダウト判定的中、+${C.dv}点。</span>`:'ダウト判定は外れ。'):''}</p></div>`:''}
+          ${D?`<div class="verdict sm"><p class="vv">${D.honest?'本音でした':'本音ではありませんでした'}</p><p>${isSpot?(D.gain?`<span class="up">${D.wrong}人が外れたので、+${D.gain}点。</span>`:'全員に見抜かれました。'):mv?(mv.ok?`<span class="up">ダウト判定的中、+${mv.pt}点。${mv.last?'最下位の追い上げ分を含みます。':''}</span>`:'ダウト判定は外れ。'):''}</p></div>`:''}
           <p>${x.to?`進行役が先に進めたため、あなたの札は「${CARDS[x.pick].n}」に自動で決まりました。`:`あなたは「${CARDS[x.pick].n}」を手放し、${x.honest?`本音どおりで+${C.hon}点。`:'本音点はなし。'}`}</p>
           ${V.jk&&V.jk.length?`<div class="jk sm"><p class="dl">実況</p>${V.jk.map(t=>`<p>${esc(t)}</p>`).join('')}</div>`:''}
-          ${TEST?distHTML(X,V.players):''}
+          ${NT()?distHTML(X,V.players):''}
           <h2>確定点の順位</h2>${standHTML(V.players,V.dfx,me)}
           <h2>値動き</h2>${pubBoard(V,'')}${ctl('next',V.round<C.rounds?kan[V.round+1]+'巡目へ':'最後の二択へ')}${nextNote}`}
       }else if(ph==='final'){
@@ -2666,30 +2760,29 @@ function playerMain(code,opt={}){
         const ch=V.players[V.j],b=V.lastBets.find(x=>x.i===me);
         h=`${mk(6,'最後の二択')}<h1><b class="who">${esc(ch.name)}さん</b>は<span class="ansn">「${CARDS[V.keep].n}」</span>を残した</h1><div class="hand big"><div>${card(V.keep)}</div></div>
           <p style="text-align:center;margin-top:16px">${me===V.j?`${V.gAuto?'進行役が先に進めたため、自動で残りました。':''}手放したのは「${CARDS[V.drop].n}」。${V.gHonest?`本音どおり +${C.hon}点。`:''}`:b?(b.w?`<span class="up">賭けに勝ち、+${C.bet}点</span>`:`賭けに負け、−${C.bet}点`):'賭けていません。'}</p><h2>確定点の順位</h2>${standHTML(V.players,V.dfx,me)}${ctl('next',V.j<V.players.length-1?'次の人へ':'最終相場を出す')}${nextNote}`;
-      }else if(ph==='quiz'){const Q=V.quiz,PLs=V.players;
-        const rkList=Q.rank?`<ol class="qrk">${Q.rank.map((c,k)=>`<li><span class="no num">${k+1}</span><span class="ic">${art(c)}</span><span class="bn">${CARDS[c].n}</span></li>`).join('')}</ol>`:'';
-        const mine=!!(myRank&&Q.rank&&myRank.join()===Q.rank.join());
-        const btns=`<div class="qbtn">${PLs.map((p,j)=>j===me?'':`<button data-act="qv" data-w="${j}">${esc(p.name)}</button>`).join('')}</div>`;
-        const head=mk(7,Q.k>=Q.n?'本音クイズの結果':`本音クイズ ${Q.k+1}/${Q.n}`);
-        if(Q.k>=Q.n){const best=Math.max(...Q.right);h=`${head}<h1>${Q.n}問中<span class="num">${Q.right[me]}</span>問正解</h1><p class="sub">${Q.right[me]===best?'あなたが今夜の名探偵です。':'名探偵はテレビで発表しています。'}クイズの正解数は、ゲームの得点には入りません。</p>${ctl('quiznext','本性証券を発行する')}`}
-        else if(Q.step===0){
-          if(sel.sent!==null||Q.done.includes(me))h=`${head}${wait('選びました','全員がそろうと、正解を発表します。')}`;
-          else if(mine)h=`${head}<h1>これは、あなたの順位です</h1><p class="sub">ばれないように、身代わりを1人選んでください。いちばん票を集めたのが身代わりの人なら、作戦成功です。</p>${rkList}${btns}`;
-          else h=`${head}<h1>この順位、誰のもの?</h1><p class="sub">最初に並べた「大事な順」です。持ち主だと思う人を選んでください。</p>${rkList}${btns}`}
-        else{const o=Q.owner,my=Q.votes[me];
-          h=`${head}<h1>正解は<b class="who">${o===me?'あなた':esc(PLs[o].name)+'さん'}</b></h1>
-          <p>${o===me?(Q.decoy!==null?`身代わりに選んだのは${esc(PLs[Q.decoy].name)}さん。`:''):my===o?'<span class="up">正解です。</span>':my!==undefined?`はずれ。あなたは${esc(PLs[my].name)}さんだと思いました。`:''}</p>
-          ${Q.jk&&Q.jk.length?`<div class="jk sm"><p class="dl">実況</p>${Q.jk.map(t=>`<p>${esc(t)}</p>`).join('')}</div>`:''}${rkList}${ctl('quiznext',Q.k<Q.n-1?'次の問題へ':'クイズの結果へ')}`}
+      }else if(ph==='quiz'){const Q=V.quiz,PLs=V.players,L='ABCDEFG';
+        const myK=myRank?Q.ranks.findIndex(R=>R.join()===myRank.join()):-1;
+        const names=R=>`<span class="qnm">${R.map((c,j)=>`<span><i class="num">${j+1}</i>${CARDS[c].n}</span>`).join('')}</span>`;
+        if(Q.step===0){
+          if(sel.sent||Q.done.includes(me))h=`${mk(7,'本音クイズ')}${wait('答えました','全員がそろうと、正解を一度に発表します。')}`;
+          else{const mp=sel.qmap||(sel.qmap={}),used=Object.values(mp),allSet=Q.ranks.every((R,k)=>k===myK||mp[k]!==undefined);
+            h=`${mk(7,'本音クイズ')}<h1>それぞれ、誰の順位?</h1><p class="sub">AからGまで、持ち主だと思う人を選んでください。同じ人は1回ずつしか選べません。正解数はゲームの得点には入りません。</p>
+            <ol class="qpick">${Q.ranks.map((R,k)=>`<li${k===myK?' class="mine"':''}><p class="qh"><span class="ql">${L[k]}</span>${k===myK?'<span class="me">あなたの順位</span>':`<select data-q="${k}" aria-label="${L[k]}の持ち主"><option value="">誰の?</option>${PLs.map((p,j)=>j===me?'':`<option value="${j}"${mp[k]===j?' selected':''}${mp[k]!==j&&used.includes(j)?' disabled':''}>${esc(p.name)}</option>`).join('')}</select>`}</p>${names(R)}</li>`).join('')}</ol>
+            <button class="go" data-act="qok"${allSet?'':' disabled'}>${allSet?'これで答える':'まだ選んでいない順位があります'}</button>`}}
+        else{const my=Q.ans&&Q.ans[me]||{},best=Math.max(...Q.right),tot=Q.n-1;
+          h=`${mk(7,'本音クイズ')}<h1>${tot}問中<span class="num">${Q.right[me]}</span>問正解</h1><p class="sub">${Q.right[me]===best?'あなたが今夜の名探偵です。':`名探偵は${PLs.map((p,i)=>i).filter(i=>Q.right[i]===best).map(i=>esc(PLs[i].name)+'さん').join('と')}(${best}問正解)。`}</p>
+          <ol class="qpick rv">${Q.ranks.map((R,k)=>{const o=Q.owners[k],g=my[k];return`<li><p class="qh"><span class="ql">${L[k]}</span><b>${o===me?'あなた':esc(PLs[o].name)+'さん'}</b>${o===me?'':g===undefined?'':g===o?'<span class="up">正解</span>':`<span class="qx">あなたの答え:${esc(PLs[g].name)}さん</span>`}</p>${names(R)}<p class="qline">${esc(Q.stats[k].line||'')}</p></li>`}).join('')}</ol>
+          ${ctl('quiznext','本性証券を発行する')}`}
       }else if(ph==='results'){
         const R=V.results,pos=R.rows.findIndex(x=>x.i===me)+1,row=R.rows[pos-1],n=V.players.length,myTurn=R.order.indexOf(me),issued=V.cer>=myTurn;
         const scoreLine=`<p class="sub">予想 ${row.a}点、本音 ${row.h}点、注目 ${row.f}点、ダウト ${row.d}点、${row.m?`時間切れ ${sgn(row.m)}点、`:''}最後の一枚 ${row.b}点、賭け ${sgn(row.bet)}点</p>`;
-        if(TEST){
+        if(NT()){
           if(V.cer<0)h=`${mk(7,'終局')}<h1>${pos}位、<span class="num">${row.t}</span>点</h1>${scoreLine}<table class="list" style="margin-top:12px"><tr><th>名前</th><th class="r">合計</th></tr>${R.rows.map(x=>`<tr><td>${esc(V.players[x.i].name)}</td><td class="r num">${x.t}</td></tr>`).join('')}</table>${ctl('quiz','本音クイズへ')}`;
-          else if(V.cer<n){const i=R.order[V.cer];h=`${mk(7,`本性証券の発行 ${V.cer+1}/${n}`)}<div class="hero">${certHTML(R.certs[i],V.players[i].name,V.players)}</div>${ctl('nextcert',V.cer<n-1?'次の証券を発行':'終わる')}`}
-          else h=`${mk(7,'終局')}<h1>${pos}位、<span class="num">${row.t}</span>点</h1>${scoreLine}${certHTML(R.certs[me],M.name,V.players)}${ctl('again','同じ顔ぶれでもう一度')}`;
+          else if(V.cer<n){const i=R.order[V.cer];h=`${mk(7,`本性証券の発行 ${V.cer+1}/${n}`)}<div class="hero">${certHTML(R.certs[i],V.players[i].name,V.players)}</div>${shareBtn(i)}${ctl('nextcert',V.cer<n-1?'次の証券を発行':'終わる')}`}
+          else h=`${mk(7,'終局')}<h1>${pos}位、<span class="num">${row.t}</span>点</h1>${scoreLine}${certHTML(R.certs[me],M.name,V.players)}${shareBtn(me)}${ctl('again','同じ顔ぶれでもう一度')}`;
         }else{
           h=`${mk(7,'終局')}<h1>${pos}位、<span class="num">${row.t}</span>点</h1>${scoreLine}
-          ${issued?`<div class="hero">${certHTML(R.certs[me],M.name,V.players)}</div>`:`<div class="wait" style="padding-top:24px"><div class="back">${backArt}</div><p class="who">証券の発行待ち</p><p class="sub">${myTurn-V.cer<=1?'次に、テレビで発行されます。':`テレビで発行されるまで、あと${myTurn-V.cer}枚です。`}</p></div>`}
+          ${issued?`<div class="hero">${certHTML(R.certs[me],M.name,V.players)}</div>${shareBtn(me)}`:`<div class="wait" style="padding-top:24px"><div class="back">${backArt}</div><p class="who">証券の発行待ち</p><p class="sub">${myTurn-V.cer<=1?'次に、テレビで発行されます。':`テレビで発行されるまで、あと${myTurn-V.cer}枚です。`}</p></div>`}
           ${V.cer<0?ctl('quiz','本音クイズへ'):V.cer<n?ctl('nextcert',V.cer<n-1?'次の証券を発行':'全員の証券を並べる'):ctl('again','同じ顔ぶれでもう一度')}`;
         }
       }
@@ -2697,11 +2790,26 @@ function playerMain(code,opt={}){
     /* 遊んでいる間は、画面の上に自分の確定点と順位を出す */
     if(M&&['turn','reveal','final','final-reveal'].includes(V.phase))h=`<p class="mine">確定<b class="num">${M.fx}</b>点・${rankOf(V.players,me)}位/${V.players.length}人</p>`+h;
     document.documentElement.dataset.scene=V&&V.phase==='reveal'&&V.revStep===0?'dark':'';
+    /* 上部の「いま」の帯と、テレビなしの部屋での「待たずに進める」(進行役だけ) */
+    if(V&&me>=0&&V.phase!=='lobby'){const P2=V.players,ph2=V.phase,M2=P2[me];let t='';
+      if(ph2==='howto')t='遊び方の説明';
+      else if(ph2==='ranking')t=M2.rankDone||sel.sent?'全員が並べ終えるのを待っています':'7枚を、大事な順に並べる';
+      else if(ph2==='turn'){const sp=P2[V.spot];t=M2.submitted||sel.sent?'ほかの人が選び終えるのを待っています':me===V.spot?'手放す札を選ぶ(あなたが注目の人)':`手放す札と、${esc(sp.name)}さんの予想を選ぶ`}
+      else if(ph2==='reveal'){const X=V.reveal,D=V.doubt,sp=P2[X.spot];t=V.revStep===0?'答え合わせ':V.revStep===2?'この回の結果':D&&D.talk?(me===X.spot?'理由を話す':`${esc(sp.name)}さんの話を聞く`):me===X.spot?'みんなの判定を待つ':D&&D.done.includes(me)||sel.sent?'ほかの人の判定を待っています':'本音か、ダウトかを選ぶ'}
+      else if(ph2==='final')t=me===V.j?'残す1枚を選ぶ':`${esc(P2[V.j].name)}さんが残す札に賭ける`;
+      else if(ph2==='final-reveal')t='賭けの結果';
+      else if(ph2==='quiz')t=V.quiz.step?'本音クイズの正解発表':'それぞれの順位の持ち主を当てる';
+      else if(ph2==='results')t=V.cer<0?'最終結果':'本性証券';
+      const pend=ph2==='ranking'||ph2==='turn'||ph2==='final'||(ph2==='reveal'&&V.revStep===1&&V.doubt&&!V.doubt.talk)||(ph2==='quiz'&&V.quiz.step===0);
+      h=`<p class="pnow"><span class="nl">いま</span>${t}</p>`+h+(NT()&&!TEST&&LEAD&&pend?`<div class="pskip"><button class="plain" data-act="ctl" data-op="skip">待たずに進める</button><p class="sub">スマホが止まった人がいるときだけ使います。まだ決めていない人の分は自動で決まります。減点はありません。</p></div>`:'')}
     paint(h,V?V.phase+'|'+V.round+'|'+(V.j??'')+'|'+(V.cer??'')+'|'+(V.revStep??''):'join');
   }
+  /* 本音クイズ:持ち主の選択。同じ人を2回選べないよう、描き直して選択肢を絞る */
+  app.addEventListener('change',e=>{const s=e.target.closest&&e.target.closest('select[data-q]');if(!s)return;const k=+s.dataset.q;sel.qmap=sel.qmap||{};if(s.value==='')delete sel.qmap[k];else sel.qmap[k]=+s.value;render()});
   app.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled)return;const a=b.dataset.act,c=b.dataset.c===undefined?null:+b.dataset.c;
     SFX.play(['rk','pd','pg'].includes(a)?'tap':'decide');
-    if(a==='ctl'){send({type:'ctl',op:b.dataset.op});window.scrollTo(0,0);return}
+    if(a==='ctl'&&b.dataset.op==='skip'&&!b.dataset.arm){b.dataset.arm='1';b.textContent='もう一度押すと進めます';setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent='待たずに進める'}},5000);return}
+    if(a==='ctl'){send({type:'ctl',op:b.dataset.op});if(b.dataset.op!=='skip')window.scrollTo(0,0);return}
     if(a==='join'){const n=document.getElementById('nm').value.trim();if(!n){document.getElementById('nm').focus();return}myName=n;try{localStorage.setItem('saigo-name',n)}catch(e){}joined=true;send({type:'join',name:n});return}
     if(a==='rk'){if(!sel.rank.includes(c))sel.rank.push(c);render();return}
     if(a==='rkreset'){sel.rank=[];render();return}
@@ -2714,22 +2822,23 @@ function playerMain(code,opt={}){
     if(a==='keep'){sel.sent=c;send({type:'keep',card:c})}
     if(a==='dv'){const v=b.dataset.v;sel.sent=v;send({type:'doubt',v})}
     if(a==='talkend'){send({type:'talkend',nc:!!b.dataset.nc})}
-    if(a==='qv'){const w=+b.dataset.w;sel.sent=w;send({type:'qv',who:w})}
+    if(a==='share'){const i=+b.dataset.i;if(V&&V.results){b.disabled=true;b.textContent='画像を作っています';shareCert(V.results.certs[i],V.players[i].name).finally(()=>{b.disabled=false;b.textContent='証券を画像で保存・共有'})}return}
+    if(a==='qok'){sel.sent=true;send({type:'qa',map:sel.qmap||{}})}
     render();window.scrollTo(0,0)});
   render();
   let pc=null;
-  function playerCues(V){const me=V.players.findIndex(p=>p.id===pid),p=pc;pc={ph:V.phase,r:V.round,j:V.j,cer:V.cer,rs:V.revStep,n:V.players.length,qk:V.quiz?V.quiz.k:null,qs:V.quiz?V.quiz.step:null};if(!p||me<0)return;
-    if(V.phase==='quiz'&&p.ph==='quiz'&&V.quiz.step===1&&(p.qs!==1||p.qk!==V.quiz.k)){if(TEST)SFX.play('ta');const my=V.quiz.votes[me];if(my!==undefined)SFX.play(my===V.quiz.owner?'coin':'miss',.4)}
+  function playerCues(V){const me=V.players.findIndex(p=>p.id===pid),p=pc;pc={ph:V.phase,r:V.round,j:V.j,cer:V.cer,rs:V.revStep,n:V.players.length,qs:V.quiz?V.quiz.step:null};if(!p||me<0)return;
+    if(V.phase==='quiz'&&p.ph==='quiz'&&V.quiz.step===1&&p.qs===0){if(HOSTPH)SFX.play('ta');SFX.play(V.quiz.right[me]>0?'coin':'miss',.5)}
     const changed=V.phase!==p.ph||V.round!==p.r||V.j!==p.j;
     if(changed){
-      if(TEST){if(V.phase==='ranking'||V.phase==='turn'||V.phase==='final')SFX.play('hyoshigi');if(V.phase==='reveal')SFX.play('roll',C.rollAt);if(V.phase==='turn'&&V.firedEv)SFX.play('bell',.45)}
+      if(HOSTPH){if(V.phase==='ranking'||V.phase==='turn'||V.phase==='final')SFX.play('hyoshigi');if(V.phase==='reveal')SFX.play('roll',C.rollAt);if(V.phase==='turn'&&V.firedEv)SFX.play('bell',.45)}
       if(V.phase==='final-reveal'){const b=(V.lastBets||[]).find(y=>y.i===me);SFX.play('stamp');if(b)SFX.play(b.w?'coin':'miss',.3);else if(me===V.j&&V.gHonest)SFX.play('rin',.3)}
-      if(V.phase==='results'&&p.ph!=='quiz')SFX.play(TEST?'fanfare':'reveal');
+      if(V.phase==='results'&&p.ph!=='quiz')SFX.play(HOSTPH?'fanfare':'reveal');
       return}
-    if(V.phase==='reveal'&&V.revStep>=1&&p.rs===0){const X=V.reveal,g=X.guesses[me];if(TEST)SFX.play('ta');if(g&&g.hit||me===X.spot&&X.bonus)SFX.play('coin',.55)}
-    if(V.phase==='reveal'&&V.revStep===2&&p.rs!==2){const X=V.reveal,x=X.all[me],D=V.doubt,mv=D&&D.votes[me];if(TEST&&D)SFX.play('stamp');if(x.honest)SFX.play('rin',.3);if(mv)SFX.play(mv.ok?'coin':'miss',.35);if(D&&me===X.spot&&D.gain)SFX.play('coin',.35);if(x.to)SFX.play('miss',.4)}
-    if(V.phase==='results'&&V.cer!==p.cer&&V.results){const t=V.results.order.indexOf(me);if(TEST&&V.cer>=0&&V.cer<V.players.length||!TEST&&V.cer===t)SFX.play('stamp',.7)}
-    if(V.phase==='lobby'&&TEST&&V.players.length>p.n)SFX.play('join');
+    if(V.phase==='reveal'&&V.revStep>=1&&p.rs===0){const X=V.reveal,g=X.guesses[me];if(HOSTPH)SFX.play('ta');if(g&&g.hit||me===X.spot&&X.bonus)SFX.play('coin',.55)}
+    if(V.phase==='reveal'&&V.revStep===2&&p.rs!==2){const X=V.reveal,x=X.all[me],D=V.doubt,mv=D&&D.votes[me];if(HOSTPH&&D)SFX.play('stamp');if(x.honest)SFX.play('rin',.3);if(mv)SFX.play(mv.ok?'coin':'miss',.35);if(D&&me===X.spot&&D.gain)SFX.play('coin',.35);if(x.to)SFX.play('miss',.4)}
+    if(V.phase==='results'&&V.cer!==p.cer&&V.results){const t=V.results.order.indexOf(me);if(NT()&&V.cer>=0&&V.cer<V.players.length||!NT()&&V.cer===t)SFX.play('stamp',.7)}
+    if(V.phase==='lobby'&&HOSTPH&&V.players.length>p.n)SFX.play('join');
   }
   /* 残り時間の音:自分がまだ決めていないときだけ鳴らす */
   /* 時間制限はないので、秒読みの音は鳴らさない */
@@ -2771,24 +2880,27 @@ function guidePage(){
 function landing(){
   const go=u=>{location.href=u};homeBtn.hidden=true;guideBtn.target='_self';
   /* 途中のゲームがテレビ側に保存されていれば、続きから開けるようにする */
-  let resume=null;try{let best=0;for(let k=0;k<localStorage.length;k++){const key=localStorage.key(k);if(!key.startsWith('saigo-host-'))continue;const sv=JSON.parse(localStorage.getItem(key));if(sv&&!['lobby','results'].includes(sv.phase)&&Date.now()-sv.savedAt<6*3600e3&&sv.savedAt>best){best=sv.savedAt;resume=sv.code}}}catch(e){}
+  let resume=null,resumePh=false;try{let best=0;for(let k=0;k<localStorage.length;k++){const key=localStorage.key(k);if(!key.startsWith('saigo-host-'))continue;const sv=JSON.parse(localStorage.getItem(key));if(sv&&!['lobby','results'].includes(sv.phase)&&Date.now()-sv.savedAt<6*3600e3&&sv.savedAt>best){best=sv.savedAt;resume=sv.code;resumePh=!!sv.phoneHost}}}catch(e){}
   app.innerHTML=`<div class="screen"><div class="fan" aria-hidden="true">${CARDS.map((c,i)=>card(i)).join('')}</div><h1>最後の一枚</h1><p class="sub">7枚の価値観を1枚ずつ手放し、最後に残った1枚で本性を診断します。3〜7人で遊べます。</p>
   <button class="go" data-act="host">テレビで部屋を作る</button>
+  <button class="plain" data-act="phost" style="margin-top:10px">テレビなしで、スマホだけで遊ぶ</button><p class="sub" style="margin-top:6px">この端末が部屋を作り、進行も受け持ちます。ほかの人は部屋コードかQRコードで参加します。</p>
   <h2>スマホで参加</h2><label for="cd">部屋コード(4文字)</label><input id="cd" class="field code" maxlength="4" autocomplete="off" autocapitalize="characters"><button class="plain" data-act="join" style="margin-top:12px">参加する</button>
-  ${resume?`<p style="margin-top:14px"><button class="plain" data-act="resume">テレビで続きから(部屋 ${esc(resume)})</button></p>`:''}
+  ${resume?`<p style="margin-top:14px"><button class="plain" data-act="resume">${resumePh?'スマホで':'テレビで'}続きから(部屋 ${esc(resume)})</button></p>`:''}
   <h2>ひとりで試す</h2><p class="sub">CPUを相手に、テレビも通信も使わずに遊べます。</p><button class="plain" data-act="test">CPUと遊ぶ</button>
   <h2>診断の解説</h2><p class="sub">16のタイプと、最後の一枚になる21枚の札の意味を読めます。</p><button class="plain" data-act="guide">解説を読む</button>${modeNote()}</div>`;
   app.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const u=new URL(location.href);u.search='';
     if(b.dataset.act==='host'){u.searchParams.set('host','new');go(u)}
+    else if(b.dataset.act==='phost'){u.searchParams.set('phost','new');if(params.get('local')==='1')u.searchParams.set('local','1');go(u)}
     else if(b.dataset.act==='test'){u.searchParams.set('test','1');go(u)}
     else if(b.dataset.act==='guide'){u.searchParams.set('guide','1');go(u)}
-    else if(b.dataset.act==='resume'){u.searchParams.set('host',resume);if(params.get('local')==='1')u.searchParams.set('local','1');go(u)}
+    else if(b.dataset.act==='resume'){u.searchParams.set(resumePh?'phost':'host',resume);if(params.get('local')==='1')u.searchParams.set('local','1');go(u)}
     else{const v=document.getElementById('cd').value.trim().toUpperCase();if(v.length!==4){document.getElementById('cd').focus();return}u.searchParams.set('room',v);go(u)}});
 }
 const fanFix=()=>document.querySelectorAll('.fan .cd').forEach((el,i)=>{el.style.transform=`rotate(${(i-3)*11}deg)`});
 new MutationObserver(fanFix).observe(app,{childList:true,subtree:true});
 if(params.get('guide')){guidePage()}
 else if(params.get('test')){const mem=memTransport();hostMain({mem});playerMain('TEST',{mem})}
+else if(params.get('phost')){hostMain({phone:true});playerMain(new URLSearchParams(location.search).get('phost'),{notv:true})}
 else if(params.get('host'))hostMain();else if(params.get('room'))playerMain(params.get('room').toUpperCase().slice(0,4));else landing();
 }
 
